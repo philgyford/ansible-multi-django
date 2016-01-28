@@ -1,0 +1,14 @@
+---
+
+- name: Create a virtual machine via vagrant
+  hosts: all
+  become: yes
+  become_user: root
+  become_method: sudo
+  remote_user: vagrant
+  vars_files:
+    - env_vars/base.yml
+    - env_vars/vagrant.yml
+  roles:
+    - common
+

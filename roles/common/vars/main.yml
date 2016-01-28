@@ -1,0 +1,6 @@
+---
+
+swap_file_path: /swapfile
+# "Generally, an amount equal to or double the amount of RAM on your system is a good starting point."
+swap_file_size_kb: 512
+

@@ -1,0 +1,21 @@
+---
+
+# Mostly via http://ryaneschinger.com/blog/securing-a-server-with-ansible/
+
+- name: Change root password
+  user: name=root password="{{ ubuntu_root_password }}"
+
+- name: Add deploy user
+  user: name={{ ubuntu_deploy_user_name }} password="{{ ubuntu_deploy_password }}" shell=/bin/bash
+
+- name: Add authorized keys for deploy user
+  authorized_key: user={{ ubuntu_deploy_user_name }}
+                  key="{{ lookup('file', item) }}"
+  with_items: ubuntu_deploy_public_keys
+
+- name: Add deploy user to sudoers
+  lineinfile: dest=/etc/sudoers
+              regexp="{{ ubuntu_deploy_user_name }} ALL"
+              line="{{ ubuntu_deploy_user_name }} ALL=(ALL) ALL"
+              state=present
+

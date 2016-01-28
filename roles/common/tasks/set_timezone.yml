@@ -1,0 +1,7 @@
+
+- name: Set timezone
+  copy: content="Etc/UTC\n" dest=/etc/timezone owner=root group=root mode=0644
+  become: yes
+  become_method: sudo
+  notify: Update timezone
+
