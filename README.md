@@ -24,8 +24,23 @@ Each "app" (eg, a website) should have its variables set in the `apps` list in `
 
 If the app requires a python virtualenv, set its `virtualenv` name. Otherwise, leave that property out.
 
-
 ## TODO
+
+* Install memcached-dev and memcached if needed
+* Clone apps' repos
+* Install apps' pip requirements
+* Create apps' databases
+* How to set apps' environment variables?
+* Copy databse with scp?
+* Restore databse?
+* If django: Transfer media files from local machine?
+* If django: Collect static files.
+* Nginx and gunicorn
+* Git ssh stuff for updates
+* Set up postgres backups to s3?
+
+
+## TODO LATER
 
 * Change test passwords in `env_vars/base.yml`.
 
