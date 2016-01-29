@@ -10,6 +10,12 @@ Once it's run you can ssh in to Vagrant using the `deploy` user:
 
 And the password defined in `env_vars/base.yml`. The IP address is set in `Vagrantfile`.
 
+## Notes
+
+`roles/common/` is stuff to do with setting up the basic server, before we
+get to webservers, databases, etc.
+
+
 ## TODO
 
 * Change test passwords in `env_vars/base.yml`.
