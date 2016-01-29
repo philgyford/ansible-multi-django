@@ -1,0 +1,9 @@
+---
+
+- name: Install base packages
+  apt: name={{ item }} force=yes state=installed
+  with_items:
+    - libpq-dev
+    - postgresql
+    - postgresql-contrib
+

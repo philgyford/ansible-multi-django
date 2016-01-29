@@ -11,4 +11,6 @@
     - env_vars/vagrant.yml
   roles:
     - common
+    - python
+    - postgresql
 

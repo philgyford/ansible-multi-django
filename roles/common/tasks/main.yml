@@ -2,7 +2,7 @@
 
 - include: create_swap_file.yml
 - include: create_users.yml
-- include: set_up_packages.yml
+- include: install_packages.yml
 
 - include: set_up_firewall.yml
   when: ubuntu_use_firewall == true

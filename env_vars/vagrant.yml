@@ -2,7 +2,6 @@
 
 ubuntu_use_firewall: false
 
-
 # Gunicorn settings.
 
 # For the number of workers, a good rule to follow is

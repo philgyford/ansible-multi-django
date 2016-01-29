@@ -17,12 +17,7 @@ ubuntu_deploy_public_keys:
 
 ubuntu_ssh_port: 22
 
-ubuntu_packages:
-  - fail2ban
-  - ntp
-  - ufw
-  - unattended-upgrades
-  - vim
+ubuntu_update_apt_cache: yes
 
 ubuntu_use_firewall: true
 

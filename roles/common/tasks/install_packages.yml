@@ -1,7 +1,7 @@
 ---
 
 - name: Update APT package cache
-  apt: update_cache=yes cache_valid_time=3600
+  apt: update_cache={{ ubuntu_update_apt_cache }} cache_valid_time=3600
 
 - name: Upgrade APT to the latest packages
   apt: upgrade=safe
@@ -15,8 +15,16 @@
     - libssl-doc
 
 - name: Install packages
-  apt: state=installed pkg={{ item }}
-  with_items: ubuntu_packages
+  apt: name={{ item }} state=installed
+  with_items:
+    - build-essential
+    - fail2ban
+    - git
+    - htop
+    - ntp
+    - ufw
+    - unattended-upgrades
+    - vim
 
 - name: Adjust APT update intervals
   copy: src=apt_periodic dest=/etc/apt/apt.conf.d/10periodic
