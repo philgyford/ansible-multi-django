@@ -1,0 +1,56 @@
+---
+
+# Some of this via https://github.com/gcporras/ansible-role-virtualenvwrapper
+
+- name: Install virtualenvwrapper
+  pip: name=virtualenvwrapper state=latest
+
+- name: Set workon home
+  lineinfile:
+    dest: '{{ virtualenvwrapper_shell_rc_file }}'
+    regexp: '^export WORKON_HOME'
+    line: 'export WORKON_HOME={{ virtualenvs_path }}'
+    state: present
+    backup: yes
+    create: yes
+
+- name: Set project home
+  lineinfile:
+    dest: '{{ virtualenvwrapper_shell_rc_file }}'
+    regexp: '^export PROJECT_HOME'
+    line: 'export PROJECT_HOME={{ apps_path }}'
+    state: present
+    backup: yes
+    create: yes
+
+- name: Set virtualenvwrapper python path
+  lineinfile:
+    dest: '{{ virtualenvwrapper_shell_rc_file }}'
+    regexp: '^export VIRTUALENVWRAPPER_PYTHON'
+    line: 'export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python'
+    state: present
+    backup: yes
+    create: yes
+
+- name: Load virtualenvwrapper script
+  lineinfile:
+    dest: '{{ virtualenvwrapper_shell_rc_file }}'
+    regexp: '^source `which virtualenvwrapper.sh`'
+    line: 'source `which virtualenvwrapper.sh`'
+    state: present
+    backup: yes
+    create: yes
+
+
+# http://stackoverflow.com/questions/22960944/running-mkvirtualenv-using-ansible
+#- name: Make a virtualenv
+  #shell: . /usr/share/virtualenvwrapper/virtualenvwrapper.sh && mkvirtualenv {{ venv }}
+  #args:
+    #executable: /bin/bash
+    #creates: "{{ venvabs }}"
+
+# http://stackoverflow.com/questions/20040141/ansible-command-from-inside-virtualenv
+
+#http://stackoverflow.com/questions/20575084/best-way-to-always-run-ansible-inside-a-virtualenv-on-remote-machines
+
+#https://github.com/openwebengineering/server-config/blob/master/ansible/mkvirtualenv.yml

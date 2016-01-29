@@ -1,0 +1,9 @@
+---
+
+- name: Create virtualenvs for apps
+  with_items: apps
+  when: item.virtualenv is defined
+  command: virtualenv {{ virtualenvs_path }}/{{ item.virtualenv }} --no-site-packages
+  args:
+    creates: "{{ virtualenvs_path }}/{{ item.virtualenv }}"
+

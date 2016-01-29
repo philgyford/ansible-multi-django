@@ -1,5 +1,6 @@
 ---
 
+
 - name: Create a virtual machine via vagrant
   hosts: all
   become: yes
@@ -13,4 +14,6 @@
     - common
     - python
     - postgresql
+    - apps
+
 

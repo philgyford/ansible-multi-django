@@ -15,6 +15,15 @@ And the password defined in `env_vars/base.yml`. The IP address is set in `Vagra
 `roles/common/` is stuff to do with setting up the basic server, before we
 get to webservers, databases, etc.
 
+Each "app" (eg, a website) should have its variables set in the `apps` list in `roles/apps/vars/main.yml`. eg:
+
+	apps:
+	  - repo: git@github.com:philgyford/twelescreen.git
+	    virtualenv: twelescreen
+	  - repo: git@github.com:philgyford/myphpapp.git
+
+If the app requires a python virtualenv, set its `virtualenv` name. Otherwise, leave that property out.
+
 
 ## TODO
 

@@ -8,33 +8,5 @@
     - python-pycurl
     - python-virtualenv
 
-- name: Install pip
-  pip: name=virtualenvwrapper state=latest
+- include: virtualenvwrapper.yml
 
-#- name: Update .bashrc for virtualenvs for {{ ubuntu_deploy_user_name }} user
-  #lineinfile:
-    #dest: /home/{{ ubuntu_deploy_user_name }}/.bashrc
-    #regexp: "{{ item.regexp }}"
-    #line: "{{ item.line }}"
-  #with_items:
-    #- regexp: '^export WORKON_HOME'
-      #line: 'export WORKON_HOME=$HOME/.virtualenvs'
-    #- regexp: '^export PROJECT_HOME'
-      #line: 'export PROJECT_HOME=/webapps'
-    #- regexp: '^export VIRTUALENVWRAPPER_PYTHON'
-      #line: 'export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python'
-    #- regexp: '^source /usr/local/bin/virtualenvwrapper.sh'
-      #line: 'source /usr/local/bin/virtualenvwrapper.sh'
-
-# http://stackoverflow.com/questions/22960944/running-mkvirtualenv-using-ansible
-#- name: Make a virtualenv
-  #shell: . /usr/share/virtualenvwrapper/virtualenvwrapper.sh && mkvirtualenv {{ venv }}
-  #args:
-    #executable: /bin/bash
-    #creates: "{{ venvabs }}"
-
-# http://stackoverflow.com/questions/20040141/ansible-command-from-inside-virtualenv
-
-#http://stackoverflow.com/questions/20575084/best-way-to-always-run-ansible-inside-a-virtualenv-on-remote-machines
-
-#https://github.com/openwebengineering/server-config/blob/master/ansible/mkvirtualenv.yml

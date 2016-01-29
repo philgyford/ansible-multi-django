@@ -1,0 +1,9 @@
+---
+
+apps:
+  - repo: bibble
+    virtualenv: pepysdiary
+  - repo: boo
+    virtualenv: gyford
+  - repo: myphpapp
+

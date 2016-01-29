@@ -21,3 +21,10 @@ ubuntu_update_apt_cache: yes
 
 ubuntu_use_firewall: true
 
+# Where the code will live, eg `/webapps` will have the `pepysdiary` app's
+# code at `/webapps/pepysdiary`:
+apps_path: '/webapps'
+
+virtualenvwrapper_shell_rc_file: '/home/{{ ubuntu_deploy_user_name }}/.bashrc'
+virtualenv_home_path: '/home/{{ ubuntu_deploy_user_name }}/.virtualenvs'
+
