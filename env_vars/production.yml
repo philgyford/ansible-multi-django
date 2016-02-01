@@ -2,5 +2,3 @@
 
 ubuntu_ssh_port: 1025
 
-ubuntu_use_firewall: yes
-

@@ -1,0 +1,28 @@
+---
+
+# From http://ryaneschinger.com/blog/securing-a-server-with-ansible/
+
+- name: Allow SSH from one port
+  ufw: rule=allow port={{ ubuntu_ssh_port }} proto=tcp
+
+- name: Change ssh port
+  lineinfile: dest=/etc/ssh/sshd_config
+              regexp="^Port\s"
+              line="Port {{ ubuntu_ssh_port }}"
+              state=present
+  notify: Restart ssh
+
+- name: Disallow password authentication
+  lineinfile: dest=/etc/ssh/sshd_config
+              regexp="^PasswordAuthentication"
+              line="PasswordAuthentication no"
+              state=present
+  notify: Restart ssh
+
+- name: Disallow root SSH access
+  lineinfile: dest=/etc/ssh/sshd_config
+              regexp="^PermitRootLogin"
+              line="PermitRootLogin no"
+              state=present
+  notify: Restart ssh
+

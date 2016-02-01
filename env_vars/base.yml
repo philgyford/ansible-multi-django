@@ -1,17 +1,14 @@
 ---
 
-
 # Make crypted passwords:
 #
 # pip install passlib
 # python -c "from passlib.hash import sha512_crypt; import getpass; print sha512_crypt.encrypt(getpass.getpass())"
 
-# test
-ubuntu_root_password: '$6$rounds=656000$fuNSrg7T/SmuclL/$PfVldMqIaqGia7aOu7z2PJO4MuErvUFoF/DrQOy/tt34s2NVbo9sgVN/.VMKNQKnVQqrT9q1P2pNP8RVAheka.'
+ubuntu_deploy_password: '$6$rounds=656000$onqTkZCRMWVbL2Wc$deRbKjDVYeIDSVOCJd1pG1E0sj5iHOzlb6Owx0j4qHBuA9UDFQc7XzBWLL6HKxO7K2awKf3P5z9FSMlgMxooM1'
 
-# test2
-ubuntu_deploy_password: '$6$rounds=656000$vPJelH3ETgzDmT7X$mrXzf9TeGyOGgEbgFfVuTn5/t7i5X88cf2lpo3SLjfB/8fTqXLi6DNXLrhnitOcUcCEtWirHyTN.BZ5.hbwvP1'
-ubuntu_deploy_user_name: deploy
+ubuntu_deploy_user: deploy
+
 ubuntu_deploy_public_keys:
   - ~/.ssh/id_rsa.pub
 
@@ -19,12 +16,17 @@ ubuntu_ssh_port: 22
 
 ubuntu_update_apt_cache: yes
 
+# Deny access on all but a few ports:
 ubuntu_use_firewall: yes
+
+# Change the SSH port, disallow password authentication, disallow root login:
+ubuntu_restrict_ssh: yes
 
 # Where the code will live, eg `/webapps` will have the `pepysdiary` app's
 # code at `/webapps/pepysdiary`:
 apps_path: '/webapps'
 
-virtualenvwrapper_shell_rc_file: '/home/{{ ubuntu_deploy_user_name }}/.bashrc'
-virtualenv_home_path: '/home/{{ ubuntu_deploy_user_name }}/.virtualenvs'
+virtualenvwrapper_shell_rc_file: '/home/{{ ubuntu_deploy_user }}/.bashrc'
+virtualenv_home_path: '/home/{{ ubuntu_deploy_user }}/.virtualenvs'
+
 

@@ -10,13 +10,4 @@
     - 443 # SSL/TLS-enabled web traffic
     - 587 # SMTP
 
-- name: Allow SSH from one port
-  ufw: rule=allow port={{ ubuntu_ssh_port }} proto=tcp
-
-- name: Change ssh port
-  lineinfile: dest=/etc/ssh/sshd_config
-              regexp="^Port\s"
-              line="Port {{ ubuntu_ssh_port }}"
-              state=present
-  notify: Restart ssh
 

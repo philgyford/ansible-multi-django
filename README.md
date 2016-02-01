@@ -16,36 +16,59 @@ Or, possibly quicker:
 
 	$ ansible-playbook --private-key=.vagrant/machines/default/virtualbox/private_key --user=vagrant --connection=ssh --inventory-file=.vagrant/provisioners/ansible/inventory/vagrant_ansible_inventory -v vagrant.yml
 
-NOT WORKING: Once it's run you can ssh in to Vagrant using the `deploy` user:
+I did get an error at this point, and doing this fixed it:
+
+	$ ssh-keygen -R [127.0.0.1]:2222
+
+Once it's run you can ssh in to Vagrant using the `deploy` user (using the IP address set in `Vagrantfile` and `inventories/vagrant.ini`):
 
 	$ ssh deploy@192.168.33.15
 
-And the password defined in `env_vars/base.yml`. The IP address is set in `Vagrantfile` and `inventories/vagrant`.
+or as the standard `vagrant` user:
+
+	$ vagrant ssh
 
 
 ## DigitalOcean
 
 1. Have an SSH key set on your account: https://www.digitalocean.com/community/tutorials/how-to-use-ssh-keys-with-digitalocean-droplets
 
-2. Create a new Ubuntu 14.04 x64 droplet, clicking the checkbox for your SSH key (or add a new one).
+2. Create a new Ubuntu 14.04 x64 droplet, clicking the checkbox to add your SSH key (or add a new one).
 
-3. You should be able to do (using your new IP address of course):
+3. You should be able to do (in this and subsequent examples, change the IP address to yours of course):
 
-	$ ssh root@SERVER_IP_ADDRESS
-
-4. Put the droplet's IP address in `inventories/production`.
-
-5. Do:
-
-	$ ansible-playbook --inventory-file=inventories/production -v production.yml
-
+	$ ssh root@188.166.146.145
 
 If you get a warning about 'REMOTE HOST IDENTIFICATION HAS CHANGED!' after destroying and creating a new droplet, you can remove the warning with:
 
-	$ ssh-keygen -R SERVER_IP_ADDRESS
+	$ ssh-keygen -R 188.166.146.145
 
+4. Put the droplet's IP address in `inventories/production.ini`. eg:
 
+	[webservers]
+	188.166.146.145
 
+5. Run the playbook (note, this first time we specify the user as `root`):
+
+	$ ansible-playbook --i inventories/production.ini -u root production.yml
+
+6. It should be all done. If the variable `ubuntu_use_firewall` is true (set in `env_vars/*.yml`), then you'll only be able to SSH to the `ubuntu_ssh_port` as the `ubuntu_deploy_user` eg, if the user is `deploy` and `ubuntu_ssh_port` is `1025`:
+
+	$ ssh deploy@188.166.146.145 -p 1025
+
+These should fail (although the first will work if `ubuntu_ssh_port` is `22`, the default):
+
+	$ ssh deploy@188.166.146.145
+	$ ssh root@188.166.146.145 -p 1025
+
+7. If the SSH port has now changed (as in the previous step), you'll need to add it to `inventories/production.ini`. eg:
+
+	[webservers]
+	188.166.146.145:1025
+
+8. For subsequent runs, you'll need to set it to use the `ubuntu_deploy_user` and use `-s` to become sudo, and `-K` to be prompted for the sudo password (set in an `env_vars/*.yml` file):
+
+	$ ansible-playbook --i inventories/production.ini -u deploy -s -K production.yml
 
 
 ## Notes
@@ -64,8 +87,8 @@ If the app requires a python virtualenv, set its `virtualenv` name. Otherwise, l
 
 ## TODO
 
-* Get server so far running on DigitalOcean.
-* For DO, change/add `PermitRootLogin without-password` in `/etc/ssh/sshd_config` and restart sshd process.
+* DONE: Get server so far running on DigitalOcean.
+* DONE: For DO, change/add `PermitRootLogin without-password` in `/etc/ssh/sshd_config` and restart sshd process.
 * Install memcached-dev and memcached if needed
 * Clone apps' repos
 * Install apps' pip requirements

@@ -1,6 +1,7 @@
 ---
 
 ubuntu_use_firewall: no
+ubuntu_restrict_ssh: no
 
 
 # Gunicorn settings.
