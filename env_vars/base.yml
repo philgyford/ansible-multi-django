@@ -13,7 +13,7 @@ ubuntu_root_password: '$6$rounds=656000$fuNSrg7T/SmuclL/$PfVldMqIaqGia7aOu7z2PJO
 ubuntu_deploy_password: '$6$rounds=656000$vPJelH3ETgzDmT7X$mrXzf9TeGyOGgEbgFfVuTn5/t7i5X88cf2lpo3SLjfB/8fTqXLi6DNXLrhnitOcUcCEtWirHyTN.BZ5.hbwvP1'
 ubuntu_deploy_user_name: deploy
 ubuntu_deploy_public_keys:
-  - ~/.ssh/digitalocean_pepys_rsa.pub
+  - ~/.ssh/id_rsa.pub
 
 ubuntu_ssh_port: 22
 

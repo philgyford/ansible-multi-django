@@ -23,6 +23,31 @@ NOT WORKING: Once it's run you can ssh in to Vagrant using the `deploy` user:
 And the password defined in `env_vars/base.yml`. The IP address is set in `Vagrantfile` and `inventories/vagrant`.
 
 
+## DigitalOcean
+
+1. Have an SSH key set on your account: https://www.digitalocean.com/community/tutorials/how-to-use-ssh-keys-with-digitalocean-droplets
+
+2. Create a new Ubuntu 14.04 x64 droplet, clicking the checkbox for your SSH key (or add a new one).
+
+3. You should be able to do (using your new IP address of course):
+
+	$ ssh root@SERVER_IP_ADDRESS
+
+4. Put the droplet's IP address in `inventories/production`.
+
+5. Do:
+
+	$ ansible-playbook --inventory-file=inventories/production -v production.yml
+
+
+If you get a warning about 'REMOTE HOST IDENTIFICATION HAS CHANGED!' after destroying and creating a new droplet, you can remove the warning with:
+
+	$ ssh-keygen -R SERVER_IP_ADDRESS
+
+
+
+
+
 ## Notes
 
 `roles/common/` is stuff to do with setting up the basic server, before we
@@ -40,6 +65,7 @@ If the app requires a python virtualenv, set its `virtualenv` name. Otherwise, l
 ## TODO
 
 * Get server so far running on DigitalOcean.
+* For DO, change/add `PermitRootLogin without-password` in `/etc/ssh/sshd_config` and restart sshd process.
 * Install memcached-dev and memcached if needed
 * Clone apps' repos
 * Install apps' pip requirements
