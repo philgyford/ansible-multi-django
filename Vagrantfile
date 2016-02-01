@@ -22,7 +22,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.provision "ansible" do |ansible|
     ansible.host_key_checking = false
     ansible.inventory_path = "inventories/vagrant"
-    ansible.limit = "vagrant" # Matches the [vagrant] in inventories/vagrant
+    ansible.limit = "webservers"
     ansible.playbook = "vagrant.yml"
     ansible.verbose = "v"
   end
