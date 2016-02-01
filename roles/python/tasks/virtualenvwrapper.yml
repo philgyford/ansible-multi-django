@@ -9,7 +9,7 @@
   lineinfile:
     dest: '{{ virtualenvwrapper_shell_rc_file }}'
     regexp: '^export WORKON_HOME'
-    line: 'export WORKON_HOME={{ virtualenvs_path }}'
+    line: 'export WORKON_HOME={{ virtualenv_home_path }}'
     state: present
     backup: yes
     create: yes

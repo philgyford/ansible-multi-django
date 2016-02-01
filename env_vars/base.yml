@@ -19,7 +19,7 @@ ubuntu_ssh_port: 22
 
 ubuntu_update_apt_cache: yes
 
-ubuntu_use_firewall: true
+ubuntu_use_firewall: yes
 
 # Where the code will live, eg `/webapps` will have the `pepysdiary` app's
 # code at `/webapps/pepysdiary`:

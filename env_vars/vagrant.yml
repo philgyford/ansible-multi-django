@@ -1,6 +1,7 @@
 ---
 
-ubuntu_use_firewall: false
+ubuntu_use_firewall: no
+
 
 # Gunicorn settings.
 

@@ -5,7 +5,7 @@
 - include: install_packages.yml
 
 - include: set_up_firewall.yml
-  when: ubuntu_use_firewall == true
+  when: ubuntu_use_firewall == 'yes'
 
 - include: set_timezone.yml
 

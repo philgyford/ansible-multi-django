@@ -7,6 +7,7 @@ VAGRANTFILE_API_VERSION = "2"
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box = "ubuntu/trusty64"
 
+  # IP address is the same as in inventories/vagrant
   config.vm.network :private_network, ip: "192.168.33.15"
 
   config.vm.provider :virtualbox do |vb|
@@ -19,9 +20,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   # Ansible provisioner.
   config.vm.provision "ansible" do |ansible|
-	ansible.playbook = "vagrant.yml"
-	ansible.host_key_checking = false
-	ansible.verbose = "v"
+    ansible.host_key_checking = false
+    ansible.inventory_path = "inventories/vagrant"
+    ansible.limit = "vagrant" # Matches the [vagrant] in inventories/vagrant
+    ansible.playbook = "vagrant.yml"
+    ansible.verbose = "v"
   end
 end
 
