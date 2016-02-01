@@ -1,3 +1,4 @@
+
 [vagrant]
 # Same IP as in Vagrantfile
 192.168.33.15

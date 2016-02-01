@@ -2,13 +2,26 @@
 
 Very in progress.
 
+## Vagrant
+
+To set up the Vagrant box:
+
+	$ vagrant up
+
+To subsequently run ansible over the box again:
+
 	$ vagrant provision
 
-Once it's run you can ssh in to Vagrant using the `deploy` user:
+Or, possibly quicker:
+
+	$ ansible-playbook --private-key=.vagrant/machines/default/virtualbox/private_key --user=vagrant --connection=ssh --inventory-file=.vagrant/provisioners/ansible/inventory/vagrant_ansible_inventory -v vagrant.yml
+
+NOT WORKING: Once it's run you can ssh in to Vagrant using the `deploy` user:
 
 	$ ssh deploy@192.168.33.15
 
-And the password defined in `env_vars/base.yml`. The IP address is set in `Vagrantfile`.
+And the password defined in `env_vars/base.yml`. The IP address is set in `Vagrantfile` and `inventories/vagrant`.
+
 
 ## Notes
 
