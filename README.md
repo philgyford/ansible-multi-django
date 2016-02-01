@@ -39,13 +39,14 @@ If the app requires a python virtualenv, set its `virtualenv` name. Otherwise, l
 
 ## TODO
 
+* Get server so far running on DigitalOcean.
 * Install memcached-dev and memcached if needed
 * Clone apps' repos
 * Install apps' pip requirements
 * Create apps' databases
 * How to set apps' environment variables?
 * Copy databse with scp?
-* Restore databse?
+* Restore database?
 * If django: Transfer media files from local machine?
 * If django: Collect static files.
 * Nginx and gunicorn
