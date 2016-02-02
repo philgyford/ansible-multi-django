@@ -87,9 +87,6 @@ If the app requires a python virtualenv, set its `virtualenv` name. Otherwise, l
 
 ## TODO
 
-* DONE: Get server so far running on DigitalOcean.
-* DONE: For DO, change/add `PermitRootLogin without-password` in `/etc/ssh/sshd_config` and restart sshd process.
-* Install memcached-dev and memcached if needed
 * Clone apps' repos
 * Install apps' pip requirements
 * Create apps' databases
@@ -99,6 +96,7 @@ If the app requires a python virtualenv, set its `virtualenv` name. Otherwise, l
 * If django: Transfer media files from local machine?
 * If django: Collect static files.
 * Nginx and gunicorn
+* Install memcached-dev and memcached if needed
 * Git ssh stuff for updates
 * Set up postgres backups to s3?
 
