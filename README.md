@@ -37,38 +37,54 @@ or as the standard `vagrant` user:
 
 3. You should be able to do (in this and subsequent examples, change the IP address to yours of course):
 
+	```
 	$ ssh root@188.166.146.145
+	```
 
-If you get a warning about 'REMOTE HOST IDENTIFICATION HAS CHANGED!' after destroying and creating a new droplet, you can remove the warning with:
+	If you get a warning about 'REMOTE HOST IDENTIFICATION HAS CHANGED!' after destroying and creating a new droplet, you can remove the warning with:
 
+	```
 	$ ssh-keygen -R 188.166.146.145
+	```
 
 4. Put the droplet's IP address in `inventories/production.ini`. eg:
 
+	```
 	[webservers]
 	188.166.146.145
+	```
 
 5. Run the playbook (note, this first time we specify the user as `root`):
 
+	```
 	$ ansible-playbook --i inventories/production.ini -u root production.yml
+	```
 
 6. It should be all done. If the variable `ubuntu_use_firewall` is true (set in `env_vars/*.yml`), then you'll only be able to SSH to the `ubuntu_ssh_port` as the `ubuntu_deploy_user` eg, if the user is `deploy` and `ubuntu_ssh_port` is `1025`:
 
+	```
 	$ ssh deploy@188.166.146.145 -p 1025
+	```
 
-These should fail (although the first will work if `ubuntu_ssh_port` is `22`, the default):
+	These should fail (although the first will work if `ubuntu_ssh_port` is `22`, the default):
 
+	```
 	$ ssh deploy@188.166.146.145
 	$ ssh root@188.166.146.145 -p 1025
+	```
 
 7. If the SSH port has now changed (as in the previous step), you'll need to add it to `inventories/production.ini`. eg:
 
+	```
 	[webservers]
 	188.166.146.145:1025
+	```
 
 8. For subsequent runs, you'll need to set it to use the `ubuntu_deploy_user` and use `-s` to become sudo, and `-K` to be prompted for the sudo password (set in an `env_vars/*.yml` file):
 
+	```
 	$ ansible-playbook --i inventories/production.ini -u deploy -s -K production.yml
+	```
 
 
 ## Notes
