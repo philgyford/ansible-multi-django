@@ -2,11 +2,12 @@
 
 - name: Set up git repos for apps
   with_items: apps
-  when: item.git_repo is defined
+  when: item.app_directory is defined and
+        item.git_repo is defined
   git: >
     repo={{ item.git_repo }}
     version="{{ item.git_repo_branch | default('master') }}"
-    dest="{{ apps_path }}/{{ item.git_directory }}"
+    dest="{{ apps_path }}/{{ item.app_directory }}"
     accept_hostkey=yes
 
 - name: Delete all .pyc files

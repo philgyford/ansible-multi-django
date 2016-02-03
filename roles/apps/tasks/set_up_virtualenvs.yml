@@ -5,5 +5,5 @@
   when: item.virtualenv is defined
   command: virtualenv {{ virtualenv_home_path }}/{{ item.virtualenv }} --no-site-packages
   args:
-    creates: "{{ virtualenv_home_path }}/{{ item.virtualenv }}"
+    creates: "{{ virtualenv_home_path }}/{{ item.virtualenv }}/bin/activate"
 

@@ -3,8 +3,10 @@
 # Note: Only https git repos will work. Don't use git@...
 
 apps:
-  - git_repo: 'https://github.com/philgyford/samuelpepys-twitter.git'
-    git_directory: 'samuelpepys-twitter'
+  - app_directory: 'samuelpepys-twitter'
+    git_repo: 'https://github.com/philgyford/samuelpepys-twitter.git'
+    git_repo_branch: 'master'
+    pip_requirements_file: 'requirements.txt'
     virtualenv: 'samuelpepys-twitter'
   - virtualenv: gyford
   - repo: myphpapp

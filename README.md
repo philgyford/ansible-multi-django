@@ -103,7 +103,6 @@ If the app requires a python virtualenv, set its `virtualenv` name. Otherwise, l
 
 ## TODO
 
-* Install apps' pip requirements
 * Create apps' databases
 * How to set apps' environment variables?
 * Copy databse with scp?
