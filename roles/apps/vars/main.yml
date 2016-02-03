@@ -1,9 +1,11 @@
 ---
 
+# Note: Only https git repos will work. Don't use git@...
+
 apps:
-  - repo: bibble
-    virtualenv: pepysdiary
-  - repo: boo
-    virtualenv: gyford
+  - git_repo: 'https://github.com/philgyford/samuelpepys-twitter.git'
+    git_directory: 'samuelpepys-twitter'
+    virtualenv: 'samuelpepys-twitter'
+  - virtualenv: gyford
   - repo: myphpapp
 

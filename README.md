@@ -103,7 +103,6 @@ If the app requires a python virtualenv, set its `virtualenv` name. Otherwise, l
 
 ## TODO
 
-* Clone apps' repos
 * Install apps' pip requirements
 * Create apps' databases
 * How to set apps' environment variables?
@@ -115,13 +114,14 @@ If the app requires a python virtualenv, set its `virtualenv` name. Otherwise, l
 * Install memcached-dev and memcached if needed
 * Git ssh stuff for updates
 * Set up postgres backups to s3?
+* Vaulted secrets, using tip in https://www.reinteractive.net/posts/167-ansible-real-life-good-practices
 
 
 ## TODO LATER
 
-* Change test passwords in `env_vars/base.yml`.
+* Add tags to all tasks. What tags?
 
-* Fix the warning/failture if trying to do `$ ssh deploy@192.168.33.15` with Vagrant.
+* Make Vagrant more similar to live. Maybe http://hakunin.com/six-ansible-practices ?
 
 * Improve firewall stuff for Vagrant. At the moment it's just 'off'. Would be good to have it more similar to live, but I got confused over configuring SSH.
 

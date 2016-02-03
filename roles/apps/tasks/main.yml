@@ -1,9 +1,6 @@
 ---
 
-- name: Create virtualenvs for apps
-  with_items: apps
-  when: item.virtualenv is defined
-  command: virtualenv {{ virtualenv_home_path }}/{{ item.virtualenv }} --no-site-packages
-  args:
-    creates: "{{ virtualenv_home_path }}/{{ item.virtualenv }}"
+- include: set_up_virtualenvs.yml
+
+- include: set_up_git_repo.yml
 
