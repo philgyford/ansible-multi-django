@@ -2,6 +2,24 @@
 
 Very in progress.
 
+Designed to host multiple websites, from different git repositories, on a single webserver. Can be used with a Vagrant virtual machine and a DigitalOcean droplet (not tested with anything else).
+
+
+## Apps
+
+You'll need to alter `roles/apps/vars/main.yml` to reflect the websites (called "apps" here you want to install). Each item in the list has one or more of these elements:
+
+* `app_directory`: Where its git repo, if any, will be checked out to. A single directory name that will be put within `apps_path` (defined in an `env_vars/*.yml` file).
+
+* `git_repo`: The `https://github.com...` path to the git repository. It won't work with a `git@github.com...` path. Requires that `app_directory` is set, or else nothing will be checked out.
+
+* `git_repo_branch`: The name of the branch to check out. If omitted, defaults to `master`.
+
+* `pip_requirements_file`: If the app has a pip requirements file, set the path to it within the repo here. eg, `requirements.txt`. Otherwise, omit this. If set, and `app_directory` and `virtualenv` are also set, the python packages will be installed.
+
+* `virtualenv`: If this is a python app, specify a unique name for its virtualenv.
+
+
 ## Vagrant
 
 To set up the Vagrant box:

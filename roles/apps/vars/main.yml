@@ -9,5 +9,5 @@ apps:
     pip_requirements_file: 'requirements.txt'
     virtualenv: 'samuelpepys-twitter'
   - virtualenv: gyford
-  - repo: myphpapp
+  - app_directory: myphpapp
 
