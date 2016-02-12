@@ -3,9 +3,8 @@
 - name: Install packages required by python apps in virtualenvs
   with_items: apps
   when: item.pip_requirements_file is defined and
-        item.app_directory is defined and
-        item.virtualenv is defined
+        item.virtualenv_name is defined
   pip: >
-    virtualenv={{ virtualenv_home_path }}/{{ item.virtualenv }}
+    virtualenv={{ virtualenv_home_path }}/{{ item.virtualenv_name }}
     requirements="{{ apps_path }}/{{ item.app_directory }}/{{ item.pip_requirements_file }}"
 

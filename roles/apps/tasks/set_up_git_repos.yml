@@ -2,8 +2,7 @@
 
 - name: Set up git repos for apps
   with_items: apps
-  when: item.app_directory is defined and
-        item.git_repo is defined
+  when: item.git_repo is defined
   git: >
     repo={{ item.git_repo }}
     version="{{ item.git_repo_branch | default('master') }}"
@@ -14,4 +13,3 @@
   command: find . -name '*.pyc' -delete
   args:
     chdir: "{{ apps_path }}"
-

@@ -7,7 +7,13 @@ apps:
     git_repo: 'https://github.com/philgyford/samuelpepys-twitter.git'
     git_repo_branch: 'master'
     pip_requirements_file: 'requirements.txt'
-    virtualenv: 'samuelpepys-twitter'
-  - virtualenv: gyford
-  - app_directory: myphpapp
+    virtualenv_name: 'samuelpepys-twitter'
 
+  - app_directory: 'pepysdiary'
+    django_settings_file: 'pepysdiary/settings/live.py'
+    git_repo: 'https://github.com/philgyford/pepysdiary.git'
+    git_repo_branch: 'master'
+    pip_requirements_file: 'requirements.txt'
+    virtualenv_name: 'pepysdiary'
+
+  - app_directory: myphpapp

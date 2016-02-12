@@ -2,8 +2,8 @@
 
 - name: Create virtualenvs for apps
   with_items: apps
-  when: item.virtualenv is defined
-  command: virtualenv {{ virtualenv_home_path }}/{{ item.virtualenv }} --no-site-packages
+  when: item.virtualenv_name is defined
+  command: virtualenv {{ virtualenv_home_path }}/{{ item.virtualenv_name }} --no-site-packages
   args:
-    creates: "{{ virtualenv_home_path }}/{{ item.virtualenv }}/bin/activate"
+    creates: "{{ virtualenv_home_path }}/{{ item.virtualenv_name }}/bin/activate"
 

@@ -9,15 +9,17 @@ Designed to host multiple websites, from different git repositories, on a single
 
 You'll need to alter `roles/apps/vars/main.yml` to reflect the websites (called "apps" here you want to install). Each item in the list has one or more of these elements:
 
-* `app_directory`: Where its git repo, if any, will be checked out to. A single directory name that will be put within `apps_path` (defined in an `env_vars/*.yml` file).
+* `app_directory`: Required. Where its git repo will be checked out to. A single directory name that will be put within `apps_path` (defined in an `env_vars/*.yml` file).
 
-* `git_repo`: The `https://github.com...` path to the git repository. It won't work with a `git@github.com...` path. Requires that `app_directory` is set, or else nothing will be checked out.
+* `django_settings_file`: Optional. If this is a Django site, this is the path to the settings file to use within the repo. eg `myapp/settings/production.py`. If this and `virtualenv_name` are defined then the Django `syncdb`, `migrate` and `collectstatic` management commands will be run.
 
-* `git_repo_branch`: The name of the branch to check out. If omitted, defaults to `master`.
+* `git_repo`: Optional. The `https://github.com...` path to the git repository. It won't work with a `git@github.com...` path. Although optional, not much will happen without this.
 
-* `pip_requirements_file`: If the app has a pip requirements file, set the path to it within the repo here. eg, `requirements.txt`. Otherwise, omit this. If set, and `app_directory` and `virtualenv` are also set, the python packages will be installed.
+* `git_repo_branch`: Optional. The name of the branch to check out. If omitted, defaults to `master`.
 
-* `virtualenv`: If this is a python app, specify a unique name for its virtualenv.
+* `pip_requirements_file`: Optional. If the app has a pip requirements file, set the path to it within the repo here. eg, `requirements.txt`. Otherwise, omit this. If set, and `app_directory` and `virtualenv` are also set, the python packages will be installed.
+
+* `virtualenv_name`: Optional. If this is a python app, specify a unique name for its virtualenv.
 
 
 ## Vagrant
@@ -121,8 +123,9 @@ If the app requires a python virtualenv, set its `virtualenv` name. Otherwise, l
 
 ## TODO
 
+* Add tags
+* Set apps' environment variables?
 * Create apps' databases
-* How to set apps' environment variables?
 * Copy databse with scp?
 * Restore database?
 * If django: Transfer media files from local machine?
@@ -136,10 +139,8 @@ If the app requires a python virtualenv, set its `virtualenv` name. Otherwise, l
 
 ## TODO LATER
 
-* Add tags to all tasks. What tags?
-
 * Make Vagrant more similar to live. Maybe http://hakunin.com/six-ansible-practices ?
 
 * Improve firewall stuff for Vagrant. At the moment it's just 'off'. Would be good to have it more similar to live, but I got confused over configuring SSH.
 
-
+* Rename pepysdiary `live.py` settings file?
