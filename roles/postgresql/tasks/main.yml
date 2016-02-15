@@ -6,4 +6,6 @@
     - libpq-dev
     - postgresql
     - postgresql-contrib
-
+  tags:
+    - box
+    - packages

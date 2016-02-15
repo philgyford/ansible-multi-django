@@ -6,4 +6,5 @@
   command: virtualenv {{ virtualenv_home_path }}/{{ item.virtualenv_name }} --no-site-packages
   args:
     creates: "{{ virtualenv_home_path }}/{{ item.virtualenv_name }}/bin/activate"
-
+  tags:
+    - virtualenvs

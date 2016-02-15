@@ -123,7 +123,7 @@ If the app requires a python virtualenv, set its `virtualenv` name. Otherwise, l
 
 ## TODO
 
-* Add tags
+* Change from virtualenvwrapper to pyenv.
 * Set apps' environment variables?
 * Create apps' databases
 * Copy databse with scp?

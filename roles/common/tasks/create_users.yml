@@ -4,15 +4,26 @@
 
 - name: Add deploy user
   user: name={{ ubuntu_deploy_user }} password="{{ ubuntu_deploy_password }}" shell=/bin/bash
+  tags:
+    - box
+    - users
+    - users.deploy.create
 
 - name: Add authorized keys for deploy user
   authorized_key: user={{ ubuntu_deploy_user }}
                   key="{{ lookup('file', item) }}"
   with_items: ubuntu_deploy_public_keys
+  tags:
+    - box
+    - users
+    - users.deploy.keys
 
 - name: Add deploy user to sudoers
   lineinfile: dest=/etc/sudoers
               regexp="{{ ubuntu_deploy_user }} ALL"
               line="{{ ubuntu_deploy_user }} ALL=(ALL) ALL"
               state=present
-
+  tags:
+    - box
+    - users
+    - users.deploy.sudoers

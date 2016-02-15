@@ -7,4 +7,5 @@
   pip: >
     virtualenv={{ virtualenv_home_path }}/{{ item.virtualenv_name }}
     requirements="{{ apps_path }}/{{ item.app_directory }}/{{ item.pip_requirements_file }}"
-
+  tags:
+    - requirements

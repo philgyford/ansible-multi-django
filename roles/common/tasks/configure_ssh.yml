@@ -4,6 +4,9 @@
 
 - name: Allow SSH from one port
   ufw: rule=allow port={{ ubuntu_ssh_port }} proto=tcp
+  tags:
+    - box
+    - ssh
 
 - name: Change ssh port
   lineinfile: dest=/etc/ssh/sshd_config
@@ -11,6 +14,9 @@
               line="Port {{ ubuntu_ssh_port }}"
               state=present
   notify: Restart ssh
+  tags:
+    - box
+    - ssh
 
 - name: Disallow password authentication
   lineinfile: dest=/etc/ssh/sshd_config
@@ -18,6 +24,9 @@
               line="PasswordAuthentication no"
               state=present
   notify: Restart ssh
+  tags:
+    - box
+    - ssh
 
 - name: Disallow root SSH access
   lineinfile: dest=/etc/ssh/sshd_config
@@ -25,4 +34,6 @@
               line="PermitRootLogin no"
               state=present
   notify: Restart ssh
-
+  tags:
+    - box
+    - ssh
