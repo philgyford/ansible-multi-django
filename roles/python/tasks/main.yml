@@ -7,6 +7,9 @@
     - python-pip
     - python-pycurl
     - python-virtualenv
+  tags:
+    - box
+    - packages
+    - python
 
-- include: virtualenvwrapper.yml
-
+- include: pyenv.yml

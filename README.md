@@ -55,7 +55,7 @@ or as the standard `vagrant` user:
 
 2. Create a new Ubuntu 14.04 x64 droplet, clicking the checkbox to add your SSH key (or add a new one).
 
-3. You should be able to do (in this and subsequent examples, change the IP address to yours of course):
+3. You should be able to do (in this and subsequent examples, change the IP address to your droplet's of course):
 
 	```
 	$ ssh root@188.166.146.145

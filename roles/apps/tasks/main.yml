@@ -1,9 +1,9 @@
 ---
 
-- include: set_up_virtualenvs.yml
-
-- include: set_up_git_repos.yml
-
-- include: install_python_packages.yml
+# - include: set_up_virtualenvs.yml
+#
+# - include: set_up_git_repos.yml
+#
+# - include: install_python_packages.yml
 
 #- include: set_up_django.yml

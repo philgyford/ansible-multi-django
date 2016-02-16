@@ -8,6 +8,7 @@
 ubuntu_deploy_password: '$6$rounds=656000$onqTkZCRMWVbL2Wc$deRbKjDVYeIDSVOCJd1pG1E0sj5iHOzlb6Owx0j4qHBuA9UDFQc7XzBWLL6HKxO7K2awKf3P5z9FSMlgMxooM1'
 
 ubuntu_deploy_user: deploy
+ubuntu_deploy_group: deploy
 
 ubuntu_deploy_public_keys:
   - ~/.ssh/id_rsa.pub
@@ -26,7 +27,14 @@ ubuntu_restrict_ssh: yes
 # code at `/webapps/pepysdiary`:
 apps_path: '/webapps'
 
-virtualenvwrapper_shell_rc_file: '/home/{{ ubuntu_deploy_user }}/.bashrc'
-virtualenv_home_path: '/home/{{ ubuntu_deploy_user }}/.virtualenvs'
+# Deploy user's home directory:
+deploy_user_home: '/home/{{ ubuntu_deploy_user }}'
 
+# The .bashrc file that we'll use to update PATH etc:
+deploy_user_rc_file: '{{ deploy_user_home }}/.bashrc'
 
+# Where pyenv will be installed:
+pyenv_root: '{{ deploy_user_home }}/.pyenv'
+
+# Base version of python to be installed with pyenv:
+default_python_version: '3.5.1'

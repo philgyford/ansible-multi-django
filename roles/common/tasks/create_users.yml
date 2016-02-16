@@ -3,7 +3,7 @@
 # Mostly via http://ryaneschinger.com/blog/securing-a-server-with-ansible/
 
 - name: Add deploy user
-  user: name={{ ubuntu_deploy_user }} password="{{ ubuntu_deploy_password }}" shell=/bin/bash
+  user: name={{ ubuntu_deploy_user }} password="{{ ubuntu_deploy_password }}" shell=/bin/bash state=present
   tags:
     - box
     - users
@@ -17,6 +17,20 @@
     - box
     - users
     - users.deploy.keys
+
+- name: Create deploy group
+  group: name={{ ubuntu_deploy_group }} system=yes state=present
+  tags:
+    - box
+    - users
+    - users.deploy.group
+
+- name: Add deploy user to deploy group
+  user: name={{ ubuntu_deploy_user }} group={{ ubuntu_deploy_group }} state=present
+  tags:
+    - box
+    - users
+    - users.deploy.group
 
 - name: Add deploy user to sudoers
   lineinfile: dest=/etc/sudoers
