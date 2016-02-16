@@ -14,6 +14,7 @@
     - curl
     - llvm
   tags:
+    - box
     - packages
     - pyenv
 
@@ -22,6 +23,7 @@
     repo: https://github.com/yyuu/pyenv.git
     dest: "{{ pyenv_root }}"
   tags:
+    - box
     - packages
     - pyenv
 
@@ -30,6 +32,7 @@
     repo: https://github.com/yyuu/pyenv-virtualenv.git
     dest: "{{ pyenv_root }}/plugins/pyenv-virtualenv"
   tags:
+    - box
     - packages
     - pyenv
 
@@ -46,6 +49,7 @@
     - 'eval "$(pyenv init -)"'
     - 'eval "$(pyenv virtualenv-init -)"'
   tags:
+    - box
     - packages
     - pyenv
 
@@ -56,6 +60,7 @@
         group={{ ubuntu_deploy_group }}
         state=directory
   tags:
+    - box
     - pyenv
 
 - name: Install a default python version
@@ -64,6 +69,7 @@
   shell: . {{ deploy_user_rc_file }} && {{ pyenv_root }}/libexec/pyenv install {{ default_python_version }}
     creates="{{ pyenv_root }}/versions/{{ default_python_version }}"
   tags:
+    - box
     - pyenv
 
 - name: Set default python version
@@ -71,4 +77,5 @@
     content: '{{ default_python_version }}'
     dest: '{{ pyenv_root }}/version'
   tags:
+    - box
     - pyenv
