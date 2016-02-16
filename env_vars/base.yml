@@ -37,4 +37,5 @@ deploy_user_rc_file: '{{ deploy_user_home }}/.bashrc'
 pyenv_root: '{{ deploy_user_home }}/.pyenv'
 
 # Base version of python to be installed with pyenv:
+# (Not entirely sure we need to do this, or should bother.)
 default_python_version: '3.5.1'
