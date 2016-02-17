@@ -1,5 +1,6 @@
 ---
 
+# As deploy user, because .pyenv is in its home directory.
 - name: Install python versions for apps
   become: yes
   become_user: '{{ ubuntu_deploy_user }}'
@@ -11,6 +12,7 @@
   tags:
     - virtualenvs
 
+# As deploy user, because .pyenv is in its home directory.
 - name: Create virtualenvs for apps
   become: yes
   become_user: '{{ ubuntu_deploy_user }}'
@@ -19,5 +21,15 @@
   shell: . {{ deploy_user_rc_file }} && {{ pyenv_path }}/libexec/pyenv virtualenv {{ item.python_version }} {{ item.name }}
   args:
     creates: "{{ pyenv_path }}/versions/{{ item.name }}/bin/activate"
+  tags:
+    - virtualenvs
+
+# Set the virtualenv name in each repo's .python-version file.
+- name: Create .python-version files for virtualenvs
+  with_items: apps
+  when: item.python_version is defined
+  copy:
+    dest: "{{ apps_path }}/{{ item.name }}/.python-version"
+    content: "{{ item.name }}"
   tags:
     - virtualenvs
