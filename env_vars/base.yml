@@ -23,12 +23,11 @@ ubuntu_use_firewall: yes
 # Change the SSH port, disallow password authentication, disallow root login:
 ubuntu_restrict_ssh: yes
 
-# Where the code will live, eg `/webapps` will have the `pepysdiary` app's
-# code at `/webapps/pepysdiary`:
-apps_path: '/webapps'
-
 # Deploy user's home directory:
 deploy_user_home: '/home/{{ ubuntu_deploy_user }}'
+
+# Where the code will live, eg `/home/deploy/webapps` will have the `pepysdiary` app's code at `/home/deploy/webapps/pepysdiary`:
+apps_path: '{{ deploy_user_home }}/webapps'
 
 # The .bashrc file that we'll use to update PATH etc:
 deploy_user_rc_file: '{{ deploy_user_home }}/.bashrc'

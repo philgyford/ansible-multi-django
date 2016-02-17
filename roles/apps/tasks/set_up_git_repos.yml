@@ -1,8 +1,10 @@
 ---
 
 - name: Set up git repos for apps
-  with_items: apps
+  become: yes
+  become_user: '{{ ubuntu_deploy_user }}'
   when: item.git_repo is defined
+  with_items: apps
   git:
     repo: '{{ item.git_repo }}'
     version: "{{ item.git_repo_branch | default('master') }}"
@@ -13,6 +15,8 @@
     - deploy
 
 - name: Delete all .pyc files
+  become: yes
+  become_user: '{{ ubuntu_deploy_user }}'
   command: find . -name '*.pyc' -delete
   args:
     chdir: "{{ apps_path }}"
