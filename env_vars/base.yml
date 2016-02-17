@@ -34,7 +34,7 @@ deploy_user_home: '/home/{{ ubuntu_deploy_user }}'
 deploy_user_rc_file: '{{ deploy_user_home }}/.bashrc'
 
 # Where pyenv will be installed:
-pyenv_root: '{{ deploy_user_home }}/.pyenv'
+pyenv_path: '{{ deploy_user_home }}/.pyenv'
 
 # Base version of python to be installed with pyenv:
 # (Not entirely sure we need to do this, or should bother.)

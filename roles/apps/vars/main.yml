@@ -3,17 +3,17 @@
 # Note: Only https git repos will work. Don't use git@...
 
 apps:
-  - app_directory: 'samuelpepys-twitter'
+  - name: 'samuelpepys-twitter'
     git_repo: 'https://github.com/philgyford/samuelpepys-twitter.git'
     git_repo_branch: 'master'
     pip_requirements_file: 'requirements.txt'
-    virtualenv_name: 'samuelpepys-twitter'
+    python_version: 2.7.11
 
-  - app_directory: 'pepysdiary'
+  - name: 'pepysdiary'
     django_settings_file: 'pepysdiary/settings/live.py'
     git_repo: 'https://github.com/philgyford/pepysdiary.git'
     git_repo_branch: 'master'
     pip_requirements_file: 'requirements.txt'
-    virtualenv_name: 'pepysdiary'
+    python_version: 2.7.11
 
-  - app_directory: myphpapp
+  - name: myphpapp

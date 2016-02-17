@@ -9,7 +9,7 @@ Designed to host multiple websites, from different git repositories, on a single
 
 You'll need to alter `roles/apps/vars/main.yml` to reflect the websites (called "apps" here you want to install). Each item in the list has one or more of these elements:
 
-* `app_directory`: Required. Where its git repo will be checked out to. A single directory name that will be put within `apps_path` (defined in an `env_vars/*.yml` file).
+* `name`: Required. No spaces. Will be used as a directory name for where its git repo will be checked out to. A single directory name that will be put within `apps_path` (defined in an `env_vars/*.yml` file). Also used for a virtualenv name, if required.
 
 * `django_settings_file`: Optional. If this is a Django site, this is the path to the settings file to use within the repo. eg `myapp/settings/production.py`. If this and `virtualenv_name` are defined then the Django `syncdb`, `migrate` and `collectstatic` management commands will be run.
 
@@ -19,7 +19,7 @@ You'll need to alter `roles/apps/vars/main.yml` to reflect the websites (called 
 
 * `pip_requirements_file`: Optional. If the app has a pip requirements file, set the path to it within the repo here. eg, `requirements.txt`. Otherwise, omit this. If set, and `app_directory` and `virtualenv` are also set, the python packages will be installed.
 
-* `virtualenv_name`: Optional. If this is a python app, specify a unique name for its virtualenv.
+* `python_version`: Optional. e.g. `3.5.1`. If set, will be used to create a python virtualenv for this app using pyenv.
 
 
 ## Vagrant
@@ -123,7 +123,7 @@ If the app requires a python virtualenv, set its `virtualenv` name. Otherwise, l
 
 ## TODO
 
-* Change from virtualenvwrapper to pyenv.
+* Install pip requirements.
 * Set apps' environment variables?
 * Create apps' databases
 * Copy databse with scp?

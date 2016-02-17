@@ -21,7 +21,14 @@
 - name: Install pyenv
   git:
     repo: https://github.com/yyuu/pyenv.git
-    dest: "{{ pyenv_root }}"
+    dest: "{{ pyenv_path }}"
+  tags:
+    - box
+    - packages
+    - pyenv
+
+- name: Install virtualenv
+  pip: name=virtualenv
   tags:
     - box
     - packages
@@ -30,7 +37,7 @@
 - name: Install pyenv-virtualenv plugin
   git:
     repo: https://github.com/yyuu/pyenv-virtualenv.git
-    dest: "{{ pyenv_root }}/plugins/pyenv-virtualenv"
+    dest: "{{ pyenv_path }}/plugins/pyenv-virtualenv"
   tags:
     - box
     - packages
@@ -54,7 +61,7 @@
     - pyenv
 
 - name: Ensure .pyenv permissions are set properly
-  file: path={{ pyenv_root }}
+  file: path={{ pyenv_path }}
         recurse=yes
         owner={{ ubuntu_deploy_user }}
         group={{ ubuntu_deploy_group }}
@@ -66,8 +73,8 @@
 - name: Install a default python version
   become: yes
   become_user: '{{ ubuntu_deploy_user }}'
-  shell: . {{ deploy_user_rc_file }} && {{ pyenv_root }}/libexec/pyenv install {{ default_python_version }}
-    creates="{{ pyenv_root }}/versions/{{ default_python_version }}"
+  shell: . {{ deploy_user_rc_file }} && {{ pyenv_path }}/libexec/pyenv install {{ default_python_version }}
+    creates="{{ pyenv_path }}/versions/{{ default_python_version }}"
   tags:
     - box
     - pyenv
@@ -75,7 +82,7 @@
 - name: Set default python version
   copy:
     content: '{{ default_python_version }}'
-    dest: '{{ pyenv_root }}/version'
+    dest: '{{ pyenv_path }}/version'
   tags:
     - box
     - pyenv

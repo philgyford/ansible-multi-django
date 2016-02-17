@@ -1,10 +1,23 @@
 ---
 
-- name: Create virtualenvs for apps
+- name: Install python versions for apps
+  become: yes
+  become_user: '{{ ubuntu_deploy_user }}'
   with_items: apps
-  when: item.virtualenv_name is defined
-  command: virtualenv {{ virtualenv_home_path }}/{{ item.virtualenv_name }} --no-site-packages
+  when: item.python_version is defined
+  shell: . {{ deploy_user_rc_file }} && {{ pyenv_path }}/libexec/pyenv install {{ item.python_version }}
   args:
-    creates: "{{ virtualenv_home_path }}/{{ item.virtualenv_name }}/bin/activate"
+    creates: "{{ pyenv_path }}/versions/{{ item.python_version }}/bin/python"
+  tags:
+    - virtualenvs
+
+- name: Create virtualenvs for apps
+  become: yes
+  become_user: '{{ ubuntu_deploy_user }}'
+  with_items: apps
+  when: item.python_version is defined
+  shell: . {{ deploy_user_rc_file }} && {{ pyenv_path }}/libexec/pyenv virtualenv {{ item.python_version }} {{ item.name }}
+  args:
+    creates: "{{ pyenv_path }}/versions/{{ item.name }}/bin/activate"
   tags:
     - virtualenvs
