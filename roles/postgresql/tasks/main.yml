@@ -1,12 +1,18 @@
 ---
 
-- name: Install base packages
+# Creation of databases happens in apps/ on a per-app basis.
+
+- name: Install PostgreSQL
   apt: name={{ item }} force=yes state=installed
   with_items:
     - libpq-dev
     - postgresql
     - postgresql-contrib
+    - python-psycopg2
   tags:
     - box
     - packages
     - postgresql
+
+- name: Ensure the PostgreSQL service is running
+  service: name=postgresql state=started enabled=yes

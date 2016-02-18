@@ -1,0 +1,38 @@
+---
+
+# Set up a postgres database and user for each app that has
+# db_type=='postgresql' and a db_password set.
+
+- name: Ensure PostgreSQL databases are created
+  become_user: postgres
+  with_items: apps
+  when: item.db_type is defined and
+        item.db_type == 'postgresql'
+  postgresql_db: name={{ item.name }}
+                 encoding='UTF-8'
+                 lc_collate='en_US.UTF-8'
+                 lc_ctype='en_US.UTF-8'
+                 template='template0'
+                 state=present
+
+- name: Ensure user has access to the database
+  become_user: postgres
+  with_items: apps
+  when: item.db_type is defined and
+        item.db_type == 'postgresql' and
+        item.db_password is defined
+  postgresql_user: db={{ item.name }}
+                   name={{ item.name }}
+                   password={{ item.db_password }}
+                   priv=ALL
+                   state=present
+
+- name: Ensure database user does not have unnecessary privileges
+  become_user: postgres
+  with_items: apps
+  when: item.db_type is defined and
+        item.db_type == 'postgresql' and
+        item.db_password is defined
+  postgresql_user: name={{ item.name }}
+                   role_attr_flags=NOSUPERUSER,NOCREATEDB
+                   state=present

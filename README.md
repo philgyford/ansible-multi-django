@@ -19,7 +19,19 @@ You'll need to alter `roles/apps/vars/main.yml` to reflect the websites (called 
 
 * `pip_requirements_file`: Optional. If the app has a pip requirements file, set the path to it within the repo here. eg, `requirements.txt`. Otherwise, omit this. If set, the python packages will be installed.
 
-* `django_settings_file`: Optional. If this is a Django site, this is the path to the settings file to use within the repo. eg `myapp/settings/production.py`. If this is defined then the Django `syncdb`, `migrate` and `collectstatic` management commands will be run.
+* `db_type`: Optional. Currently must be 'postgresql' if present.
+
+* `db_password`: Password for the database. Database name and username will be the same as the app's `name`.
+
+In addition, the `roles/apps/vars/vault.yml` file is encrypted with ansible-vault, and contains variables that can be used in `roles/apps/vars/main.yml`. eg, in `main.yml` we might have:
+
+    apps:
+	  - name: 'pepysdiary'
+	    db_password: '{{ pepysdiary_db_password }}'
+
+And in `vault.yml` we'd have this (except the entire file is encrypted of course):
+
+	pepysdiary_db_password: 'secretpassword'
 
 
 ## Vagrant
@@ -34,7 +46,7 @@ To subsequently run ansible over the box again:
 
 Or, possibly quicker:
 
-	$ ansible-playbook --private-key=.vagrant/machines/default/virtualbox/private_key --user=vagrant --connection=ssh --inventory-file=.vagrant/provisioners/ansible/inventory/vagrant_ansible_inventory vagrant.yml
+	$ ansible-playbook --private-key=.vagrant/machines/default/virtualbox/private_key --user=vagrant --connection=ssh --inventory-file=.vagrant/provisioners/ansible/inventory/vagrant_ansible_inventory --ask-vault-pass vagrant.yml
 
 When recreating the box I did get an error at this point, and doing this fixed it:
 
@@ -77,7 +89,7 @@ or as the standard `vagrant` user:
 5. Run the playbook (note, this first time we specify the user as `root`):
 
 	```
-	$ ansible-playbook --i inventories/production.ini -u root production.yml
+	$ ansible-playbook --inventory-file=inventories/production.ini --user=root --ask-vault-pass production.yml
 	```
 
 6. It should be all done. If the variable `ubuntu_use_firewall` is true (set in `env_vars/*.yml`), then you'll only be able to SSH to the `ubuntu_ssh_port` as the `ubuntu_deploy_user` eg, if the user is `deploy` and `ubuntu_ssh_port` is `1025`:
@@ -100,26 +112,12 @@ or as the standard `vagrant` user:
 	188.166.146.145:1025
 	```
 
-8. For subsequent runs, you'll need to set it to use the `ubuntu_deploy_user` and use `-s` to become sudo, and `-K` to be prompted for the sudo password (set in an `env_vars/*.yml` file):
+8. For subsequent runs, you'll need to set it to use the `ubuntu_deploy_user` and use `--sudo` to become sudo, and `--ask-sudo-pass` to be prompted for the sudo password (set in an `env_vars/*.yml` file):
 
 	```
-	$ ansible-playbook --i inventories/production.ini -u deploy -s -K production.yml
+	$ ansible-playbook --inventory-file=inventories/production.ini --user=deploy --sudo --ask-sudo-pass production.yml
 	```
 
-
-## Notes
-
-`roles/common/` is stuff to do with setting up the basic server, before we
-get to webservers, databases, etc.
-
-Each "app" (eg, a website) should have its variables set in the `apps` list in `roles/apps/vars/main.yml`. eg:
-
-	apps:
-	  - repo: git@github.com:philgyford/twelescreen.git
-	    virtualenv: twelescreen
-	  - repo: git@github.com:philgyford/myphpapp.git
-
-If the app requires a python virtualenv, set its `virtualenv` name. Otherwise, leave that property out.
 
 ## TODO
 

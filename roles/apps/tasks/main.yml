@@ -1,5 +1,7 @@
 ---
 
+- include_vars: vars/vault.yml
+
 - include: set_up_git_repos.yml
   tags:
     - deploy
@@ -9,6 +11,10 @@
   tags:
     - deploy
     - virtualenvs
+
+- include: set_up_postgresql.yml
+  tags:
+    - postgresql
 
 #- include: set_up_django.yml
   # tags:

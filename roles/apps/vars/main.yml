@@ -10,10 +10,35 @@ apps:
     python_version: 2.7.11
 
   - name: 'pepysdiary'
-    django_settings_file: 'pepysdiary/settings/live.py'
     git_repo: 'https://github.com/philgyford/pepysdiary.git'
     git_repo_branch: 'master'
     pip_requirements_file: 'requirements.txt'
     python_version: 2.7.6
+    db_type: 'postgresql'
+    db_password: '{{ pepysdiary_db_password }}'
+
+    environment_variables:
+      ALLOWED_HOSTS: '.pepysdiary.com'
+      COMPRESS_ENABLED: 'true'
+      SETTINGS_MODULE: 'pepysdiary.settings.live'
+      PREPEND_WWW: 'True'
+      DB_PASSWORD: '{{ pepysdiary_db_password }}'
+
+      USE_SPAM_CHECK: 'True'
+
+      GOOGLE_ANALYTICS_ID: 'UA-89135-2'
+
+      MAPBOX_ACCESS_TOKEN: 'pk.eyJ1IjoicGhpbGd5Zm9yZCIsImEiOiJUUGpZME9zIn0.O3bxMZ-0-Fq-e0HwR6-xcA'
+      MAPBOX_MAP_ID: 'philgyford.hnhb28lo'
+
+      AKISMET_API_KEY: '{{ pepysdiary_akismet_api_key }}'
+
+      RECAPTCHA_PRIVATE_KEY: '{{ pepysdiary_recaptcha_private_key }}'
+      RECAPTCHA_PUBLIC_KEY: '{{ pepysdiary_recaptcha_public_key }}'
+
+      SECRET_KEY: '{{ pepysdiary_django_secret_key }}'
+
+      SENDGRID_USERNAME: '{{ pepysdiary_sendgrid_username }}'
+      SENDGRID_PASSWORD: '{{ pepysdiary_sendgrid_password }}'
 
   - name: myphpapp
