@@ -13,3 +13,7 @@
     - python
 
 - include: pyenv.yml
+  tags:
+    - box
+    - python
+    - pyenv

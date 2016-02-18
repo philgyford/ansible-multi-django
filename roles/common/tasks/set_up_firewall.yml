@@ -2,9 +2,6 @@
 
 - name: Set firewall default policy
   ufw: state=enabled policy=deny
-  tags:
-    - box
-    - firewall
 
 - name: Allow traffic on certain ports
   ufw: rule=allow port={{ item }} proto=tcp
@@ -12,6 +9,3 @@
     - 80  # HTTP
     - 443 # SSL/TLS-enabled web traffic
     - 587 # SMTP
-  tags:
-    - box
-    - firewall

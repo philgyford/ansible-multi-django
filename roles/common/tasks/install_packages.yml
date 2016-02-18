@@ -2,15 +2,9 @@
 
 - name: Update APT package cache
   apt: update_cache={{ ubuntu_update_apt_cache }} cache_valid_time=3600
-  tags:
-    -- box
-    -- packages
 
 - name: Upgrade APT to the latest packages
   apt: upgrade=safe
-  tags:
-    -- box
-    -- packages
 
 - name: Ensure bash, OpenSSL, and libssl are the latest versions
   apt: name={{ item }} state=latest
@@ -19,9 +13,6 @@
     - openssl
     - libssl-dev
     - libssl-doc
-  tags:
-    -- box
-    -- packages
 
 - name: Install packages
   apt: name={{ item }} state=installed
@@ -35,12 +26,6 @@
     - ufw
     - unattended-upgrades
     - vim
-  tags:
-    -- box
-    -- packages
 
 - name: Adjust APT update intervals
   copy: src=apt_periodic dest=/etc/apt/apt.conf.d/10periodic
-  tags:
-    -- box
-    -- packages

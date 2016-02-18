@@ -4,40 +4,25 @@
 
 - name: Add deploy user
   user: name={{ ubuntu_deploy_user }} password="{{ ubuntu_deploy_password }}" shell=/bin/bash state=present
-  tags:
-    - box
-    - users
-    - users.deploy.create
+  tags: users.deploy.create
 
 - name: Add authorized keys for deploy user
   authorized_key: user={{ ubuntu_deploy_user }}
                   key="{{ lookup('file', item) }}"
   with_items: ubuntu_deploy_public_keys
-  tags:
-    - box
-    - users
-    - users.deploy.keys
+  tags: users.deploy.keys
 
 - name: Create deploy group
   group: name={{ ubuntu_deploy_group }} system=yes state=present
-  tags:
-    - box
-    - users
-    - users.deploy.group
+  tags: users.deploy.group
 
 - name: Add deploy user to deploy group
   user: name={{ ubuntu_deploy_user }} group={{ ubuntu_deploy_group }} state=present
-  tags:
-    - box
-    - users
-    - users.deploy.group
+  tags: users.deploy.group
 
 - name: Add deploy user to sudoers
   lineinfile: dest=/etc/sudoers
               regexp="{{ ubuntu_deploy_user }} ALL"
               line="{{ ubuntu_deploy_user }} ALL=(ALL) ALL"
               state=present
-  tags:
-    - box
-    - users
-    - users.deploy.sudoers
+  tags: users.deploy.sudoers

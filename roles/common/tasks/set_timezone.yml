@@ -4,6 +4,3 @@
   become: yes
   become_method: sudo
   notify: Update timezone
-  tags:
-    - box
-    - timezone

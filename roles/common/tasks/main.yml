@@ -1,14 +1,33 @@
 ---
 
 - include: create_swap_file.yml
+  tags:
+    - box
+    - swap
+
 - include: create_users.yml
+  tags:
+    - box
+    - users
+
 - include: install_packages.yml
+  tags:
+    -- box
+    -- packages
 
 - include: set_up_firewall.yml
   when: ubuntu_use_firewall
+  tags:
+    - box
+    - firewall
 
 - include: configure_ssh.yml
   when: ubuntu_restrict_ssh
+  tags:
+    - box
+    - ssh
 
 - include: set_timezone.yml
-
+  tags:
+    - box
+    - timezone
