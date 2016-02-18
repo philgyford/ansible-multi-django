@@ -9,8 +9,6 @@
   shell: . {{ deploy_user_rc_file }} && {{ pyenv_path }}/libexec/pyenv install {{ item.python_version }}
   args:
     creates: "{{ pyenv_path }}/versions/{{ item.python_version }}/bin/python"
-  tags:
-    - virtualenvs
 
 # As deploy user, because .pyenv is in its home directory.
 - name: Create virtualenvs for apps
@@ -21,8 +19,6 @@
   shell: . {{ deploy_user_rc_file }} && {{ pyenv_path }}/libexec/pyenv virtualenv {{ item.python_version }} {{ item.name }}
   args:
     creates: "{{ pyenv_path }}/versions/{{ item.name }}/bin/activate"
-  tags:
-    - virtualenvs
 
 # Set the virtualenv name in each repo's .python-version file.
 - name: Create .python-version files for virtualenvs
@@ -31,5 +27,14 @@
   copy:
     dest: "{{ apps_path }}/{{ item.name }}/.python-version"
     content: "{{ item.name }}"
-  tags:
-    - virtualenvs
+
+# Changing
+- name: Install python packages required by apps
+  become: yes
+  become_user: '{{ ubuntu_deploy_user }}'
+  with_items: apps
+  when: item.pip_requirements_file is defined
+  pip:
+    executable: '{{ pyenv_path }}/versions/{{ item.name }}/bin/pip'
+    virtualenv: '{{ pyenv_path }}/versions/{{ item.name }}'
+    requirements: '{{ apps_path }}/{{ item.name }}/{{ item.pip_requirements_file }}'

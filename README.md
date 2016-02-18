@@ -11,15 +11,15 @@ You'll need to alter `roles/apps/vars/main.yml` to reflect the websites (called 
 
 * `name`: Required. No spaces. Will be used as a directory name for where its git repo will be checked out to. A single directory name that will be put within `apps_path` (defined in an `env_vars/*.yml` file). Also used for a virtualenv name, if required.
 
-* `django_settings_file`: Optional. If this is a Django site, this is the path to the settings file to use within the repo. eg `myapp/settings/production.py`. If this and `virtualenv_name` are defined then the Django `syncdb`, `migrate` and `collectstatic` management commands will be run.
-
 * `git_repo`: Optional. The `https://github.com...` path to the git repository. It won't work with a `git@github.com...` path. Although optional, not much will happen without this.
 
-* `git_repo_branch`: Optional. The name of the branch to check out. If omitted, defaults to `master`.
-
-* `pip_requirements_file`: Optional. If the app has a pip requirements file, set the path to it within the repo here. eg, `requirements.txt`. Otherwise, omit this. If set, and `app_directory` and `virtualenv` are also set, the python packages will be installed.
+* `git_repo_branch`: Optional. The name of the branch to check out. If omitted, defaults to `'master'`.
 
 * `python_version`: Optional. e.g. `3.5.1`. If set, will be used to create a python virtualenv for this app using pyenv.
+
+* `pip_requirements_file`: Optional. If the app has a pip requirements file, set the path to it within the repo here. eg, `requirements.txt`. Otherwise, omit this. If set, the python packages will be installed.
+
+* `django_settings_file`: Optional. If this is a Django site, this is the path to the settings file to use within the repo. eg `myapp/settings/production.py`. If this is defined then the Django `syncdb`, `migrate` and `collectstatic` management commands will be run.
 
 
 ## Vagrant

@@ -10,9 +10,6 @@
     version: "{{ item.git_repo_branch | default('master') }}"
     dest: "{{ apps_path }}/{{ item.name }}"
     accept_hostkey: yes
-  tags:
-    - git
-    - deploy
 
 - name: Delete all .pyc files
   become: yes
@@ -20,6 +17,3 @@
   command: find . -name '*.pyc' -delete
   args:
     chdir: "{{ apps_path }}"
-  tags:
-    - git
-    - deploy

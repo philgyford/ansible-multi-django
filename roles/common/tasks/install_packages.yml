@@ -30,6 +30,7 @@
     - fail2ban
     - git
     - htop
+    - libmemcached-dev
     - ntp
     - ufw
     - unattended-upgrades
