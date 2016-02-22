@@ -6,16 +6,17 @@ apps:
   - name: 'samuelpepys-twitter'
     git_repo: 'https://github.com/philgyford/samuelpepys-twitter.git'
     git_repo_branch: 'master'
-    pip_requirements_file: 'requirements.txt'
     python_version: 2.7.11
+    pip_requirements_file: 'requirements.txt'
 
   - name: 'pepysdiary'
     git_repo: 'https://github.com/philgyford/pepysdiary.git'
     git_repo_branch: 'master'
-    pip_requirements_file: 'requirements.txt'
     python_version: 2.7.6
+    pip_requirements_file: 'requirements.txt'
     db_type: 'postgresql'
     db_password: '{{ pepysdiary_db_password }}'
+    django_settings_file: 'pepysdiary.settings.live'
 
     environment_variables:
       ALLOWED_HOSTS: '.pepysdiary.com'

@@ -5,9 +5,9 @@
 - name: Install PostgreSQL
   apt: name={{ item }} force=yes state=installed
   with_items:
-    - libpq-dev
     - postgresql
     - postgresql-contrib
+    - libpq-dev
     - python-psycopg2
   tags:
     - box

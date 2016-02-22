@@ -27,6 +27,6 @@
   tags:
     - postgresql
 
-#- include: set_up_django.yml
-  # tags:
-  #   - django
+- include: set_up_django.yml
+  tags:
+    - django
