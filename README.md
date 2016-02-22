@@ -130,10 +130,11 @@ or as the standard `vagrant` user:
 * Install memcached-dev and memcached if needed
 * Git ssh stuff for updates
 * Set up postgres backups to s3?
-* Vaulted secrets, using tip in https://www.reinteractive.net/posts/167-ansible-real-life-good-practices
 
 
 ## TODO LATER
+
+* We're currently only setting up virtualenvs if it's a python app. But do we also need them for webserver and environment variables if its PHP for example?
 
 * Make Vagrant more similar to live. Maybe http://hakunin.com/six-ansible-practices ?
 
