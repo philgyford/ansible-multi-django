@@ -125,11 +125,11 @@ or as the standard `vagrant` user:
 
 ## TODO
 
+* Nginx and gunicorn
+* Install memcached-dev and memcached if needed
 * Copy databse with scp?
 * Restore database?
 * If django: Transfer media files from local machine?
-* Nginx and gunicorn
-* Install memcached-dev and memcached if needed
 * Git ssh stuff for updates
 * Set up postgres backups to s3?
 
