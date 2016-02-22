@@ -18,21 +18,27 @@ apps:
     db_password: '{{ pepysdiary_db_password }}'
     django_settings_file: 'pepysdiary.settings.live'
 
+    # Will be put in the virtualenv's postactivate file:
     environment_variables:
+      AKISMET_API_KEY: '{{ pepysdiary_akismet_api_key }}'
+
       ALLOWED_HOSTS: '.pepysdiary.com'
-      COMPRESS_ENABLED: 'true'
-      SETTINGS_MODULE: 'pepysdiary.settings.live'
-      PREPEND_WWW: 'True'
+      COMPRESS_ENABLED: 'True'
+
+      # NAME and USERNAME should be the same as the app's `name`:
+      DB_NAME: 'pepysdiary'
+      DB_USERNAME: 'pepysdiary'
+      DB_HOST: 'localhost'
       DB_PASSWORD: '{{ pepysdiary_db_password }}'
 
-      USE_SPAM_CHECK: 'True'
+      DJANGO_SETTINGS_MODULE: 'pepysdiary.settings.live'
 
       GOOGLE_ANALYTICS_ID: 'UA-89135-2'
 
       MAPBOX_ACCESS_TOKEN: 'pk.eyJ1IjoicGhpbGd5Zm9yZCIsImEiOiJUUGpZME9zIn0.O3bxMZ-0-Fq-e0HwR6-xcA'
       MAPBOX_MAP_ID: 'philgyford.hnhb28lo'
 
-      AKISMET_API_KEY: '{{ pepysdiary_akismet_api_key }}'
+      PREPEND_WWW: 'True'
 
       RECAPTCHA_PRIVATE_KEY: '{{ pepysdiary_recaptcha_private_key }}'
       RECAPTCHA_PUBLIC_KEY: '{{ pepysdiary_recaptcha_public_key }}'
@@ -41,5 +47,7 @@ apps:
 
       SENDGRID_USERNAME: '{{ pepysdiary_sendgrid_username }}'
       SENDGRID_PASSWORD: '{{ pepysdiary_sendgrid_password }}'
+
+      USE_SPAM_CHECK: 'True'
 
   - name: myphpapp

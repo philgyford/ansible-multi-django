@@ -21,7 +21,11 @@ You'll need to alter `roles/apps/vars/main.yml` to reflect the websites (called 
 
 * `db_type`: Optional. Currently must be 'postgresql' if present.
 
-* `db_password`: Password for the database. Database name and username will be the same as the app's `name`.
+* `db_password`: Optional. Password for the database. Database name and username will be the same as the app's `name`.
+
+* `django_settings_file`: Optional. Python path to the settings file within the app, eg, if the app is in `django-myproject/myproject/settings/live.py` then use `myproject.settings.live`.
+
+* `environment_variables`: Optional. A dictionary of keys/values that will be added to the virtualenv's `postactivate` script.
 
 In addition, the `roles/apps/vars/vault.yml` file is encrypted with ansible-vault, and contains variables that can be used in `roles/apps/vars/main.yml`. eg, in `main.yml` we might have:
 
@@ -121,7 +125,6 @@ or as the standard `vagrant` user:
 
 ## TODO
 
-* Create apps' databases
 * Copy databse with scp?
 * Restore database?
 * If django: Transfer media files from local machine?
@@ -140,4 +143,4 @@ or as the standard `vagrant` user:
 
 * Improve firewall stuff for Vagrant. At the moment it's just 'off'. Would be good to have it more similar to live, but I got confused over configuring SSH.
 
-* Rename pepysdiary `live.py` settings file?
+* Rename pepysdiary `live.py` settings file? Hard-code the django apps' settings file name based on which env we're in?
