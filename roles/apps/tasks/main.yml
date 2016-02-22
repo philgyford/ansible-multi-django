@@ -1,6 +1,17 @@
 ---
 
+# Include the encrypted variables.
+# Need to give this the tags for all tasks in this role:
 - include_vars: vars/vault.yml
+  tags:
+    - deploy
+    - django
+    - django.collectstatic
+    - django.migrate
+    - django.syncdb
+    - git
+    - postgresql
+    - virtualenvs
 
 - include: set_up_git_repos.yml
   tags:

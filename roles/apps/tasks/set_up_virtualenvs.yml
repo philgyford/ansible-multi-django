@@ -38,3 +38,17 @@
     executable: '{{ pyenv_path }}/versions/{{ item.name }}/bin/pip'
     virtualenv: '{{ pyenv_path }}/versions/{{ item.name }}'
     requirements: '{{ apps_path }}/{{ item.name }}/{{ item.pip_requirements_file }}'
+
+- name: Create the virtualenv postactivate script to set environment variables
+  template:
+    src: virtualenv_postactivate.j2
+    dest: '{{ pyenv_path }}/versions/{{ item.name }}/bin/postactivate'
+    owner: '{{ ubuntu_deploy_user }}'
+    group: '{{ ubuntu_deploy_group }}'
+    mode: 0640
+    backup: yes
+  with_items: apps
+  when: item.environment_variables is defined
+  tags:
+    - deploy
+    

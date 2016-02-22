@@ -121,7 +121,6 @@ or as the standard `vagrant` user:
 
 ## TODO
 
-* Set apps' environment variables?
 * Create apps' databases
 * Copy databse with scp?
 * Restore database?

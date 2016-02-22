@@ -32,5 +32,5 @@
   environment: django_environment
   when: run_django_collectstatic is defined and run_django_collectstatic
   tags:
-    - django.colectstatic
+    - django.collectstatic
     - deploy
