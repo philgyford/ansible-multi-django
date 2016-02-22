@@ -27,6 +27,9 @@ You'll need to alter `roles/apps/vars/main.yml` to reflect the websites (called 
 
 * `environment_variables`: Optional. A dictionary of keys/values that will be added to the virtualenv's `postactivate` script.
 
+* `nginx_config`: Optional. If present, the site will have its Nginx site enabled. There *must* be a template for its Nginx config file at `roles/apps/templates/{{name}}_nginx_site_config.j2`. Variables within `nginx_config`:
+    * `allowed_hosts`: Required. eg, 'mydomain.com|www.mydomain.com'
+
 In addition, the `roles/apps/vars/vault.yml` file is encrypted with ansible-vault, and contains variables that can be used in `roles/apps/vars/main.yml`. eg, in `main.yml` we might have:
 
     apps:
@@ -36,6 +39,24 @@ In addition, the `roles/apps/vars/vault.yml` file is encrypted with ansible-vaul
 And in `vault.yml` we'd have this (except the entire file is encrypted of course):
 
 	pepysdiary_db_password: 'secretpassword'
+
+### Django sites
+
+We assume this structure for Django sites, eg:
+
+```
+myproject
+├── manage.py
+├── myproject/
+│   ├── media/
+│   ├── static_collected/
+│   ├── settings/
+│   ├── templates/
+│   └── wsgi.py
+└── requirements.txt
+```
+
+(`myproject` is the same as the `name` variable in the `apps` config, above.)
 
 
 ## Vagrant
@@ -125,6 +146,7 @@ or as the standard `vagrant` user:
 
 ## TODO
 
+* Set allowed hosts and django settings file per env+app combo in environment_variables and nginx config.
 * Nginx and gunicorn
 * Install memcached-dev and memcached if needed
 * Copy databse with scp?
@@ -132,6 +154,7 @@ or as the standard `vagrant` user:
 * If django: Transfer media files from local machine?
 * Git ssh stuff for updates
 * Set up postgres backups to s3?
+* Add maintenance_on.html page? (in nginx config)
 
 
 ## TODO LATER

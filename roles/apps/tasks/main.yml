@@ -10,6 +10,7 @@
     - django.migrate
     - django.syncdb
     - git
+    - nginx
     - postgresql
     - virtualenvs
 
@@ -30,3 +31,7 @@
 - include: set_up_django.yml
   tags:
     - django
+
+- include: set_up_nginx.yml
+  tags:
+    - nginx

@@ -1,0 +1,27 @@
+---
+
+- name: Create Nginx configuration files for apps
+  with_items: apps
+  when: item.nginx_config is defined
+  template: src={{ item.name }}_nginx_site_config.j2
+            dest=/etc/nginx/sites-available/{{ item.name }}
+            backup=yes
+  notify: reload nginx
+  tags:
+    - deploy
+
+- name: Ensure default Nginx site is disabled
+  command: rm /etc/nginx/sites-enabled/default
+           removes=/etc/nginx/sites-enabled/default
+  notify: reload nginx
+
+- name: Ensure apps' Ningx sites are enabled
+  with_items: apps
+  when: item.nginx_config is defined
+  command: ln -s /etc/nginx/sites-available/{{ item.name }}
+           /etc/nginx/sites-enabled/{{ item.name }}
+           creates=/etc/nginx/sites-enabled/{{ item.name }}
+  notify: reload nginx
+
+- name: Ensure Nginx service is started
+  service: name=nginx state=started enabled=yes

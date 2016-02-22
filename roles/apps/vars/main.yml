@@ -17,6 +17,9 @@ apps:
     db_type: 'postgresql'
     db_password: '{{ pepysdiary_db_password }}'
     django_settings_file: 'pepysdiary.settings.live'
+    nginx_config:
+      allowed_hosts: 'pepysdiary.com|www.pepysdiary.com'
+
 
     # Will be put in the virtualenv's postactivate file:
     environment_variables:

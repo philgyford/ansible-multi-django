@@ -22,6 +22,7 @@
     - git
     - htop
     - libmemcached-dev
+    - nginx
     - ntp
     - ufw
     - unattended-upgrades
