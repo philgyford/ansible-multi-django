@@ -28,14 +28,15 @@
   tags:
     - django.migrate
 
-# - name: Django - Run collectstatic
-#   django_manage:
-#     command: collectstatic
-#     app_path: "{{ project_path }}"
-#     virtualenv: "{{ virtualenv_path }}"
-#     settings: "{{ django_settings_file }}"
-#   environment: django_environment
-#   when: run_django_collectstatic is defined and run_django_collectstatic
-#   tags:
-#     - django.collectstatic
-#     - deploy
+- name: Django - Run collectstatic
+  with_items: apps
+  when: item.django_settings_file is defined
+  django_manage:
+    command: collectstatic
+    app_path: '{{ apps_path }}/{{ item.name }}'
+    virtualenv: '{{ pyenv_path }}/versions/{{ item.name }}'
+    settings: '{{ item.django_settings_file }}'
+  environment: '{{ item.environment_variables }}'
+  # when: run_django_db_migrations is defined and run_django_db_migrations
+  tags:
+    - django.collectstatic

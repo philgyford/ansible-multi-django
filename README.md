@@ -128,7 +128,6 @@ or as the standard `vagrant` user:
 * Copy databse with scp?
 * Restore database?
 * If django: Transfer media files from local machine?
-* If django: Collect static files.
 * Nginx and gunicorn
 * Install memcached-dev and memcached if needed
 * Git ssh stuff for updates
