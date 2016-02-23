@@ -24,6 +24,7 @@
     - libmemcached-dev
     - nginx
     - ntp
+    - python-dev # So we can pip install setproctitle
     - supervisor
     - ufw
     - unattended-upgrades

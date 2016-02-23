@@ -40,6 +40,15 @@
     virtualenv: '{{ pyenv_path }}/versions/{{ item.name }}'
     requirements: '{{ apps_path }}/{{ item.name }}/{{ item.pip_requirements_file }}'
 
+- name: Install extra python packages
+  become: yes
+  become_user: '{{ ubuntu_deploy_user }}'
+  with_items: apps
+  pip:
+    executable: '{{ pyenv_path }}/versions/{{ item.name }}/bin/pip'
+    virtualenv: '{{ pyenv_path }}/versions/{{ item.name }}'
+    name: setproctitle # To make gunicorn appear with app name in `ps` etc.
+
 - name: Create the virtualenv postactivate script to set environment variables
   template:
     src: virtualenv_postactivate.j2

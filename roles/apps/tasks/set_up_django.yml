@@ -8,7 +8,7 @@
 #     command: syncdb
 #     app_path: '{{ apps_path }}/{{ item.name }}'
 #     virtualenv: '{{ pyenv_path }}/versions/{{ item.name }}'
-#     settings: '{{ item.django_settings_file }}'
+#     settings: '{{ item.django_settings_file[env_name] }}'
 #   environment: '{{ item.environment_variables }}'
 #   # when: run_django_syncdb is defined and run_django_syncdb
 #   tags:
@@ -22,7 +22,7 @@
     command: migrate
     app_path: '{{ apps_path }}/{{ item.name }}'
     virtualenv: '{{ pyenv_path }}/versions/{{ item.name }}'
-    settings: '{{ item.django_settings_file }}'
+    settings: '{{ item.django_settings_file[env_name] }}'
   environment: '{{ item.environment_variables }}'
   # when: run_django_db_migrations is defined and run_django_db_migrations
   tags:
@@ -35,7 +35,7 @@
     command: collectstatic
     app_path: '{{ apps_path }}/{{ item.name }}'
     virtualenv: '{{ pyenv_path }}/versions/{{ item.name }}'
-    settings: '{{ item.django_settings_file }}'
+    settings: '{{ item.django_settings_file[env_name ]}}'
   environment: '{{ item.environment_variables }}'
   # when: run_django_db_migrations is defined and run_django_db_migrations
   tags:

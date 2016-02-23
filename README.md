@@ -23,7 +23,7 @@ You'll need to alter `roles/apps/vars/main.yml` to reflect the websites (called 
 
 * `db_password`: Optional. Password for the database. Database name and username will be the same as the app's `name`.
 
-* `django_settings_file`: Optional. Python path to the settings file within the app, eg, if the app is in `django-myproject/myproject/settings/live.py` then use `myproject.settings.live`.
+* `django_settings_file`: Optional. A dictionary with keys of environment names (eg, `production`) and the Python path to the settings file within the app, eg, if the app is in `django-myproject/myproject/settings/live.py` then use `production: myproject.settings.live`.
 
 * `environment_variables`: Optional. A dictionary of keys/values that will be added to the virtualenv's `postactivate` script.
 

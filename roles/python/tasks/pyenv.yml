@@ -51,6 +51,7 @@
         owner={{ ubuntu_deploy_user }}
         group={{ ubuntu_deploy_group }}
         state=directory
+  tags: deploy
 
 - name: Install a default python version
   become: yes

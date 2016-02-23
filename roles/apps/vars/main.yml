@@ -16,7 +16,9 @@ apps:
     pip_requirements_file: 'requirements.txt'
     db_type: 'postgresql'
     db_password: '{{ pepysdiary_db_password }}'
-    django_settings_file: 'pepysdiary.settings.live'
+    django_settings_file:
+      production: 'pepysdiary.settings.live'
+      vagrant: 'pepysdiary.settings.live'
     nginx_config:
       production:
         allowed_hosts: 'pepysdiary.com|www.pepysdiary.com'
@@ -35,7 +37,7 @@ apps:
     environment_variables:
       AKISMET_API_KEY: '{{ pepysdiary_akismet_api_key }}'
 
-      ALLOWED_HOSTS: '.pepysdiary.com'
+      ALLOWED_HOSTS: '.pepysdiary.dev'
       COMPRESS_ENABLED: 'True'
 
       # NAME and USERNAME should be the same as the app's `name`:

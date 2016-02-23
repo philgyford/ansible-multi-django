@@ -32,11 +32,8 @@
 
 - include: set_up_django.yml
   tags:
+    - deploy
     - django
-
-- include: set_up_nginx.yml
-  tags:
-    - nginx
 
 - include: set_up_gunicorn.yml
   tags:
@@ -45,3 +42,7 @@
 - include: set_up_supervisor.yml
   tags:
     - supervisor
+
+- include: set_up_nginx.yml
+  tags:
+    - nginx
