@@ -149,30 +149,3 @@ or as the standard `vagrant` user:
 	```
 	$ ansible-playbook --inventory-file=inventories/production.ini --user=deploy --sudo --ask-sudo-pass production.yml
 	```
-
-
-## TODO
-
-* Set allowed hosts and django settings file per env+app combo in environment_variables and nginx config.
-* Nginx and gunicorn
-* Use a `runtime.txt` file for python version.
-* Install memcached-dev and memcached if needed
-* Copy databse with scp?
-* Restore database?
-* If django: Transfer media files from local machine?
-* Git ssh stuff for updates
-* Set up postgres backups to s3?
-* Add maintenance_on.html page? (in nginx config)
-
-
-## TODO LATER
-
-* In `roles/apps/tasks/set_up_nginx.yml` we should replace the `src=nginx_site_config_default.j2` with `src={{ lookup('first_found', ['nginx_site_config_{{ item.name }}.j2', 'nginx_site_config_default.j2']) }}` to allow for using a config per app. It was recently fixed <https://github.com/ansible/ansible/issues/14190> but isn't in v2.0.0.2. Remove NOTE in instructions above.
-
-* We're currently only setting up virtualenvs if it's a python app. But do we also need them for webserver and environment variables if its PHP for example?
-
-* Make Vagrant more similar to live. Maybe http://hakunin.com/six-ansible-practices ?
-
-* Improve firewall stuff for Vagrant. At the moment it's just 'off'. Would be good to have it more similar to live, but I got confused over configuring SSH.
-
-* Rename pepysdiary `live.py` settings file? Hard-code the django apps' settings file name based on which env we're in?
