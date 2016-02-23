@@ -1,5 +1,17 @@
 ---
 
+
+# Also in set_up_gunicorn.yml
+- name: Create log folder, if it doesn't already exist
+  with_items: apps
+  when: item.nginx_config is defined
+  file:
+    path: '{{ pyenv_path }}/versions/{{ item.name }}/logs/'
+    owner: '{{ ubuntu_deploy_user }}'
+    group: '{{ ubuntu_deploy_group }}'
+    mode: 0774
+    state: directory
+
 - name: Create Nginx configuration files for apps
   template: src=nginx_site_config_default.j2
             dest=/etc/nginx/sites-available/{{ item.name }}
@@ -25,3 +37,13 @@
 
 - name: Ensure Nginx service is started
   service: name=nginx state=started enabled=yes
+
+- name: Create the maintenance page
+  become: yes
+  become_user: '{{ ubuntu_deploy_user }}'
+  with_items: apps
+  when: item.nginx_config is defined
+  template:
+    src: maintenance_off.html
+    dest: '{{ pyenv_path }}/versions/{{ item.name }}/maintenance_off.html'
+    mode: 0664

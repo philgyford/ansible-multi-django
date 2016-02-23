@@ -10,11 +10,11 @@ server {
     listen      80;
     server_name {{ item.name }};
 
-    access_log {{ nginx_log_directory }}/{{ item.name }}/access.log;
-    error_log {{ nginx_log_directory }}/{{ item.name }}/error.log;
+    access_log {{ pyenv_path }}/versions/{{ item.name }}/logs/nginx_access.log;
+    error_log {{ pyenv_path }}/versions/{{ item.name }}/logs/nginx_error.log;
 
     # Deny illegal Host headers
-    if ($host !~* ^({{ item.nginx_config.allowed_hosts[env_name] }})$ ) {
+    if ($host !~* ^({{ item.nginx_config[env_name].allowed_hosts }})$ ) {
         return 444;
     }
 

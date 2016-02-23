@@ -18,9 +18,18 @@ apps:
     db_password: '{{ pepysdiary_db_password }}'
     django_settings_file: 'pepysdiary.settings.live'
     nginx_config:
-      allowed_hosts:
-        production: 'pepysdiary.com|www.pepysdiary.com'
-        vagrant: 'pepysdiary.dev|www.pepysdiary.dev'
+      production:
+        allowed_hosts: 'pepysdiary.com|www.pepysdiary.com'
+      vagrant:
+        allowed_hosts: 'pepysdiary.dev|www.pepysdiary.dev'
+    gunicorn_config:
+      production:
+        max_requests: 1000 # Restarts after this many requests.
+        num_workers: 3 # Rule of thumb: 2 * CPUs + 1
+      vagrant:
+        max_requests: 1 # Reloads code on every request.
+        num_workers: 3
+      # Also, optional: timeout_seconds
 
     # Will be put in the virtualenv's postactivate file:
     environment_variables:

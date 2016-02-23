@@ -54,11 +54,13 @@ We assume this structure for Django sites, eg:
 ```
 myproject
 ├── manage.py
-├── myproject/
+├── myapplication/
+│   ├── __init__.py
 │   ├── media/
 │   ├── static_collected/
 │   ├── settings/
 │   ├── templates/
+│   ├── urls.py
 │   └── wsgi.py
 └── requirements.txt
 ```

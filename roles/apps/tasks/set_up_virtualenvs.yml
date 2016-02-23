@@ -28,6 +28,7 @@
     dest: "{{ apps_path }}/{{ item.name }}/.python-version"
     content: "{{ item.name }}"
 
+
 # Changing
 - name: Install python packages required by apps
   become: yes
@@ -51,4 +52,3 @@
   when: item.environment_variables is defined
   tags:
     - deploy
-    

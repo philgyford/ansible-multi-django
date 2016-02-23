@@ -10,6 +10,7 @@
     - django.migrate
     - django.syncdb
     - git
+    - gunicorn
     - nginx
     - postgresql
     - virtualenvs
@@ -35,3 +36,7 @@
 - include: set_up_nginx.yml
   tags:
     - nginx
+
+- include: set_up_gunicorn.yml
+  tags:
+    - gunicorn

@@ -1,0 +1,50 @@
+---
+
+# Will probably be installed via the app's requirements.txt, but just in case.
+- name: Ensure gunicorn is installed
+  become: yes
+  become_user: '{{ ubuntu_deploy_user }}'
+  pip:
+    virtualenv: '{{ pyenv_path }}/versions/{{ item.name }}'
+    name: gunicorn
+  with_items: apps
+  when: item.gunicorn_config is defined
+
+- name: Create the Gunicorn script file
+  template:
+    src: gunicorn_start.j2
+    dest: '{{ pyenv_path }}/versions/{{ item.name }}/bin/gunicorn_start'
+    owner: '{{ ubuntu_deploy_user }}'
+    group: '{{ ubuntu_deploy_group }}'
+    mode: 0755
+    backup: yes
+  with_items: apps
+  when: item.gunicorn_config is defined
+  tags: deploy
+
+# Also in set_up_nginx.yml
+- name: Create log folder, if it doesn't already exist
+  file:
+    path: '{{ pyenv_path }}/versions/{{ item.name }}/logs/'
+    owner: '{{ ubuntu_deploy_user }}'
+    group: '{{ ubuntu_deploy_group }}'
+    mode: 0774
+    state: directory
+  with_items: apps
+  when: item.gunicorn_config is defined
+
+- name: Create application log file
+  command: touch {{ pyenv_path }}/versions/{{ item.name }}/logs/gunicorn_supervisor.log
+           creates={{ pyenv_path }}/versions/{{ item.name }}/logs/gunicorn_supervisor.log
+  with_items: apps
+  when: item.gunicorn_config is defined
+
+- name: Set permission to the application log file
+  file:
+    path: '{{ pyenv_path }}/versions/{{ item.name }}/logs/gunicorn_supervisor.log'
+    owner: '{{ ubuntu_deploy_user }}'
+    group: '{{ ubuntu_deploy_group }}'
+    mode: 0664
+    state: file
+  with_items: apps
+  when: item.gunicorn_config is defined
