@@ -35,7 +35,7 @@ You'll need to alter `roles/apps/vars/main.yml` to reflect the websites (called 
               production: 'mydomain.com|www.mydomain.com'
               vagrant: 'mydomain.dev|www.mydomain.dev'
 
-If you want a custom Nginx config file, copy `roles/apps/templates/nginx_site_config_default.j2` to `roles/apps/templates/nginx_site_config_{{ app.name }}.j2` and customise that. NOTE: Not currently working, see 'TODO LATER'.
+If you want a custom Nginx config file, copy `roles/apps/templates/nginx_site_config_default.j2` to `roles/apps/templates/nginx_site_config_{{ app.name }}.j2` and customise that. NOTE: Not currently working see https://github.com/philgyford/ansible-playbook/issues/9
 
 In addition, the `roles/apps/vars/vault.yml` file is encrypted with ansible-vault, and contains variables that can be used in `roles/apps/vars/main.yml`. eg, in `main.yml` we might have:
 
