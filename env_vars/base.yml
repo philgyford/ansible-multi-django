@@ -1,5 +1,7 @@
 ---
 
+env_name: 'base'
+
 # Make crypted passwords:
 #
 # pip install passlib

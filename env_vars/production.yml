@@ -1,4 +1,5 @@
 ---
 
-ubuntu_ssh_port: 1025
+env_name: 'production'
 
+ubuntu_ssh_port: 1025

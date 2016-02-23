@@ -30,7 +30,10 @@ You'll need to alter `roles/apps/vars/main.yml` to reflect the websites (called 
 * `nginx_config`: Optional. If present, the site will have its Nginx site enabled.
 
     Variables within `nginx_config`:
-    * `allowed_hosts`: Required. eg, 'mydomain.com|www.mydomain.com'
+    * `allowed_hosts`: Required. A dictionary of domain patterns for environment names, eg:
+            allowed_hosts:
+              production: 'mydomain.com|www.mydomain.com'
+              vagrant: 'mydomain.dev|www.mydomain.dev'
 
 If you want a custom Nginx config file, copy `roles/apps/templates/nginx_site_config_default.j2` to `roles/apps/templates/nginx_site_config_{{ app.name }}.j2` and customise that. NOTE: Not currently working, see 'TODO LATER'.
 
@@ -152,6 +155,7 @@ or as the standard `vagrant` user:
 
 * Set allowed hosts and django settings file per env+app combo in environment_variables and nginx config.
 * Nginx and gunicorn
+* Use a `runtime.txt` file for python version.
 * Install memcached-dev and memcached if needed
 * Copy databse with scp?
 * Restore database?

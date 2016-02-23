@@ -1,5 +1,7 @@
 ---
 
+env_name: 'vagrant'
+
 ubuntu_use_firewall: no
 ubuntu_restrict_ssh: no
 

@@ -14,7 +14,7 @@ server {
     error_log {{ nginx_log_directory }}/{{ item.name }}/error.log;
 
     # Deny illegal Host headers
-    if ($host !~* ^({{ item.nginx_config.allowed_hosts }})$ ) {
+    if ($host !~* ^({{ item.nginx_config.allowed_hosts[env_name] }})$ ) {
         return 444;
     }
 

@@ -1,5 +1,6 @@
 ---
 
+- debug: msg="{{ environment }}"
 
 - name: Create Nginx configuration files for apps
   template: src=nginx_site_config_default.j2
