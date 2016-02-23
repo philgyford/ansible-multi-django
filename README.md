@@ -27,8 +27,12 @@ You'll need to alter `roles/apps/vars/main.yml` to reflect the websites (called 
 
 * `environment_variables`: Optional. A dictionary of keys/values that will be added to the virtualenv's `postactivate` script.
 
-* `nginx_config`: Optional. If present, the site will have its Nginx site enabled. There *must* be a template for its Nginx config file at `roles/apps/templates/{{name}}_nginx_site_config.j2`. Variables within `nginx_config`:
+* `nginx_config`: Optional. If present, the site will have its Nginx site enabled.
+
+    Variables within `nginx_config`:
     * `allowed_hosts`: Required. eg, 'mydomain.com|www.mydomain.com'
+
+If you want a custom Nginx config file, copy `roles/apps/templates/nginx_site_config_default.j2` to `roles/apps/templates/nginx_site_config_{{ app.name }}.j2` and customise that. NOTE: Not currently working, see 'TODO LATER'.
 
 In addition, the `roles/apps/vars/vault.yml` file is encrypted with ansible-vault, and contains variables that can be used in `roles/apps/vars/main.yml`. eg, in `main.yml` we might have:
 
@@ -158,6 +162,8 @@ or as the standard `vagrant` user:
 
 
 ## TODO LATER
+
+* In `roles/apps/tasks/set_up_nginx.yml` we should replace the `src=nginx_site_config_default.j2` with `src={{ lookup('first_found', ['nginx_site_config_{{ item.name }}.j2', 'nginx_site_config_default.j2']) }}` to allow for using a config per app. It was recently fixed <https://github.com/ansible/ansible/issues/14190> but isn't in v2.0.0.2. Remove NOTE in instructions above.
 
 * We're currently only setting up virtualenvs if it's a python app. But do we also need them for webserver and environment variables if its PHP for example?
 
