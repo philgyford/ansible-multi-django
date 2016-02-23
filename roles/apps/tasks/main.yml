@@ -13,6 +13,7 @@
     - gunicorn
     - nginx
     - postgresql
+    - supervisor
     - virtualenvs
 
 - include: set_up_git_repos.yml
@@ -40,3 +41,7 @@
 - include: set_up_gunicorn.yml
   tags:
     - gunicorn
+
+- include: set_up_supervisor.yml
+  tags:
+    - supervisor

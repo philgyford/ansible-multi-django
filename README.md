@@ -29,11 +29,30 @@ You'll need to alter `roles/apps/vars/main.yml` to reflect the websites (called 
 
 * `nginx_config`: Optional. If present, the site will have its Nginx site enabled.
 
-    Variables within `nginx_config`:
-    * `allowed_hosts`: Required. A dictionary of domain patterns for environment names, eg:
-            allowed_hosts:
-              production: 'mydomain.com|www.mydomain.com'
-              vagrant: 'mydomain.dev|www.mydomain.dev'
+    Within there should be one dictionary per environment (eg, `production`), each containing config variables:
+    * `allowed_hosts`: Required. A dictionary of domain patterns for environment names.
+
+* `gunicorn_config`: Optional. If present Gunicorn and Supervisor will be set up.
+
+    Within there should be one dictionary per environment (eg, `production`), each containing config variables:
+    * `max_requests`: Optional, default `1000`
+    * `num_workers`: Optional, default `3`
+    * `timeout_seconds`: Optional, default `30`
+
+eg:
+
+    nginx_config:
+      production:
+        allowed_hosts: 'mydomain.com|www.mydomain.com'
+      vagrant:
+        allowed_hosts: 'mydomain.dev|www.mydomain.dev'
+    gunicorn_config:
+      production:
+        max_requests: 1000
+        num_workers: 3
+        timeout_seconds: 30
+      vagrant:
+        max_requests: 1
 
 If you want a custom Nginx config file, copy `roles/apps/templates/nginx_site_config_default.j2` to `roles/apps/templates/nginx_site_config_{{ app.name }}.j2` and customise that. NOTE: Not currently working see https://github.com/philgyford/ansible-playbook/issues/9
 

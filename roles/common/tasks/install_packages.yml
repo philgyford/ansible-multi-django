@@ -24,6 +24,7 @@
     - libmemcached-dev
     - nginx
     - ntp
+    - supervisor
     - ufw
     - unattended-upgrades
     - vim
