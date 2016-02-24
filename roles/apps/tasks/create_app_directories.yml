@@ -1,0 +1,14 @@
+---
+
+# This would happen anyway when the git repo is checked out, but just in case
+# an app doesn't have one, we still want to create a directory for it.
+# Even if only for its .python_version file.
+
+- name: Create directories for apps
+  file:
+    path: "{{ apps_path }}/{{ item.name }}"
+    state: directory
+    owner: "{{ ubuntu_deploy_user }}"
+    group: "{{ ubuntu_deploy_group }}"
+    mode: 0755
+  with_items: apps

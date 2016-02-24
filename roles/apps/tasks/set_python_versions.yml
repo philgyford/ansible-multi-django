@@ -1,0 +1,25 @@
+---
+
+# Populates the python_versions list, initially created in vars/main.yml.
+
+# Because I don't think we can dynamically add a python_version element
+# to the existing apps variable. So we use a separate structure.
+
+
+# Look in runtime.txt for each app and see if it contains a line like
+# python-2.7.11
+# Grab the '2.7.11' if it does.
+- name: Get python versions from repos
+  shell: cat {{ apps_path }}/{{ item.name }}/runtime.txt | sed 's/^python-\([0-9\.]*\)$/\1/'
+  with_items: apps
+  register: python_runtimes
+
+
+# Populates the existing, empty python_versions dict, so it'll be like
+# [ {'name': 'appname', 'python_version': '2.7.11'}, {...} ]
+# http://stackoverflow.com/a/35608380/250962
+# If the app has no python version declared, use default_python_version.
+- name: Populate python_versions
+  set_fact:
+    python_versions: "{{ python_versions + [ { 'name': item.item.name, 'python_version': (item.stdout == '') | ternary(default_python_version, item.stdout) } ] }}"
+  with_items: python_runtimes.results

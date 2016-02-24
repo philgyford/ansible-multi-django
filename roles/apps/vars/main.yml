@@ -1,18 +1,19 @@
 ---
 
-# Note: Only https git repos will work. Don't use git@...
+# This will be created in the set_python_versions.yml tasks.
+# It will be like [ {'name': 'appname', 'python_version': '2.7.11'}, {...} ]
+python_versions: []
 
+# Note: Only https git repos will work. Don't use git@...
 apps:
   - name: 'samuelpepys-twitter'
     git_repo: 'https://github.com/philgyford/samuelpepys-twitter.git'
     git_repo_branch: 'master'
-    python_version: 2.7.11
     pip_requirements_file: 'requirements.txt'
 
   - name: 'pepysdiary'
     git_repo: 'https://github.com/philgyford/pepysdiary.git'
     git_repo_branch: 'ansible'
-    python_version: 2.7.6
     pip_requirements_file: 'requirements.txt'
     db_type: 'postgresql'
     db_password: '{{ vault.pepysdiary.db_password }}'

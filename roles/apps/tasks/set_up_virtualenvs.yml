@@ -4,9 +4,8 @@
 - name: Install python versions for apps
   become: yes
   become_user: '{{ ubuntu_deploy_user }}'
-  with_items: apps
-  when: item.python_version is defined
   shell: . {{ deploy_user_rc_file }} && {{ pyenv_path }}/libexec/pyenv install {{ item.python_version }}
+  with_items: python_versions
   args:
     creates: "{{ pyenv_path }}/versions/{{ item.python_version }}/bin/python"
 
@@ -14,40 +13,37 @@
 - name: Create virtualenvs for apps
   become: yes
   become_user: '{{ ubuntu_deploy_user }}'
-  with_items: apps
-  when: item.python_version is defined
   shell: . {{ deploy_user_rc_file }} && {{ pyenv_path }}/libexec/pyenv virtualenv {{ item.python_version }} {{ item.name }}
+  with_items: python_versions
   args:
     creates: "{{ pyenv_path }}/versions/{{ item.name }}/bin/activate"
 
 # Set the virtualenv name in each repo's .python-version file.
 - name: Create .python-version files for virtualenvs
-  with_items: apps
-  when: item.python_version is defined
   copy:
     dest: "{{ apps_path }}/{{ item.name }}/.python-version"
     content: "{{ item.name }}"
-
+  with_items: python_versions
 
 # Changing
 - name: Install python packages required by apps
   become: yes
   become_user: '{{ ubuntu_deploy_user }}'
-  with_items: apps
-  when: item.pip_requirements_file is defined
   pip:
     executable: '{{ pyenv_path }}/versions/{{ item.name }}/bin/pip'
     virtualenv: '{{ pyenv_path }}/versions/{{ item.name }}'
     requirements: '{{ apps_path }}/{{ item.name }}/{{ item.pip_requirements_file }}'
+  with_items: apps
+  when: item.pip_requirements_file is defined
 
 - name: Install extra python packages
   become: yes
   become_user: '{{ ubuntu_deploy_user }}'
-  with_items: apps
   pip:
     executable: '{{ pyenv_path }}/versions/{{ item.name }}/bin/pip'
     virtualenv: '{{ pyenv_path }}/versions/{{ item.name }}'
     name: setproctitle # To make gunicorn appear with app name in `ps` etc.
+  with_items: apps
 
 - name: Create the virtualenv postactivate script to set environment variables
   template:
@@ -58,7 +54,6 @@
     mode: 0640
     backup: yes
   with_items: apps
-  when: item.python_version is defined
   ignore_errors: yes
   tags:
     - deploy

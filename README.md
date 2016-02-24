@@ -15,7 +15,11 @@ To add a new app (ie, a new website on a new domain):
 4. If you want a custom Nginx config file, copy `roles/apps/templates/nginx_site_config_default.j2` to `roles/apps/templates/nginx_site_config_appname.j2` and customise that. **NOTE:** Not currently working, see [this issue](https://github.com/philgyford/ansible-playbook/issues/9).
 5. Cross your fingers and run the playbook.
 
-The app's repo will be checked out to `/home/deploy/webapps/appname/`. If a python version is set then a virtualenv will be created at `/home/deploy/.pyenv/versions/appname` . (Both assuming your `ubuntu_deploy_user` is `deploy`.)
+The app's repo will be checked out to `/home/deploy/webapps/appname/`.
+
+A python virtualenv will be created at `/home/deploy/.pyenv/versions/appname`. If the repo has a `runtime.txt` file whose first line is like `python-2.7.11` then that python version will be used in the virtualenv. Otherwise, the `default_python_version` will be used.
+
+(Both those paths assum your `ubuntu_deploy_user` (set in `env_vars/*.yml`) is `deploy`.)
 
 ### App config
 
@@ -26,7 +30,6 @@ You'll need to alter `roles/apps/vars/main.yml` to reflect the websites (called 
       - name: 'myapp'
         git_repo: 'https://github.com/myname/myrepo.git'
         git_repo_branch: 'master'
-        python_version: 2.7.11
         pip_requirements_file: 'requirements.txt'
         db_type: 'postgresql'
         db_password: '{{ vault.myapp.db_password }}'
@@ -46,15 +49,13 @@ You'll need to alter `roles/apps/vars/main.yml` to reflect the websites (called 
       - name: 'anotherapp'
         # etc...
 
-The presence of many of these options determines which tasks will be run for the app. eg, if `python_version` is present then a python virtualenv will be created; otherwise it won't. The options:
+The presence of many of these options determines which tasks will be run for the app. eg, if `db_type` is present then a database will be created; otherwise it won't. The options:
 
 * `name`: Required. No spaces. Must be unique. Depending on other options, will be used as directory names, virtualenv name, database name and user, etc.
 
 * `git_repo`: Optional. The `https://github.com...` path to the git repository. It won't work with a `git@github.com...` path. Although optional, not much will happen without this.
 
 * `git_repo_branch`: Optional. The name of the branch to check out. If omitted, defaults to `'master'`.
-
-* `python_version`: Optional. e.g. `3.5.1`. If set, will be used to create a python virtualenv for this app using pyenv.
 
 * `pip_requirements_file`: Optional. If the app has a pip requirements file, set the path to it within the repo here. eg, `requirements.txt`. Otherwise, omit this. If set, the python packages will be installed.
 
@@ -117,6 +118,12 @@ myproject
 ```
 
 (`myproject` is the same as the `name` variable in the `apps` config, above.)
+
+
+### Logs
+
+Nginx and Gunicorn logs for each app are in `/home/deploy/.pyenv/versions/appname/logs/`, assuming `deploy` is the deploy user name.
+
 
 
 ## Vagrant
