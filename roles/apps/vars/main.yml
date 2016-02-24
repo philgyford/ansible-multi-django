@@ -11,19 +11,18 @@ apps:
 
   - name: 'pepysdiary'
     git_repo: 'https://github.com/philgyford/pepysdiary.git'
-    git_repo_branch: 'master'
+    git_repo_branch: 'ansible'
     python_version: 2.7.6
     pip_requirements_file: 'requirements.txt'
     db_type: 'postgresql'
-    db_password: '{{ pepysdiary_db_password }}'
-    django_settings_file:
-      production: 'pepysdiary.settings.live'
-      vagrant: 'pepysdiary.settings.live'
-    nginx_config:
-      production:
-        allowed_hosts: 'pepysdiary.com|www.pepysdiary.com'
-      vagrant:
-        allowed_hosts: 'pepysdiary.dev|www.pepysdiary.dev'
+    db_password: '{{ vault.pepysdiary.db_password }}'
+    allowed_hosts:
+      production: ['pepysdiary.com', 'www.pepysdiary.com']
+      vagrant: ['pepysdiary.dev', 'www.pepysdiary.dev']
+    django_settings_module:
+      production: 'pepysdiary.settings.production'
+      vagrant: 'pepysdiary.settings.vagrant'
+    nginx_config: {}
     gunicorn_config:
       production:
         max_requests: 1000 # Restarts after this many requests.
@@ -32,37 +31,5 @@ apps:
         max_requests: 1 # Reloads code on every request.
         num_workers: 3
       # Also, optional: timeout_seconds
-
-    # Will be put in the virtualenv's postactivate file:
-    environment_variables:
-      AKISMET_API_KEY: '{{ pepysdiary_akismet_api_key }}'
-
-      ALLOWED_HOSTS: '.pepysdiary.dev'
-      COMPRESS_ENABLED: 'True'
-
-      # NAME and USERNAME should be the same as the app's `name`:
-      DB_NAME: 'pepysdiary'
-      DB_USERNAME: 'pepysdiary'
-      DB_HOST: 'localhost'
-      DB_PASSWORD: '{{ pepysdiary_db_password }}'
-
-      DJANGO_SETTINGS_MODULE: 'pepysdiary.settings.live'
-
-      GOOGLE_ANALYTICS_ID: 'UA-89135-2'
-
-      MAPBOX_ACCESS_TOKEN: 'pk.eyJ1IjoicGhpbGd5Zm9yZCIsImEiOiJUUGpZME9zIn0.O3bxMZ-0-Fq-e0HwR6-xcA'
-      MAPBOX_MAP_ID: 'philgyford.hnhb28lo'
-
-      PREPEND_WWW: 'True'
-
-      RECAPTCHA_PRIVATE_KEY: '{{ pepysdiary_recaptcha_private_key }}'
-      RECAPTCHA_PUBLIC_KEY: '{{ pepysdiary_recaptcha_public_key }}'
-
-      SECRET_KEY: '{{ pepysdiary_django_secret_key }}'
-
-      SENDGRID_USERNAME: '{{ pepysdiary_sendgrid_username }}'
-      SENDGRID_PASSWORD: '{{ pepysdiary_sendgrid_password }}'
-
-      USE_SPAM_CHECK: 'True'
 
   - name: myphpapp

@@ -3,40 +3,40 @@
 # - name: Django - Run the syncdb command
 #   become_user: postgres
 #   with_items: apps
-#   when: item.django_settings_file is defined
+#   when: item.django_settings_module is defined
 #   django_manage:
 #     command: syncdb
 #     app_path: '{{ apps_path }}/{{ item.name }}'
 #     virtualenv: '{{ pyenv_path }}/versions/{{ item.name }}'
-#     settings: '{{ item.django_settings_file[env_name] }}'
-#   environment: '{{ item.environment_variables }}'
-#   # when: run_django_syncdb is defined and run_django_syncdb
+#     settings: '{{ item.django_settings_module[env_name] }}'
 #   tags:
 #     - django.syncdb
 
 - name: Django - Run database migrations
   become_user: postgres
-  with_items: apps
-  when: item.django_settings_file is defined
   django_manage:
     command: migrate
     app_path: '{{ apps_path }}/{{ item.name }}'
     virtualenv: '{{ pyenv_path }}/versions/{{ item.name }}'
-    settings: '{{ item.django_settings_file[env_name] }}'
-  environment: '{{ item.environment_variables }}'
-  # when: run_django_db_migrations is defined and run_django_db_migrations
+    settings: '{{ item.django_settings_module[env_name] }}'
+  with_items: apps
+  when: item.django_settings_module is defined
+  environment:
+    # For some reason it doesn't pick this up from the virtualenv:
+    SECRET_KEY: '{{ vault[item.name].django_secret_key }}'
   tags:
-    - django.migrate
+  - django.migrate
 
 - name: Django - Run collectstatic
-  with_items: apps
-  when: item.django_settings_file is defined
   django_manage:
     command: collectstatic
     app_path: '{{ apps_path }}/{{ item.name }}'
     virtualenv: '{{ pyenv_path }}/versions/{{ item.name }}'
-    settings: '{{ item.django_settings_file[env_name ]}}'
-  environment: '{{ item.environment_variables }}'
-  # when: run_django_db_migrations is defined and run_django_db_migrations
+    settings: '{{ item.django_settings_module[env_name] }}'
+  with_items: apps
+  when: item.django_settings_module is defined
+  environment:
+    # For some reason it doesn't pick this up from the virtualenv:
+    SECRET_KEY: '{{ vault[item.name].django_secret_key }}'
   tags:
     - django.collectstatic

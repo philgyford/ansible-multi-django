@@ -16,9 +16,11 @@ server {
     error_log {{ pyenv_path }}/versions/{{ item.name }}/logs/nginx_error.log;
 
     # Deny illegal Host headers
-    if ($http_host !~* ^({{ item.nginx_config[env_name].allowed_hosts }})$ ) {
-        return 444;
-    }
+    {% if item.allowed_hosts is defined and item.allowed_hosts[env_name] is defined %}
+        if ($host !~* ^({{ item.allowed_hosts[env_name]|join('|') }})$ ) {
+            return 444;
+        }
+    {% endif %}
 
     location / {
         if (-f {{ pyenv_path }}/versions/{{ item.name }}/maintenance_on.html) {

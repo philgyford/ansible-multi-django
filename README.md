@@ -7,9 +7,48 @@ Designed to host multiple websites, from different git repositories, on a single
 
 ## Apps
 
-You'll need to alter `roles/apps/vars/main.yml` to reflect the websites (called "apps" here you want to install). Each item in the list has one or more of these elements:
+To add a new app (ie, a new website on a new domain):
 
-* `name`: Required. No spaces. Will be used as a directory name for where its git repo will be checked out to. A single directory name that will be put within `apps_path` (defined in an `env_vars/*.yml` file). Also used for a virtualenv name, if required.
+1. Add its config to `roles/apps/vars/main.yml` (see below for options).
+2. Add its secret config to the encrypted `roles/apps/vars/vault.yml` (see further below).
+3. If it uses a virtualenv and needs environment variables set, create a `roles/apps/templates/virtualenv_postactivate_appname.j2` file (where `appname` corresponds to `name` in the app's config).
+4. If you want a custom Nginx config file, copy `roles/apps/templates/nginx_site_config_default.j2` to `roles/apps/templates/nginx_site_config_appname.j2` and customise that. **NOTE:** Not currently working, see [this issue](https://github.com/philgyford/ansible-playbook/issues/9).
+5. Cross your fingers and run the playbook.
+
+The app's repo will be checked out to `/home/deploy/webapps/appname/`. If a python version is set then a virtualenv will be created at `/home/deploy/.pyenv/versions/appname` . (Both assuming your `ubuntu_deploy_user` is `deploy`.)
+
+### App config
+
+You'll need to alter `roles/apps/vars/main.yml` to reflect the websites (called "apps" here you want to install). The file looks something like this:
+
+    ---
+    apps:
+      - name: 'myapp'
+        git_repo: 'https://github.com/myname/myrepo.git'
+        git_repo_branch: 'master'
+        python_version: 2.7.11
+        pip_requirements_file: 'requirements.txt'
+        db_type: 'postgresql'
+        db_password: '{{ vault.myapp.db_password }}'
+        allowed_hosts:
+          production: ['example.org', 'www.example.org']
+          vagrant: ['example.dev', 'www.example.dev']
+        django_settings_module:
+          production: 'mydjangoapp.settings.production'
+          vagrant: 'mydjangoapp.settings.vagrant'
+        nginx_config: {}
+        gunicorn_config:
+          production:
+            max_requests: 1000
+            num_workers: 3
+          vagrant:
+            max_requests: 1
+      - name: 'anotherapp'
+        # etc...
+
+The presence of many of these options determines which tasks will be run for the app. eg, if `python_version` is present then a python virtualenv will be created; otherwise it won't. The options:
+
+* `name`: Required. No spaces. Must be unique. Depending on other options, will be used as directory names, virtualenv name, database name and user, etc.
 
 * `git_repo`: Optional. The `https://github.com...` path to the git repository. It won't work with a `git@github.com...` path. Although optional, not much will happen without this.
 
@@ -23,14 +62,11 @@ You'll need to alter `roles/apps/vars/main.yml` to reflect the websites (called 
 
 * `db_password`: Optional. Password for the database. Database name and username will be the same as the app's `name`.
 
-* `django_settings_file`: Optional. A dictionary with keys of environment names (eg, `production`) and the Python path to the settings file within the app, eg, if the app is in `django-myproject/myproject/settings/live.py` then use `production: myproject.settings.live`.
+* `allowed_hosts`: Optional. A dictionary with keys of environment names (eg, `production`) each one with an array of allowed hostnames. eg, `production: ['example.org', 'www.example.org']`. Used in Nginx config and maybe in your `virtualenv_postactivate_appname.j2` template.
 
-* `environment_variables`: Optional. A dictionary of keys/values that will be added to the virtualenv's `postactivate` script.
+* `django_settings_module`: Optional. A dictionary with keys of environment names (eg, `production`) and the Python path to the settings file within the app. eg, `production: 'myproject.settings.live'`.
 
-* `nginx_config`: Optional. If present, the site will have its Nginx site enabled.
-
-    Within there should be one dictionary per environment (eg, `production`), each containing config variables:
-    * `allowed_hosts`: Required. A dictionary of domain patterns for environment names.
+* `nginx_config`: Optional. If present, the site will have its Nginx site enabled. We don't currently use any settings in here, so it should be set to an empty dictionary (`{}`).
 
 * `gunicorn_config`: Optional. If present Gunicorn and Supervisor will be set up.
 
@@ -39,32 +75,28 @@ You'll need to alter `roles/apps/vars/main.yml` to reflect the websites (called 
     * `num_workers`: Optional, default `3`
     * `timeout_seconds`: Optional, default `30`
 
-eg:
-
-    nginx_config:
-      production:
-        allowed_hosts: 'mydomain.com|www.mydomain.com'
-      vagrant:
-        allowed_hosts: 'mydomain.dev|www.mydomain.dev'
-    gunicorn_config:
-      production:
-        max_requests: 1000
-        num_workers: 3
-        timeout_seconds: 30
-      vagrant:
-        max_requests: 1
-
-If you want a custom Nginx config file, copy `roles/apps/templates/nginx_site_config_default.j2` to `roles/apps/templates/nginx_site_config_{{ app.name }}.j2` and customise that. NOTE: Not currently working see https://github.com/philgyford/ansible-playbook/issues/9
+### Vaulted config
 
 In addition, the `roles/apps/vars/vault.yml` file is encrypted with ansible-vault, and contains variables that can be used in `roles/apps/vars/main.yml`. eg, in `main.yml` we might have:
 
     apps:
 	  - name: 'pepysdiary'
-	    db_password: '{{ pepysdiary_db_password }}'
+	    db_password: '{{ vault.pepysdiary.db_password }}'
 
 And in `vault.yml` we'd have this (except the entire file is encrypted of course):
 
-	pepysdiary_db_password: 'secretpassword'
+    vault:
+      pepysdiary:
+    	db_password: 'secretpassword'
+
+See `roles/apps/vars/vault_example.yml` for an unencrypted example file. Copy it to `roles/apps/vars/vault.yml` and encrypt it with:
+
+    $ ansible-vault encrypt roles/apps/vars/vault.yml
+
+Edit it with:
+
+    $ ansible-vault edit roles/apps/vars/vault.yml
+
 
 ### Django sites
 
@@ -99,7 +131,7 @@ To subsequently run ansible over the box again:
 
 Or, possibly quicker:
 
-	$ ansible-playbook --private-key=.vagrant/machines/default/virtualbox/private_key --user=vagrant --connection=ssh --inventory-file=.vagrant/provisioners/ansible/inventory/vagrant_ansible_inventory --ask-vault-pass vagrant.yml
+	$ ansible-playbook --private-key=.vagrant/machines/default/virtualbox/private_key --user=vagrant --connection=ssh --inventory-file=.vagrant/provisioners/ansible/inventory/vagrant_ansible_inventory -v --ask-vault-pass vagrant.yml
 
 When recreating the box I did get an error at this point, and doing this fixed it:
 
@@ -142,7 +174,7 @@ or as the standard `vagrant` user:
 5. Run the playbook (note, this first time we specify the user as `root`):
 
 	```
-	$ ansible-playbook --inventory-file=inventories/production.ini --user=root --ask-vault-pass production.yml
+	$ ansible-playbook --inventory-file=inventories/production.ini --user=root --ask-vault-pass -v production.yml
 	```
 
 6. It should be all done. If the variable `ubuntu_use_firewall` is true (set in `env_vars/*.yml`), then you'll only be able to SSH to the `ubuntu_ssh_port` as the `ubuntu_deploy_user` eg, if the user is `deploy` and `ubuntu_ssh_port` is `1025`:
@@ -168,5 +200,5 @@ or as the standard `vagrant` user:
 8. For subsequent runs, you'll need to set it to use the `ubuntu_deploy_user` and use `--sudo` to become sudo, and `--ask-sudo-pass` to be prompted for the sudo password (set in an `env_vars/*.yml` file):
 
 	```
-	$ ansible-playbook --inventory-file=inventories/production.ini --user=deploy --sudo --ask-sudo-pass production.yml
+	$ ansible-playbook --inventory-file=inventories/production.ini --user=deploy --sudo  -v --ask-sudo-pass production.yml
 	```

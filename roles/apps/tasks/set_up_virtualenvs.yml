@@ -51,13 +51,14 @@
 
 - name: Create the virtualenv postactivate script to set environment variables
   template:
-    src: virtualenv_postactivate.j2
+    src: virtualenv_postactivate_{{ item.name }}.j2
     dest: '{{ pyenv_path }}/versions/{{ item.name }}/bin/postactivate'
     owner: '{{ ubuntu_deploy_user }}'
     group: '{{ ubuntu_deploy_group }}'
     mode: 0640
     backup: yes
   with_items: apps
-  when: item.environment_variables is defined
+  when: item.python_version is defined
+  ignore_errors: yes
   tags:
     - deploy

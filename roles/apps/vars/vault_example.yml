@@ -1,0 +1,9 @@
+---
+
+vault:
+  appname:
+    db_password: 'my-password'
+    django_secret_key: 'mySECRETkey'
+    other_private_variable: 'another-secret'
+  anotherapp:
+    db_password: 'etc'
