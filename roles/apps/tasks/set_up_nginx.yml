@@ -23,8 +23,9 @@
     - deploy
 
 - name: Ensure default Nginx site is disabled
-  command: rm /etc/nginx/sites-enabled/default
-           removes=/etc/nginx/sites-enabled/default
+  file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
   notify: reload nginx
 
 - name: Ensure apps' Ningx sites are enabled
