@@ -22,8 +22,12 @@
   with_items: apps
   when: item.django_settings_module is defined
   environment:
-    # For some reason it doesn't pick this up from the virtualenv:
+    # Env vars aren't currently being picked up from virtualenv:
     SECRET_KEY: '{{ vault[item.name].django_secret_key }}'
+    DB_NAME: '{{ item.name }}'
+    DB_USERNAME: '{{ item.name }}'
+    DB_HOST: 'localhost'
+    DB_PASSWORD: '{{ vault[item.name].db_password }}'
   tags:
   - django.migrate
 
@@ -36,7 +40,7 @@
   with_items: apps
   when: item.django_settings_module is defined
   environment:
-    # For some reason it doesn't pick this up from the virtualenv:
+    # Env vars aren't currently being picked up from virtualenv:
     SECRET_KEY: '{{ vault[item.name].django_secret_key }}'
   tags:
     - django.collectstatic
