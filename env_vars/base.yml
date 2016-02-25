@@ -2,13 +2,6 @@
 
 env_name: 'base'
 
-# Make crypted passwords:
-#
-# pip install passlib
-# python -c "from passlib.hash import sha512_crypt; import getpass; print sha512_crypt.encrypt(getpass.getpass())"
-
-ubuntu_deploy_password: '$6$rounds=656000$onqTkZCRMWVbL2Wc$deRbKjDVYeIDSVOCJd1pG1E0sj5iHOzlb6Owx0j4qHBuA9UDFQc7XzBWLL6HKxO7K2awKf3P5z9FSMlgMxooM1'
-
 ubuntu_deploy_user: deploy
 ubuntu_deploy_group: deploy
 

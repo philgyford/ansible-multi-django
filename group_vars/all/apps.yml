@@ -1,6 +1,6 @@
 ---
 
-# This will be created in the set_python_versions.yml tasks.
+# This will be populated in the roles/apps/set_python_versions.yml tasks.
 # It will be like [ {'name': 'appname', 'python_version': '2.7.11'}, {...} ]
 python_versions: []
 

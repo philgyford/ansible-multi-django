@@ -1,2 +1,2 @@
 .vagrant
-roles/apps/vars/vault.yml
+vault.yml

@@ -9,8 +9,10 @@ Designed to host multiple websites, from different git repositories, on a single
 
 This isn't a blank canvas but the playbook I use for my own sites. However, it's built with ease-of-reuse in mind. To use it for yourself:
 
-1. Replace all the vars in `roles/apps/vars/main.yml`.
-2. Copy `roles/apps/vars/vault_example.yml` to `roles/apps/vars/vault.yml`, change the vars to what you need, and encrypt it.
+1. Replace the `apps` vars in `group_vars/all/apps.yml` with those needed for your apps.
+2. Copy `group_vars/all/vault_example.yml` to `group_vars/all/vault.yml`
+3. Set the `ubuntu_deploy_password` variable in `vault.yml` (using instructions in that file).
+4. Change the `vault` vars to what you need.
 
 That might be it. See below for more details on all those variables and how to run the playbook.
 
@@ -19,8 +21,8 @@ That might be it. See below for more details on all those variables and how to r
 
 To add a new app (ie, a new website on a new domain):
 
-1. Add its config to `roles/apps/vars/main.yml` (see below for options).
-2. Add its secret config to the encrypted `roles/apps/vars/vault.yml` (see further below).
+1. Add its config to `group_vars/all/apps.yml` (see below for options).
+2. Add its secret config to `group_vars/all/vault.yml` (see further below).
 3. If it uses a virtualenv and needs environment variables set, create a `roles/apps/templates/virtualenv_postactivate_appname.j2` file (where `appname` corresponds to `name` in the app's config).
 4. If you want a custom Nginx config file, copy `roles/apps/templates/nginx_site_config_default.j2` to `roles/apps/templates/nginx_site_config_appname.j2` and customise that. **NOTE:** Not currently working, see [this issue](https://github.com/philgyford/ansible-playbook/issues/9).
 5. Cross your fingers and run the playbook.
@@ -34,7 +36,7 @@ A python virtualenv will be created at `/home/deploy/.pyenv/versions/appname`. I
 
 ### App config
 
-You'll need to alter `roles/apps/vars/main.yml` to reflect the websites (called "apps" here you want to install). The file looks something like this:
+You'll need to alter `group_vars/all/apps.yml` to reflect the websites (called "apps" here you want to install). The file looks something like this:
 
     ---
     apps:
@@ -90,28 +92,29 @@ The presence of many of these options determines which tasks will be run for the
 
 ### Vaulted config
 
-In addition, the `roles/apps/vars/vault.yml` file is encrypted with ansible-vault, and contains variables that can be used in `roles/apps/vars/main.yml`. eg, in `vault.yml` we might have:
+In addition, the `group_vars/all/vault.yml` file is ignored by `.gitignore`, and contains variables that can be used in `group_vars/all/apps.yml`. eg, in `vault.yml` we might have:
 
     vault:
       pepysdiary:
     	db_password: 'secretpassword'
 
-And in `main.yml` we can use that password like this:
+And in `apps.yml` we can use that password like this:
 
     apps:
 	  - name: 'pepysdiary'
 	    db_password: '{{ vault.pepysdiary.db_password }}'
 
-See `roles/apps/vars/vault_example.yml` for an unencrypted example file. Copy it to `roles/apps/vars/vault.yml` and encrypt it with:
+See `group_vars/all/vault_example.yml` for an example file. Copy it to `group_vars/all/vault.yml` and edit is as needed.
 
-    $ ansible-vault encrypt roles/apps/vars/vault.yml
+Instead of having it `.gitignore`d, you could encrypt it instead. Do that with:
+
+    $ ansible-vault encrypt group_vars/all/vault.yml
 
 Edit it with:
 
-    $ ansible-vault edit roles/apps/vars/vault.yml
+    $ ansible-vault edit group_vars/all/vault.yml
 
-Currently the `vault.yml` is listed in `.gitignore` so it isn't committed to git. Encrypting it as well might be overkill...
-
+You would then need to add `--ask-vault-pass` whenever you use `ansible-playbook` (see below).
 
 ### Django sites
 
@@ -153,7 +156,7 @@ To subsequently run ansible over the box again:
 
 Or, possibly quicker:
 
-	$ ansible-playbook --private-key=.vagrant/machines/default/virtualbox/private_key --user=vagrant --connection=ssh --inventory-file=.vagrant/provisioners/ansible/inventory/vagrant_ansible_inventory -v --ask-vault-pass vagrant.yml
+	$ ansible-playbook --private-key=.vagrant/machines/default/virtualbox/private_key --user=vagrant --connection=ssh --inventory-file=.vagrant/provisioners/ansible/inventory/vagrant_ansible_inventory -v vagrant.yml
 
 When recreating the box I did get an error at this point, and doing this fixed it:
 
@@ -196,7 +199,7 @@ or as the standard `vagrant` user:
 5. Run the playbook (note, this first time we specify the user as `root`):
 
 	```
-	$ ansible-playbook --inventory-file=inventories/production.ini --user=root --ask-vault-pass -v production.yml
+	$ ansible-playbook --inventory-file=inventories/production.ini --user=root -v production.yml
 	```
 
 6. It should be all done. If the variable `ubuntu_use_firewall` is true (set in `env_vars/*.yml`), then you'll only be able to SSH to the `ubuntu_ssh_port` as the `ubuntu_deploy_user` eg, if the user is `deploy` and `ubuntu_ssh_port` is `1025`:

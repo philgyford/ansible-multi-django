@@ -1,21 +1,7 @@
 ---
 
-# Include the encrypted variables.
-# Need to give this the tags for all tasks in this role:
-- include_vars: vars/vault.yml
-  tags:
-    - deploy
-    - django
-    - django.collectstatic
-    - django.migrate
-    - django.syncdb
-    - git
-    - gunicorn
-    - nginx
-    - postgresql
-    - supervisor
-    - testing
-    - virtualenvs
+- debug: msg="{{ vault.pepysdiary.akismet_api_key }}"
+  tags: test
 
 - include: create_app_directories.yml
   tags:

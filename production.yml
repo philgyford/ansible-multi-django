@@ -4,6 +4,8 @@
 - name: Create a production machine
   hosts: all
   vars_files:
+    - group_vars/all/vault.yml
+    - group_vars/all/apps.yml
     - env_vars/base.yml
     - env_vars/production.yml
   roles:
@@ -11,5 +13,3 @@
     - python
     - postgresql
     - apps
-
-

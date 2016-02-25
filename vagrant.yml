@@ -7,6 +7,8 @@
   become_method: sudo
   remote_user: vagrant
   vars_files:
+    - group_vars/all/vault.yml
+    - group_vars/all/apps.yml
     - env_vars/base.yml
     - env_vars/vagrant.yml
   roles:
@@ -14,5 +16,3 @@
     - python
     - postgresql
     - apps
-
-
