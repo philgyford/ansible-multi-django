@@ -4,8 +4,6 @@ export AKISMET_API_KEY='{{ vault.pepysdiary.akismet_api_key }}'
 
 export ALLOWED_HOSTS='{{ item.allowed_hosts[env_name]|join(',') }}'
 
-export COMPRESS_ENABLED='True'
-
 export DB_NAME='{{ item.name }}'
 export DB_USERNAME='{{ item.name }}'
 export DB_HOST='localhost'
@@ -13,12 +11,8 @@ export DB_PASSWORD='{{ vault.pepysdiary.db_password }}'
 
 export DJANGO_SETTINGS_MODULE='{{ item.django_settings_module[env_name] }}'
 
-export GOOGLE_ANALYTICS_ID='UA-89135-2'
-
 export MAPBOX_ACCESS_TOKEN='pk.eyJ1IjoicGhpbGd5Zm9yZCIsImEiOiJUUGpZME9zIn0.O3bxMZ-0-Fq-e0HwR6-xcA'
 export MAPBOX_MAP_ID='philgyford.hnhb28lo'
-
-export PREPEND_WWW='True'
 
 export RECAPTCHA_PRIVATE_KEY='{{ vault.pepysdiary.recaptcha_private_key }}'
 export RECAPTCHA_PUBLIC_KEY='{{ vault.pepysdiary.recaptcha_public_key }}'
@@ -27,5 +21,3 @@ export SECRET_KEY='{{ vault.pepysdiary.django_secret_key }}'
 
 export SENDGRID_USERNAME='{{ vault.pepysdiary.sendgrid_username }}'
 export SENDGRID_PASSWORD='{{ vault.pepysdiary.sendgrid_password }}'
-
-export USE_SPAM_CHECK='True'
