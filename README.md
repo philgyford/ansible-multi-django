@@ -5,6 +5,16 @@ Very in progress.
 Designed to host multiple websites, from different git repositories, on a single webserver. Can be used with a Vagrant virtual machine and a DigitalOcean droplet (not tested with anything else).
 
 
+## To customise this for your own use
+
+This isn't a blank canvas but the playbook I use for my own sites. However, it's built with ease-of-reuse in mind. To use it for yourself:
+
+1. Replace all the vars in `roles/apps/vars/main.yml`.
+2. Copy `roles/apps/vars/vault_example.yml` to `roles/apps/vars/vault.yml`, change the vars to what you need, and encrypt it.
+
+That might be it. See below for more details on all those variables and how to run the playbook.
+
+
 ## Apps
 
 To add a new app (ie, a new website on a new domain):
@@ -19,7 +29,8 @@ The app's repo will be checked out to `/home/deploy/webapps/appname/`.
 
 A python virtualenv will be created at `/home/deploy/.pyenv/versions/appname`. If the repo has a `runtime.txt` file whose first line is like `python-2.7.11` then that python version will be used in the virtualenv. Otherwise, the `default_python_version` will be used.
 
-(Both those paths assum your `ubuntu_deploy_user` (set in `env_vars/*.yml`) is `deploy`.)
+(Both those paths assume your `ubuntu_deploy_user` (set in `env_vars/*.yml`) is `deploy`.)
+
 
 ### App config
 
@@ -76,19 +87,20 @@ The presence of many of these options determines which tasks will be run for the
     * `num_workers`: Optional, default `3`
     * `timeout_seconds`: Optional, default `30`
 
+
 ### Vaulted config
 
-In addition, the `roles/apps/vars/vault.yml` file is encrypted with ansible-vault, and contains variables that can be used in `roles/apps/vars/main.yml`. eg, in `main.yml` we might have:
-
-    apps:
-	  - name: 'pepysdiary'
-	    db_password: '{{ vault.pepysdiary.db_password }}'
-
-And in `vault.yml` we'd have this (except the entire file is encrypted of course):
+In addition, the `roles/apps/vars/vault.yml` file is encrypted with ansible-vault, and contains variables that can be used in `roles/apps/vars/main.yml`. eg, in `vault.yml` we might have:
 
     vault:
       pepysdiary:
     	db_password: 'secretpassword'
+
+And in `main.yml` we can use that password like this:
+
+    apps:
+	  - name: 'pepysdiary'
+	    db_password: '{{ vault.pepysdiary.db_password }}'
 
 See `roles/apps/vars/vault_example.yml` for an unencrypted example file. Copy it to `roles/apps/vars/vault.yml` and encrypt it with:
 
@@ -97,6 +109,8 @@ See `roles/apps/vars/vault_example.yml` for an unencrypted example file. Copy it
 Edit it with:
 
     $ ansible-vault edit roles/apps/vars/vault.yml
+
+Currently the `vault.yml` is listed in `.gitignore` so it isn't committed to git. Encrypting it as well might be overkill...
 
 
 ### Django sites
@@ -115,6 +129,7 @@ myproject
 │   ├── urls.py
 │   └── wsgi.py
 └── requirements.txt
+└── runtime.txt
 ```
 
 (`myproject` is the same as the `name` variable in the `apps` config, above.)

@@ -1,9 +1,11 @@
 ---
 
 vault:
-  appname:
-    db_password: 'my-password'
-    django_secret_key: 'mySECRETkey'
-    other_private_variable: 'another-secret'
-  anotherapp:
-    db_password: 'etc'
+  pepysdiary:
+    akismet_api_key: ''
+    db_password: ''
+    recaptcha_private_key: ''
+    recaptcha_public_key: ''
+    django_secret_key: ''
+    sendgrid_username: ''
+    sendgrid_password: ''
