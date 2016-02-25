@@ -92,7 +92,9 @@ The presence of many of these options determines which tasks will be run for the
 
 ### Vaulted config
 
-In addition, the `group_vars/all/vault.yml` file is ignored by `.gitignore`, and contains variables that can be used in `group_vars/all/apps.yml`. eg, in `vault.yml` we might have:
+Copy the `group_vars/all/vault_example.yml` to `group_vars/all/vault.yml` and edit is as needed. `vault.yml` is ignored by `.gitignore`, and contains variables that should be kept secret.
+
+We can then use these secret variables in tasks but also within the main `apps` variable structure, which can be kept in git unencrypted. eg, in `vault.yml` we might have:
 
     vault:
       pepysdiary:
@@ -104,9 +106,7 @@ And in `apps.yml` we can use that password like this:
 	  - name: 'pepysdiary'
 	    db_password: '{{ vault.pepysdiary.db_password }}'
 
-See `group_vars/all/vault_example.yml` for an example file. Copy it to `group_vars/all/vault.yml` and edit is as needed.
-
-Instead of having it `.gitignore`d, you could encrypt it instead. Do that with:
+Instead of having the `vault.yml` file `.gitignore`d, you could encrypt it instead. Do that with:
 
     $ ansible-vault encrypt group_vars/all/vault.yml
 
@@ -114,7 +114,8 @@ Edit it with:
 
     $ ansible-vault edit group_vars/all/vault.yml
 
-You would then need to add `--ask-vault-pass` whenever you use `ansible-playbook` (see below).
+You would then need to add the `--ask-vault-pass` argument whenever you use `ansible-playbook` (see below).
+
 
 ### Django sites
 
