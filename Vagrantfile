@@ -25,6 +25,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     ansible.limit = "webservers"
     ansible.playbook = "vagrant.yml"
     ansible.verbose = "v"
-    ansible.ask_vault_pass = true
+    # ansible.ask_vault_pass = true
   end
 end

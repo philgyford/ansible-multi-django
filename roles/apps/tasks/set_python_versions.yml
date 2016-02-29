@@ -1,6 +1,6 @@
 ---
 
-# Populates the python_versions list, initially created in vars/main.yml.
+# Populates the python_versions list, initially created in group_vars/all/apps.yml.
 
 # Because I don't think we can dynamically add a python_version element
 # to the existing apps variable. So we use a separate structure.

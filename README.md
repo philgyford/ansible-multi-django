@@ -23,7 +23,7 @@ To add a new app (ie, a new website on a new domain):
 
 1. Add its config to `group_vars/all/apps.yml` (see below for options).
 2. Add its secret config to `group_vars/all/vault.yml` (see further below).
-3. If it uses a virtualenv and needs environment variables set, create a `roles/apps/templates/virtualenv_postactivate_appname.j2` file (where `appname` corresponds to `name` in the app's config).
+3. If it uses a virtualenv and needs environment variables set, create a `roles/apps/templates/env_appname.j2` file (where `appname` corresponds to `name` in the app's config).
 4. If you want a custom Nginx config file, copy `roles/apps/templates/nginx_site_config_default.j2` to `roles/apps/templates/nginx_site_config_appname.j2` and customise that. **NOTE:** Not currently working, see [this issue](https://github.com/philgyford/ansible-playbook/issues/9).
 5. Cross your fingers and run the playbook.
 
@@ -76,7 +76,7 @@ The presence of many of these options determines which tasks will be run for the
 
 * `db_password`: Optional. Password for the database. Database name and username will be the same as the app's `name`.
 
-* `allowed_hosts`: Optional. A dictionary with keys of environment names (eg, `production`) each one with an array of allowed hostnames. eg, `production: ['example.org', 'www.example.org']`. Used in Nginx config and maybe in your `virtualenv_postactivate_appname.j2` template.
+* `allowed_hosts`: Optional. A dictionary with keys of environment names (eg, `production`) each one with an array of allowed hostnames. eg, `production: ['example.org', 'www.example.org']`. Used in Nginx config and maybe in your `env_appname.j2` template.
 
 * `django_settings_module`: Optional. A dictionary with keys of environment names (eg, `production`) and the Python path to the settings file within the app. eg, `production: 'myproject.settings.live'`.
 

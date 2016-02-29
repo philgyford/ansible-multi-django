@@ -45,10 +45,10 @@
     name: setproctitle # To make gunicorn appear with app name in `ps` etc.
   with_items: apps
 
-- name: Create the virtualenv postactivate script to set environment variables
+- name: Create the autoenv .env scripts to set environment variables
   template:
-    src: virtualenv_postactivate_{{ item.name }}.j2
-    dest: '{{ pyenv_path }}/versions/{{ item.name }}/bin/postactivate'
+    src: env_{{ item.name }}.j2
+    dest: '{{ apps_path }}/{{ item.name }}/.env'
     owner: '{{ ubuntu_deploy_user }}'
     group: '{{ ubuntu_deploy_group }}'
     mode: 0640
@@ -57,3 +57,4 @@
   ignore_errors: yes
   tags:
     - deploy
+    - test

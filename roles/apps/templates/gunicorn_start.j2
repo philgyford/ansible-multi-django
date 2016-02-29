@@ -19,7 +19,7 @@ cd $DJANGODIR
 . {{ pyenv_path }}/versions/{{ item.name }}/bin/activate
 
 # Set additional environment variables.
-. {{ pyenv_path }}/versions/{{ item.name }}/bin/postactivate
+. {{ apps_path }}/{{ item.name }}/.env
 
 # Create the run directory if it doesn't exist.
 RUNDIR=$(dirname $SOCKFILE)

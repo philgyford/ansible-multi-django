@@ -1,8 +1,5 @@
 ---
 
-- debug: msg="{{ vault.pepysdiary.akismet_api_key }}"
-  tags: test
-
 - include: create_app_directories.yml
   tags:
     - deploy
@@ -15,7 +12,7 @@
 
 - include: set_python_versions.yml
   tags:
-    - testing
+    - deploy
 
 - include: set_up_virtualenvs.yml
   tags:

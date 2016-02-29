@@ -31,6 +31,11 @@
     dest: "{{ pyenv_path }}/plugins/pyenv-virtualenv"
   tags: packages
 
+# Add a .env file to a directory and it will be executed when you CD into it.
+- name: Install autoenv
+  pip: name=autoenv
+  tags: packages
+
 - name: Add path etc to .bashrc.
   lineinfile:
     dest: "{{ deploy_user_rc_file }}"
@@ -43,6 +48,8 @@
     - 'export PATH="$PYENV_ROOT/bin:$PATH"'
     - 'eval "$(pyenv init -)"'
     - 'eval "$(pyenv virtualenv-init -)"'
+    - '# Added by Ansible for autoenv.'
+    - 'source /usr/local/bin/activate.sh'
   tags: packages
 
 - name: Ensure .pyenv permissions are set properly
