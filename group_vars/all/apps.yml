@@ -6,10 +6,10 @@ python_versions: []
 
 # Note: Only https git repos will work. Don't use git@...
 apps:
-  - name: 'samuelpepys-twitter'
-    git_repo: 'https://github.com/philgyford/samuelpepys-twitter.git'
-    git_repo_branch: 'master'
-    pip_requirements_file: 'requirements.txt'
+  # - name: 'samuelpepys-twitter'
+  #   git_repo: 'https://github.com/philgyford/samuelpepys-twitter.git'
+  #   git_repo_branch: 'master'
+  #   pip_requirements_file: 'requirements.txt'
 
   - name: 'pepysdiary'
     git_repo: 'https://github.com/philgyford/pepysdiary.git'
@@ -33,4 +33,4 @@ apps:
         num_workers: 3
       # Also, optional: timeout_seconds
 
-  - name: myphpapp
+  # - name: myphpapp
