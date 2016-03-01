@@ -3,26 +3,40 @@
 # Mostly via http://ryaneschinger.com/blog/securing-a-server-with-ansible/
 
 - name: Add deploy user
-  user: name={{ ubuntu_deploy_user }} password="{{ ubuntu_deploy_password }}" shell=/bin/bash state=present
+  user:
+    name: '{{ ubuntu_deploy_user }}'
+    password: '{{ ubuntu_deploy_password }}'
+    uid: '{{ ubuntu_deploy_user_id }}'
+    shell: /bin/bash
+    state: present
   tags: users.deploy.create
 
 - name: Add authorized keys for deploy user
-  authorized_key: user={{ ubuntu_deploy_user }}
-                  key="{{ lookup('file', item) }}"
+  authorized_key:
+    user: '{{ ubuntu_deploy_user }}'
+    key: "{{ lookup('file', item) }}"
   with_items: ubuntu_deploy_public_keys
   tags: users.deploy.keys
 
 - name: Create deploy group
-  group: name={{ ubuntu_deploy_group }} system=yes state=present
+  group:
+    name: '{{ ubuntu_deploy_group }}'
+    gid: '{{ ubuntu_deploy_group_id }}'
+    system: yes
+    state: present
   tags: users.deploy.group
 
 - name: Add deploy user to deploy group
-  user: name={{ ubuntu_deploy_user }} group={{ ubuntu_deploy_group }} state=present
+  user:
+    name: '{{ ubuntu_deploy_user }}'
+    group: '{{ ubuntu_deploy_group }}'
+    state: present
   tags: users.deploy.group
 
 - name: Add deploy user to sudoers
-  lineinfile: dest=/etc/sudoers
-              regexp="{{ ubuntu_deploy_user }} ALL"
-              line="{{ ubuntu_deploy_user }} ALL=(ALL) ALL"
-              state=present
+  lineinfile:
+    dest: /etc/sudoers
+    regexp: "{{ ubuntu_deploy_user }} ALL"
+    line: "{{ ubuntu_deploy_user }} ALL=(ALL) ALL"
+    state: present
   tags: users.deploy.sudoers

@@ -12,3 +12,5 @@
     group: "{{ ubuntu_deploy_group }}"
     mode: 0755
   with_items: apps
+  # Because we use Vagrant synced_folders:
+  when: env_name != 'vagrant'

@@ -3,7 +3,9 @@
 env_name: 'base'
 
 ubuntu_deploy_user: deploy
+ubuntu_deploy_user_id: 5000
 ubuntu_deploy_group: deploy
+ubuntu_deploy_group_id: 5000
 
 ubuntu_deploy_public_keys:
   - ~/.ssh/id_rsa.pub

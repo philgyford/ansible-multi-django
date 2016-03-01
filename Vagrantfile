@@ -14,9 +14,20 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     vb.customize ["modifyvm", :id, "--name", "AnsiblePlaybook", "--memory", "512"]
   end
 
-  # Shared folder from the host machine to the guest machine. Uncomment the line
-  # below to enable it.
-  #config.vm.synced_folder "../../../my-cool-app", "/webapps/mycoolapp/my-cool-app"*/
+
+  # Change the lines below to map from directories on the host (local) machine
+  # to the guest (Vagrant) machine.
+
+  # NOTE: The owner and group IDs should be the same as those set in
+  # env_vars/*.yml files. Because of this problem:
+  # http://ryansechrest.com/2014/04/unable-set-permissions-within-shared-folder-using-vagrant-virtualbox/
+ 
+  # AND: guest path should be like /home/[ubuntu_deploy_user]/webapps/[appname]
+
+  config.vm.synced_folder "../../Projects/personal/django-pepysdiary/",
+    "/home/deploy/webapps/pepysdiary",
+    owner: 5000, group: 5000, mount_options: ['dmode=755', 'fmode=755']
+
 
   # Ansible provisioner.
   config.vm.provision "ansible" do |ansible|
