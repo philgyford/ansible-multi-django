@@ -49,9 +49,7 @@
     - 'eval "$(pyenv init -)"'
     - 'eval "$(pyenv virtualenv-init -)"'
     - '# Added by Ansible for autoenv.'
-    # Use `bash` not `source` here, because the latter will use dash, the
-    # default shell under unix, but this is a bash script:
-    - 'bash `which activate.sh`'
+    - 'source `which activate.sh`'
   tags: packages
 
 - name: Ensure .pyenv permissions are set properly
