@@ -21,13 +21,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # NOTE: The owner and group IDs should be the same as those set in
   # env_vars/*.yml files. Because of this problem:
   # http://ryansechrest.com/2014/04/unable-set-permissions-within-shared-folder-using-vagrant-virtualbox/
- 
+
   # AND: guest path should be like /home/[ubuntu_deploy_user]/webapps/[appname]
 
   config.vm.synced_folder "../../Projects/personal/django-pepysdiary/",
-    "/home/deploy/webapps/pepysdiary",
-    owner: 5000, group: 5000, mount_options: ['dmode=755', 'fmode=755']
-
+    "/webapps/pepysdiary",
+    owner: 5000, group: 5000, mount_options: ['dmode=775', 'fmode=664']
 
   # Ansible provisioner.
   config.vm.provision "ansible" do |ansible|
