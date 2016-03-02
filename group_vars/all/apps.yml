@@ -28,9 +28,11 @@ apps:
       production:
         max_requests: 1000 # Restarts after this many requests.
         num_workers: 3 # Rule of thumb: 2 * CPUs + 1
+        loglevel: 'error' # debug, info, warning, error, critical
       vagrant:
         max_requests: 1 # Reloads code on every request.
         num_workers: 3
+        loglevel: 'debug'
       # Also, optional: timeout_seconds
 
   # - name: myphpapp

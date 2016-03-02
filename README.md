@@ -61,6 +61,7 @@ You'll need to alter `group_vars/all/apps.yml` to reflect the websites (called "
             num_workers: 3
           vagrant:
             max_requests: 1
+            loglevel: 'debug'
       - name: 'anotherapp'
         # etc...
 
@@ -86,7 +87,8 @@ The presence of many of these options determines which tasks will be run for the
 
 * `gunicorn_config`: Optional. If present Gunicorn and Supervisor will be set up.
 
-    Within there should be one dictionary per environment (eg, `production`), each containing config variables:
+    Within, there should be one dictionary per environment (eg, `production`), each containing config variables:
+    * `loglevel`: Optional, default `"info"'. One of debug, info, warning, error, critical.
     * `max_requests`: Optional, default `1000`
     * `num_workers`: Optional, default `3`
     * `timeout_seconds`: Optional, default `30`
