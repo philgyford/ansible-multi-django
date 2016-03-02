@@ -1,6 +1,6 @@
 [program:{{ item.name }}]
 command = {{ pyenv_path }}/versions/{{ item.name }}/bin/gunicorn_start
 user = {{ ubuntu_deploy_user }}
-stdout_logfile = {{ pyenv_path }}/versions/{{ item.name }}/logs/gunicorn_supervisor.log
+stdout_logfile = {{ apps_path }}/{{ item.name }}/logs/gunicorn_supervisor.log
 redirect_stderr = true
 environment=LANG=en_US.UTF-8,LC_ALL=en_US.UTF-8

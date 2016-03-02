@@ -22,26 +22,15 @@
   when: item.gunicorn_config is defined
   tags: deploy
 
-# Also in set_up_nginx.yml
-- name: Create log folder, if it doesn't already exist
-  file:
-    path: '{{ pyenv_path }}/versions/{{ item.name }}/logs/'
-    owner: '{{ ubuntu_deploy_user }}'
-    group: '{{ ubuntu_deploy_group }}'
-    mode: 0774
-    state: directory
-  with_items: apps
-  when: item.gunicorn_config is defined
-
 - name: Create application log file
-  command: touch {{ pyenv_path }}/versions/{{ item.name }}/logs/gunicorn_supervisor.log
-           creates={{ pyenv_path }}/versions/{{ item.name }}/logs/gunicorn_supervisor.log
+  command: touch {{ apps_path }}/{{ item.name }}/logs/gunicorn_supervisor.log
+           creates={{ apps_path }}/{{ item.name }}/logs/gunicorn_supervisor.log
   with_items: apps
   when: item.gunicorn_config is defined
 
 - name: Set permission to the application log file
   file:
-    path: '{{ pyenv_path }}/versions/{{ item.name }}/logs/gunicorn_supervisor.log'
+    path: '{{ apps_path }}/{{ item.name }}/logs/gunicorn_supervisor.log'
     owner: '{{ ubuntu_deploy_user }}'
     group: '{{ ubuntu_deploy_group }}'
     mode: 0664

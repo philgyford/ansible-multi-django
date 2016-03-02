@@ -14,3 +14,12 @@
   with_items: apps
   # Because we use Vagrant synced_folders:
   when: env_name != 'vagrant'
+
+- name: Create logs folder, if it doesn't already exist
+  file:
+    path: '{{ apps_path}}/{{ item.name }}/logs/'
+    owner: '{{ ubuntu_deploy_user }}'
+    group: '{{ ubuntu_deploy_group }}'
+    mode: 0774
+    state: directory
+  with_items: apps
