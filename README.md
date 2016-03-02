@@ -4,6 +4,8 @@ Very in progress.
 
 Designed to host multiple websites, from different git repositories, on a single webserver. Can be used with a Vagrant virtual machine and a DigitalOcean droplet (not tested with anything else).
 
+The `common` role sets up the basic machine. `postgresql` installs the database, but doesn't set up databases. `python` installs Python, pyenv, virtualenv and autoenv. The `apps` role sets up things like databases, Nginx, Gunicorn, virtualenvs, directories, etc for each separate app (website) we've added configuration for.
+
 
 ## To customise this for your own use
 
