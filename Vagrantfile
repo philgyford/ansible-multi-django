@@ -24,9 +24,15 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   # AND: guest path should be like /home/[ubuntu_deploy_user]/webapps/[appname]
 
+  # AND: File permissions need to be 777 so that Django's manage.py file is
+  # executable. There's no way of subsequently changing permissions within a
+  # synced folder under VirtualBox.
+
   config.vm.synced_folder "../../Projects/personal/django-pepysdiary/",
     "/webapps/pepysdiary",
-    owner: 5000, group: 5000, mount_options: ['dmode=775', 'fmode=664']
+    owner: 5000, group: 5000, mount_options: ['dmode=775', 'fmode=777']
+
+
 
   # Ansible provisioner.
   config.vm.provision "ansible" do |ansible|

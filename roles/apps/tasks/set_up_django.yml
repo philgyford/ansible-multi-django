@@ -12,6 +12,9 @@
 #   tags:
 #     - django.syncdb
 
+
+# NOTE: manage.py must have `#!/usr/bin/env python`.
+
 - name: Django - Run database migrations
   become_user: postgres
   django_manage:
