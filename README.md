@@ -13,6 +13,7 @@ This isn't a blank canvas but the playbook I use for my own sites. However, it's
 2. Copy `group_vars/all/vault_example.yml` to `group_vars/all/vault.yml`
 3. Set the `ubuntu_deploy_password` variable in `vault.yml` (using instructions in that file).
 4. Change the `vault` vars to what you need.
+5. To use with Vagrant, set a synced folder for each app in the `Vagrantfile`.
 
 That might be it. See below for more details on all those variables and how to run the playbook.
 
@@ -25,13 +26,14 @@ To add a new app (ie, a new website on a new domain):
 2. Add its secret config to `group_vars/all/vault.yml` (see further below).
 3. If it uses a virtualenv and needs environment variables set, create a `roles/apps/templates/env_appname.j2` file (where `appname` corresponds to `name` in the app's config).
 4. If you want a custom Nginx config file, copy `roles/apps/templates/nginx_site_config_default.j2` to `roles/apps/templates/nginx_site_config_appname.j2` and customise that. **NOTE:** Not currently working, see [this issue](https://github.com/philgyford/ansible-playbook/issues/9).
+4. To use with Vagrant, set a synced folder for each app in the `Vagrantfile`.
 5. Cross your fingers and run the playbook.
 
-The app's repo will be checked out to `/home/deploy/webapps/appname/`.
+By default, the app's repo will be checked out to `/webapps/appname/`.
 
 A python virtualenv will be created at `/home/deploy/.pyenv/versions/appname`. If the repo has a `runtime.txt` file whose first line is like `python-2.7.11` then that python version will be used in the virtualenv. Otherwise, the `default_python_version` will be used.
 
-(Both those paths assume your `ubuntu_deploy_user` (set in `env_vars/*.yml`) is `deploy`.)
+(Both those paths, and subsequent examples, assume your `ubuntu_deploy_user` (set in `env_vars/*.yml`) is `deploy`.)
 
 
 ### App config
@@ -138,6 +140,8 @@ myproject
 
 (`myproject` is the same as the `name` variable in the `apps` config, above.)
 
+Note that `manage.py` must have `#!/usr/bin/env python` as its shebang, and must be executable.
+
 
 ### Logs
 
@@ -147,7 +151,7 @@ Nginx and Gunicorn logs for each app are in `/home/deploy/.pyenv/versions/appnam
 
 ## Vagrant
 
-To set up the Vagrant box:
+To create the Vagrant box:
 
 	$ vagrant up
 
