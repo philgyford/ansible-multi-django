@@ -11,11 +11,11 @@
   when: item.gunicorn_config is defined
 
 - name: Re-read Supervisor config files
-  supervisorctl: name={{ item.name }} state=present
+  supervisorctl: name={{ item.name }}_gunicorn state=present
   with_items: apps
   when: item.gunicorn_config is defined
 
 - name: Restart Supervisor
-  supervisorctl: name={{ item.name }} state=restarted
+  supervisorctl: name={{ item.name }}_gunicorn state=restarted
   with_items: apps
   when: item.gunicorn_config is defined

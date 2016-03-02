@@ -1,4 +1,4 @@
-[program:{{ item.name }}]
+[program:{{ item.name }}_gunicorn]
 command = {{ pyenv_path }}/versions/{{ item.name }}/bin/gunicorn_start
 user = {{ ubuntu_deploy_user }}
 stdout_logfile = {{ apps_path }}/{{ item.name }}/logs/gunicorn_supervisor.log

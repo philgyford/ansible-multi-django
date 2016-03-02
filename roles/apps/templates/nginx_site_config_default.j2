@@ -7,20 +7,21 @@ upstream {{ item.name }}_wsgi_server {
 }
 
 server {
-    listen      80;
-    server_name {{ item.name }};
+   # if no Host match, close the connection to prevent host spoofing
+   listen 80 default_server;
+   return 444;
+}
 
+server {
+    listen 80;
     client_max_body_size 4G;
+
+    server_name {{ item.allowed_hosts[env_name]|join(' ') }};
+
+    keepalive_timeout 5;
 
     access_log {{ apps_path }}/{{ item.name }}/logs/nginx_access.log;
     error_log {{ apps_path }}/{{ item.name }}/logs/nginx_error.log;
-
-    # Deny illegal Host headers
-    {% if item.allowed_hosts is defined and item.allowed_hosts[env_name] is defined %}
-        if ($host !~* ^({{ item.allowed_hosts[env_name]|join('|') }})$ ) {
-            return 444;
-        }
-    {% endif %}
 
     location / {
         if (-f {{ pyenv_path }}/versions/{{ item.name }}/maintenance_on.html) {

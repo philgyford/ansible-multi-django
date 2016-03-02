@@ -228,3 +228,24 @@ or as the standard `vagrant` user:
 	```
 	$ ansible-playbook --inventory-file=inventories/production.ini --user=deploy --sudo  -v --ask-sudo-pass production.yml
 	```
+
+
+## Other notes
+
+### Supervisor
+
+Supervisor runs the Gunicorn processes. Log in as `deploy` and then open supervisorctl to see the processes:
+
+    $ sudo supervisorctl
+    appname_gunicorn              RUNNING    pid 14708, uptime 0:42:06
+
+Control processes using their name:
+
+    supervisor> stop appname_gunicorn
+    supervisor> start appname_gunicorn
+    supervisor> restart appname_gunicorn
+
+Or just run the commands directly:
+
+    $ sudo supervisorctl status appname_gunicorn
+    $ sudo supervisorctl restart appname_gunicorn
