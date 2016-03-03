@@ -30,3 +30,6 @@
   tags:
     - fail2ban
     - box
+
+- name: Ensure fail2ban service is started
+  service: name=fail2ban state=started enabled=yes

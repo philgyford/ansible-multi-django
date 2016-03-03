@@ -12,7 +12,7 @@
     enabled:  'true'
     port:     'http,https'
     filter:   'nginx-noscript'
-    logpath:  '{{ apps_path }}/*/logs/nginx_access.log'
+    logpath:  '/var/log/nginx/*_access.log'
     maxretry: '6'
   notify: [ 'Restart fail2ban' ]
 

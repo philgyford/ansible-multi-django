@@ -31,7 +31,13 @@ To add a new app (ie, a new website on a new domain):
 4. To use with Vagrant, set a synced folder for each app in the `Vagrantfile`.
 5. Cross your fingers and run the playbook.
 
-By default, the app's repo will be checked out to `/webapps/appname/`. A `/webapps/appanme/logs/` directory will be created for Nginx, Gunicorn, etc logs.
+By default, the app's repo will be checked out to `/webapps/appname/`.
+
+Logs for each app can be found at:
+
+    * `/var/log/nginx/appname_access.log`
+    * `/var/log/nginx/appname_error.log`
+    * `/var/log/supervisor/appname_gunicorn.log`
 
 A python virtualenv will be created at `/home/deploy/.pyenv/versions/appname`. If the repo has a `runtime.txt` file whose first line is like `python-2.7.11` then that python version will be used in the virtualenv. Otherwise, the `default_python_version` will be used.
 

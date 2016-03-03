@@ -8,8 +8,7 @@
     value: '{{ item.value }}'
   with_dict:
     enabled: 'true'
-    # Monitor error logs for all apps:
-    logpath: '{{ apps_path }}/*/logs/nginx_error.log'
+    logpath:  '/var/log/nginx/*_error.log'
   notify: [ 'Restart fail2ban' ]
 
 # Add a pattern where the user has entered no username or password:
