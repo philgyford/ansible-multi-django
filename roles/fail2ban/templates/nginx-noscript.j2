@@ -1,0 +1,13 @@
+[Definition]
+
+{# creates a line like:
+    failregex = ^<HOST> -.*GET.*(\.php|\.asp|\.exe|\.pl|\.cgi|\.scgi)
+#}
+
+{% if fail2ban_nginx_noscript_banned_extensions|length > 0 %}
+failregex = ^<HOST> -.*GET.*(\{{ fail2ban_nginx_noscript_banned_extensions|join('|\\') }})
+{% else %}
+fail2regex =
+{% endif %}
+
+ignoreregex =

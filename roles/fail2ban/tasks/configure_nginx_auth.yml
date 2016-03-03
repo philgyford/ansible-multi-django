@@ -1,0 +1,22 @@
+---
+
+- name: Update fail2ban ngingx-http-auth settings
+  ini_file:
+    dest: '{{ fail2ban_config_file }}'
+    section: 'nginx-http-auth'
+    option: '{{ item.key }}'
+    value: '{{ item.value }}'
+  with_dict:
+    enabled: 'true'
+    # Monitor error logs for all apps:
+    logpath: '{{ apps_path }}/*/logs/nginx_error.log'
+  notify: [ 'Restart fail2ban' ]
+
+# Add a pattern where the user has entered no username or password:
+- name: Configure fail2ban nginx-http-auth filter
+  lineinfile:
+    dest: '/etc/fail2ban/filter.d/nginx-http-auth.conf'
+    insertafter: '^failregex '
+    line: '            ^ \[error\] \d+#\d+: \*\d+ no user/password was provided for basic authentication, client: <HOST>, server: \S+, request: "\S+ \S+ HTTP/\d+\.\d+", host: "\S+"\s*$'
+    state: present
+  notify: [ 'Restart fail2ban' ]

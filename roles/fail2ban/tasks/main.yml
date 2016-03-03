@@ -1,0 +1,32 @@
+---
+
+# Much of this role's stuff is from
+# https://www.digitalocean.com/community/tutorials/how-to-protect-an-nginx-server-with-fail2ban-on-ubuntu-14-04
+
+- name: Install fail2ban
+  apt: name=fail2ban state=installed
+  when: ubuntu_use_fail2ban
+  tags:
+    - fail2ban
+    - box
+    - packages
+
+- name: Copy default fail2ban configuration file
+  command: cp /etc/fail2ban/jail.conf fail2ban_config_file
+  when: ubuntu_use_fail2ban
+  tags:
+    - fail2ban
+    - box
+
+- include: '{{ item }}'
+  when: ubuntu_use_fail2ban
+  with_items:
+    - configure_default.yml
+    - configure_nginx_auth.yml
+    - add_nginx_badbots.yml
+    - add_nginx_nohome.yml
+    - add_nginx_noproxy.yml
+    - add_nginx_noscript.yml
+  tags:
+    - fail2ban
+    - box

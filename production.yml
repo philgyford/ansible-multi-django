@@ -12,4 +12,5 @@
     - common
     - python
     - postgresql
+    - fail2ban
     - apps

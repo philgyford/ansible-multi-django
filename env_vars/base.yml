@@ -20,6 +20,27 @@ ubuntu_use_firewall: yes
 # Change the SSH port, disallow password authentication, disallow root login:
 ubuntu_restrict_ssh: yes
 
+
+# Install and configure Fail2Ban. http://www.fail2ban.org
+ubuntu_use_fail2ban: yes
+
+# http://www.fail2ban.org/wiki/index.php/Whitelist :
+fail2ban_whitelist: '127.0.0.1 192.168.0.1/24'
+
+fail2ban_bantime: 600    # Number of seconds a host is banned.
+
+fail2ban_findtime: 600   # These lines combine to ban clients that fail
+fail2ban_maxretry: 3     # to authenticate 6 times within a half hour.
+
+fail2ban_nginx_noscript_banned_extensions:
+  #- .php
+  - .asp
+  - .exe
+  - .pl
+  - .cgi
+  - .scgi
+
+
 # Deploy user's home directory:
 deploy_user_home: '/home/{{ ubuntu_deploy_user }}'
 

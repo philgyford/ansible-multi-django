@@ -1,0 +1,23 @@
+---
+
+# Ban clients searching for scripts on the website to execute and exploit.
+
+- name: Add fail2ban nginx-noscript settings
+  ini_file:
+    dest: '{{ fail2ban_config_file }}'
+    section: 'nginx-noscript'
+    option: '{{ item.key }}'
+    value: '{{ item.value }}'
+  with_dict:
+    enabled:  'true'
+    port:     'http,https'
+    filter:   'nginx-noscript'
+    logpath:  '{{ apps_path }}/*/logs/nginx_access.log'
+    maxretry: '6'
+  notify: [ 'Restart fail2ban' ]
+
+- name: Create filter for fail2ban nginx-noscript
+  template:
+    src: nginx-noscript.j2
+    dest: /etc/fail2ban/filter.d/nginx-noscript.conf
+  notify: [ 'Restart fail2ban' ]

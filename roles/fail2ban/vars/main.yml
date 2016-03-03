@@ -1,0 +1,3 @@
+---
+
+fail2ban_config_file: '/etc/fail2ban/jail.local'

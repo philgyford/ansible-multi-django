@@ -1,10 +1,10 @@
 # My first Ansible playbook
 
-Very in progress.
+In progress.
 
 Designed to host multiple websites, from different git repositories, on a single webserver. Can be used with a Vagrant virtual machine and a DigitalOcean droplet (not tested with anything else).
 
-The `common` role sets up the basic machine. `postgresql` installs the database, but doesn't set up databases. `python` installs Python, pyenv, virtualenv and autoenv. The `apps` role sets up things like databases, Nginx, Gunicorn, virtualenvs, directories, etc for each separate app (website) we've added configuration for.
+The `apps` role sets up things like databases, Nginx, Gunicorn, virtualenvs, directories, etc for each separate app (website) we've added configuration for. The other roles set up the basic machine, without app-specific things.
 
 
 ## To customise this for your own use
@@ -251,3 +251,19 @@ Or just run the commands directly:
 
     $ sudo supervisorctl status appname_gunicorn
     $ sudo supervisorctl restart appname_gunicorn
+
+### Fail2Ban
+
+[Fail2Ban](http://fail2ban.org) is optionally used with the Nginx server to ban people who request certain things too often. Enable/disable it with the `ubuntu_user_fail2ban` variable in `env_vars/*.yml` files, where there is also some configuration variables.
+
+This will get a list of the different jails used:
+
+    $ sudo fail2ban-client status
+
+Then for any one of the jails you can get more detail:
+
+    $ sudo fail2ban-client status nginx-http-auth
+
+Remove an IP address from a jail:
+
+    $ sudo fail2ban-client set nginx-http-auth unbanip 111.111.111.111

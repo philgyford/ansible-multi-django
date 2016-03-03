@@ -20,6 +20,8 @@ server {
 
     keepalive_timeout 5;
 
+    # If you change these paths/filenames, also change them in
+    # common/tasks/set_up_fail2ban.yml:
     access_log {{ apps_path }}/{{ item.name }}/logs/nginx_access.log;
     error_log {{ apps_path }}/{{ item.name }}/logs/nginx_error.log;
 

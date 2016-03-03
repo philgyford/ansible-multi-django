@@ -1,0 +1,23 @@
+---
+
+# Ban users who request files from users' home directories.
+
+- name: Add fail2ban nginx-nohome settings
+  ini_file:
+    dest: '{{ fail2ban_config_file }}'
+    section: 'nginx-nohome'
+    option: '{{ item.key }}'
+    value: '{{ item.value }}'
+  with_dict:
+    enabled:  'true'
+    port:     'http,https'
+    filter:   'nginx-nohome'
+    logpath:  '{{ apps_path }}/*/logs/nginx_access.log'
+    maxretry: '2'
+  notify: [ 'Restart fail2ban' ]
+
+- name: Create filter for fail2ban nginx-nohome
+  template:
+    src: nginx-nohome.j2
+    dest: /etc/fail2ban/filter.d/nginx-nohome.conf
+  notify: [ 'Restart fail2ban' ]

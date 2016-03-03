@@ -1,0 +1,23 @@
+---
+
+# Ban clients attempting to use our Nginx server as an open proxy.
+
+- name: Add fail2ban nginx-noproxy settings
+  ini_file:
+    dest: '{{ fail2ban_config_file }}'
+    section: 'nginx-noproxy'
+    option: '{{ item.key }}'
+    value: '{{ item.value }}'
+  with_dict:
+    enabled:  'true'
+    port:     'http,https'
+    filter:   'nginx-noproxy'
+    logpath:  '{{ apps_path }}/*/logs/nginx_access.log'
+    maxretry: '2'
+  notify: [ 'Restart fail2ban' ]
+
+- name: Create filter for fail2ban nginx-noproxy
+  template:
+    src: nginx-noproxy.j2
+    dest: /etc/fail2ban/filter.d/nginx-noproxy.conf
+  notify: [ 'Restart fail2ban' ]

@@ -1,0 +1,14 @@
+---
+
+- name: Update fail2ban DEFAULT settings
+  ini_file:
+    dest: '{{ fail2ban_config_file }}'
+    section: 'DEFAULT'
+    option: '{{ item.key }}'
+    value: '{{ item.value }}'
+  with_dict:
+    ignoreip: '{{ fail2ban_whitelist }}'
+    bantime: '{{ fail2ban_bantime }}'
+    findtime: '{{ fail2ban_findtime }}'
+    maxretry: '{{ fail2ban_maxretry }}'
+  notify: [ 'Restart fail2ban' ]
