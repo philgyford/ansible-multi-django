@@ -240,6 +240,15 @@ or as the standard `vagrant` user:
 
 ## Other notes
 
+### Maintenance mode
+
+Switch any app into maintenance mode by doing this (with your deploy username and appname):
+
+    $ mv /home/deploy/.pyenv/versions/appname/maintenance_off.html /home/deploy/.pyenv/versions/appname/maintenance_on.html
+
+All requests to that site will return `503` and that page until the file is moved back.
+
+
 ### Supervisor
 
 Supervisor runs the Gunicorn processes. Log in as `deploy` and then open supervisorctl to see the processes:
