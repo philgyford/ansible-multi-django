@@ -1,0 +1,19 @@
+---
+
+# Much of this from https://github.com/geerlingguy/ansible-role-memcached
+
+- name: Install Memcached
+  apt: name=memcached state=installed
+  when: ubuntu_use_memcached
+
+- name: Copy Memcached configuration.
+  template:
+    src: memcached.conf.j2
+    dest: '/etc/memcached.conf'
+    owner: root
+    group: root
+    mode: 0644
+  notify: Restart memcached
+
+- name: Ensure Memcached is started and set to run on startup
+  service: name=memcached state=started enabled=yes

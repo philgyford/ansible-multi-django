@@ -40,6 +40,8 @@ fail2ban_nginx_noscript_banned_extensions:
   - .cgi
   - .scgi
 
+ubuntu_use_memcached: yes
+
 
 # Deploy user's home directory:
 deploy_user_home: '/home/{{ ubuntu_deploy_user }}'

@@ -18,10 +18,8 @@
   apt: name={{ item }} state=installed
   with_items:
     - build-essential
-    - fail2ban
     - git
     - htop
-    - libmemcached-dev
     - nginx
     - ntp
     - python-dev # So we can pip install setproctitle

@@ -13,6 +13,7 @@
     - env_vars/vagrant.yml
   roles:
     - common
+    - memcached
     - python
     - postgresql
     - fail2ban

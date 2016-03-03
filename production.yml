@@ -10,6 +10,7 @@
     - env_vars/production.yml
   roles:
     - common
+    - memcached
     - python
     - postgresql
     - fail2ban

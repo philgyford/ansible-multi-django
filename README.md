@@ -238,7 +238,10 @@ or as the standard `vagrant` user:
 	```
 
 
-## Other notes
+## Services
+
+How to start, stop and inspect various services and things. Because I'll never remember all this.
+
 
 ### Maintenance mode
 
@@ -266,6 +269,22 @@ Or just run the commands directly:
 
     $ sudo supervisorctl status appname_gunicorn
     $ sudo supervisorctl restart appname_gunicorn
+
+
+### Memcached
+
+Restart Memcached like:
+
+    $ sudo /etc/init.d/memcached restart
+
+See some stats (assuming it's running on default IP and port):
+
+    $ echo stats | nc 127.0.0.1 11211
+
+You can do this to see it change:
+
+    $ watch "echo stats | nc 127.0.0.1 11211"
+
 
 ### Fail2Ban
 
