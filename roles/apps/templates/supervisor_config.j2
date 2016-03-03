@@ -1,4 +1,7 @@
+# {{ ansible_managed }}
+
 [program:{{ item.name }}_gunicorn]
+
 command = {{ pyenv_path }}/versions/{{ item.name }}/bin/gunicorn_start
 user = {{ ubuntu_deploy_user }}
 stdout_logfile = /var/log/supervisor/{{ item.name }}_gunicorn.log
