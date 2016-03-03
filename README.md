@@ -159,7 +159,7 @@ To subsequently run ansible over the box again:
 
 Or, possibly quicker:
 
-	$ ansible-playbook --private-key=.vagrant/machines/default/virtualbox/private_key --user=vagrant --connection=ssh --inventory-file=.vagrant/provisioners/ansible/inventory/vagrant_ansible_inventory -v vagrant.yml
+	$ ansible-playbook --private-key=.vagrant/machines/default/virtualbox/private_key --user=vagrant --connection=ssh --inventory-file=inventories/vagrant.ini -v vagrant.yml
 
 When recreating the box I did get an error at this point, and doing this fixed it:
 
