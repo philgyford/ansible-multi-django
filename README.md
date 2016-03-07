@@ -182,10 +182,6 @@ Which will let you specify tags and apps:
 
 	$ ./run-playbook.sh -e vagrant -t "foo,bar" -a appname
 
-When recreating the box I did get an error at this point, and doing this fixed it:
-
-	$ ssh-keygen -R [127.0.0.1]:2222
-
 Once it's run you can ssh in to Vagrant using the `deploy` user (using the IP address set in `Vagrantfile` and `inventories/vagrant.ini`):
 
 	$ ssh deploy@192.168.33.15
@@ -205,12 +201,6 @@ or as the standard `vagrant` user:
 
 	```
 	$ ssh root@188.166.146.145
-	```
-
-	If you get a warning about 'REMOTE HOST IDENTIFICATION HAS CHANGED!' after destroying and creating a new droplet, you can remove the warning with:
-
-	```
-	$ ssh-keygen -R 188.166.146.145
 	```
 
 4. Put the droplet's IP address in `inventories/production.ini`. eg:
