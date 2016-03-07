@@ -242,7 +242,7 @@ or as the standard `vagrant` user:
 	$ ansible-playbook --inventory-file=inventories/production.ini --user=deploy --sudo  -v --ask-sudo-pass production.yml
 	```
 
-Or, using the provided shell script:
+    Or, using the provided shell script:
 
 	```
 	$ ./run-playbook.sh -e 'production'
