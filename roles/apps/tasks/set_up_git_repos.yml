@@ -8,7 +8,7 @@
     version: "{{ item.git_repo_branch | default('master') }}"
     dest: "{{ apps_path }}/{{ item.name }}"
     accept_hostkey: yes
-  with_items: apps
+  with_items: active_apps
   # Not on vagrant, because we're using a local synced folder:
   when: item.git_repo is defined and env_name != 'vagrant'
 

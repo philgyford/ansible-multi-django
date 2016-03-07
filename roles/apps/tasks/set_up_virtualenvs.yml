@@ -33,7 +33,7 @@
     executable: '{{ pyenv_path }}/versions/{{ item.name }}/bin/pip'
     virtualenv: '{{ pyenv_path }}/versions/{{ item.name }}'
     requirements: '{{ apps_path }}/{{ item.name }}/{{ item.pip_requirements_file }}'
-  with_items: apps
+  with_items: active_apps
   when: item.pip_requirements_file is defined
 
 - name: Install extra python packages
@@ -43,7 +43,7 @@
     executable: '{{ pyenv_path }}/versions/{{ item.name }}/bin/pip'
     virtualenv: '{{ pyenv_path }}/versions/{{ item.name }}'
     name: setproctitle # To make gunicorn appear with app name in `ps` etc.
-  with_items: apps
+  with_items: active_apps
 
 - name: Create the autoenv .env scripts to set environment variables
   template:
@@ -53,7 +53,7 @@
     group: '{{ ubuntu_deploy_group }}'
     mode: 0640
     backup: yes
-  with_items: apps
+  with_items: active_apps
   ignore_errors: yes
   tags:
     - deploy

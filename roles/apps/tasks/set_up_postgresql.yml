@@ -5,7 +5,7 @@
 
 - name: Ensure PostgreSQL databases are created
   become_user: postgres
-  with_items: apps
+  with_items: active_apps
   when: item.db_type is defined and
         item.db_type == 'postgresql'
   postgresql_db: name={{ item.name }}
@@ -17,7 +17,7 @@
 
 - name: Ensure user has access to the database
   become_user: postgres
-  with_items: apps
+  with_items: active_apps
   when: item.db_type is defined and
         item.db_type == 'postgresql' and
         item.db_password is defined
@@ -29,7 +29,7 @@
 
 - name: Ensure database user does not have unnecessary privileges
   become_user: postgres
-  with_items: apps
+  with_items: active_apps
   when: item.db_type is defined and
         item.db_type == 'postgresql' and
         item.db_password is defined

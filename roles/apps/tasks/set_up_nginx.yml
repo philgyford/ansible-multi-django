@@ -4,7 +4,7 @@
   template: src=nginx_site_config_default.j2
             dest=/etc/nginx/sites-available/{{ item.name }}
             backup=yes
-  with_items: apps
+  with_items: active_apps
   when: item.nginx_config is defined
   notify: reload nginx
   tags:
@@ -20,7 +20,7 @@
   command: ln -s /etc/nginx/sites-available/{{ item.name }}
            /etc/nginx/sites-enabled/{{ item.name }}
            creates=/etc/nginx/sites-enabled/{{ item.name }}
-  with_items: apps
+  with_items: active_apps
   when: item.nginx_config is defined
   notify: reload nginx
 
@@ -30,7 +30,7 @@
 - name: Create the maintenance page
   become: yes
   become_user: '{{ ubuntu_deploy_user }}'
-  with_items: apps
+  with_items: active_apps
   when: item.nginx_config is defined
   template:
     src: maintenance_off.html

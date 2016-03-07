@@ -1,41 +1,65 @@
 ---
 
+- name: List active apps
+  debug: msg="DOING TASKS FOR APPS - {{ active_apps|join(', ', attribute='name') }}."
+  tags:
+    - apps
+    - deploy
+    - django
+    - git
+    - gunicorn
+    - nginx
+    - postgresql
+    - supervisor
+    - virtualenvs
+
 - include: create_app_directories.yml
   tags:
+    - apps
     - deploy
     - virtualenvs
 
 - include: set_up_git_repos.yml
   tags:
+    - apps
     - deploy
     - git
 
 - include: set_python_versions.yml
   tags:
+    - apps
     - deploy
 
 - include: set_up_virtualenvs.yml
   tags:
+    - apps
     - deploy
     - virtualenvs
 
 - include: set_up_postgresql.yml
   tags:
+    - apps
     - postgresql
 
 - include: set_up_django.yml
   tags:
+    - apps
     - deploy
     - django
 
 - include: set_up_gunicorn.yml
   tags:
+    - apps
     - gunicorn
 
 - include: set_up_supervisor.yml
   tags:
+    - apps
+    - gunicorn
     - supervisor
 
 - include: set_up_nginx.yml
   tags:
+    - apps
     - nginx
+

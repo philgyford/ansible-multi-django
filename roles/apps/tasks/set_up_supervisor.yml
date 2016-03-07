@@ -7,15 +7,15 @@
   template: src=supervisor_config.j2
             dest=/etc/supervisor/conf.d/{{ item.name }}.conf
             backup=yes
-  with_items: apps
+  with_items: active_apps
   when: item.gunicorn_config is defined
 
 - name: Re-read Supervisor config files
   supervisorctl: name={{ item.name }}_gunicorn state=present
-  with_items: apps
+  with_items: active_apps
   when: item.gunicorn_config is defined
 
 - name: Restart Supervisor
   supervisorctl: name={{ item.name }}_gunicorn state=restarted
-  with_items: apps
+  with_items: active_apps
   when: item.gunicorn_config is defined

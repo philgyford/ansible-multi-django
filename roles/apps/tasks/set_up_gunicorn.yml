@@ -7,7 +7,7 @@
   pip:
     virtualenv: '{{ pyenv_path }}/versions/{{ item.name }}'
     name: gunicorn
-  with_items: apps
+  with_items: active_apps
   when: item.gunicorn_config is defined
 
 - name: Create the Gunicorn script file
@@ -18,14 +18,14 @@
     group: '{{ ubuntu_deploy_group }}'
     mode: 0755
     backup: yes
-  with_items: apps
+  with_items: active_apps
   when: item.gunicorn_config is defined
   tags: deploy
 
 - name: Create application log file
   command: touch /var/log/supervisor/{{ item.name }}_gunicorn.log
            creates=/var/log/supervisor/{{ item.name }}_gunicorn.log
-  with_items: apps
+  with_items: active_apps
   when: item.gunicorn_config is defined
 
 - name: Set permission to the application log file
@@ -35,5 +35,5 @@
     group: '{{ ubuntu_deploy_group }}'
     mode: 0664
     state: file
-  with_items: apps
+  with_items: active_apps
   when: item.gunicorn_config is defined

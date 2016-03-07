@@ -2,7 +2,7 @@
 
 # - name: Django - Run the syncdb command
 #   become_user: postgres
-#   with_items: apps
+#   with_items: active_apps
 #   when: item.django_settings_module is defined
 #   django_manage:
 #     command: syncdb
@@ -22,7 +22,7 @@
     app_path: '{{ apps_path }}/{{ item.name }}'
     virtualenv: '{{ pyenv_path }}/versions/{{ item.name }}'
     settings: '{{ item.django_settings_module[env_name] }}'
-  with_items: apps
+  with_items: active_apps
   when: item.django_settings_module is defined
   environment:
     # Env vars aren't currently being picked up from virtualenv:
@@ -40,7 +40,7 @@
     app_path: '{{ apps_path }}/{{ item.name }}'
     virtualenv: '{{ pyenv_path }}/versions/{{ item.name }}'
     settings: '{{ item.django_settings_module[env_name] }}'
-  with_items: apps
+  with_items: active_apps
   when: item.django_settings_module is defined
   environment:
     # Env vars aren't currently being picked up from virtualenv:

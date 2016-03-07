@@ -2,7 +2,7 @@
 
 - name: restart application
   supervisorctl: name={{ item.name }} state=restarted
-  with_items: apps
+  with_items: active_apps
   when: item.gunicorn_config is defined
 
 - name: restart nginx

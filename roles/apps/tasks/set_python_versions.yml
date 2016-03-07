@@ -11,7 +11,7 @@
 # Grab the '2.7.11' if it does.
 - name: Get python versions from repos
   shell: cat {{ apps_path }}/{{ item.name }}/runtime.txt | sed 's/^python-\([0-9\.]*\)$/\1/'
-  with_items: apps
+  with_items: active_apps 
   register: python_runtimes
 
 
@@ -23,3 +23,4 @@
   set_fact:
     python_versions: "{{ python_versions + [ { 'name': item.item.name, 'python_version': (item.stdout == '') | ternary(default_python_version, item.stdout) } ] }}"
   with_items: python_runtimes.results
+

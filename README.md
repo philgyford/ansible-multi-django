@@ -44,6 +44,17 @@ A python virtualenv will be created at `/home/deploy/.pyenv/versions/appname`. I
 (Both those paths, and subsequent examples, assume your `ubuntu_deploy_user` (set in `env_vars/*.yml`) is `deploy`.)
 
 
+### Restricing ansible-playbook to a single app
+
+When the playbook is run, the `apps` tasks will cycle through each of the apps listed in the config and perform the task for each one.
+
+Any of the `ansible-playbook` commands below can be restricted to a single app by using `extra-vars`. eg:
+
+	$ ansible-playbook [other args here] --extra-vars="app=appname"
+
+That will only run the `apps` tasks for the `appname` app. Note that this argument is actually a regular expression. So `app=appname` would match `appname` and `appname2`. Or you could specify multiple apps by doing `app=app1|app2|app3`.
+
+
 ### App config
 
 You'll need to alter `group_vars/all/apps.yml` to reflect the websites (called "apps" here you want to install). The file looks something like this:

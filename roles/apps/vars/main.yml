@@ -1,0 +1,6 @@
+---
+
+
+active_apps: "{{ apps if app is not defined else apps | selectattr('name', 'match', app) | list }}"
+
+
