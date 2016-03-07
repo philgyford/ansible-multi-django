@@ -245,7 +245,7 @@ or as the standard `vagrant` user:
     Or, using the provided shell script:
 
 	```
-	$ ./run-playbook.sh -e 'production'
+	$ ./run-playbook.sh -e production
 	```
 
 
