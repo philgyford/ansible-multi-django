@@ -174,9 +174,13 @@ To subsequently run ansible over the box again:
 
 	$ vagrant provision
 
-Or, possibly quicker:
+Or:
 
-	$ ansible-playbook --private-key=.vagrant/machines/default/virtualbox/private_key --user=vagrant --connection=ssh --inventory-file=inventories/vagrant.ini -v vagrant.yml
+	$ ./run-playbook.sh -e vagrant
+
+Which will let you specify tags and apps:
+
+	$ ./run-playbook.sh -e vagrant -t "foo,bar" -a appname
 
 When recreating the box I did get an error at this point, and doing this fixed it:
 
@@ -246,6 +250,12 @@ or as the standard `vagrant` user:
 
 	```
 	$ ansible-playbook --inventory-file=inventories/production.ini --user=deploy --sudo  -v --ask-sudo-pass production.yml
+	```
+
+Or, using the provided shell script:
+
+	```
+	$ ./run-playbook.sh -e 'production'
 	```
 
 
