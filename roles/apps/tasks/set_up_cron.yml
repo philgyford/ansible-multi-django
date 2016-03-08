@@ -21,7 +21,12 @@
 #   ...
 # ]
 
-#- name: Get apps' cron file contents  
+
+# Started doing this when thinking about combining the commands from apps'
+# cron files with a template that would do the defining of VARIABLES at the
+# start. But maybe another time...
+
+#- name: Get apps' cron file contents
   #shell: cat '{{ apps_path }}/{{ item.item.name }}/cron.txt'
   #with_items: cron_files.results
   #when: item.stat.exists == True and ubuntu_use_cron == True
@@ -54,10 +59,11 @@
   #debug: var=cron_contents
 
 
+# Note, destination cron filenames cannot contain .s
 - name: Copy apps' cron files
   copy:
     src: '{{ apps_path }}/{{ item.item.name }}/cron.txt'
-    dest: '/etc/cron.d/{{ item.item.name }}.txt'
+    dest: '/etc/cron.d/{{ item.item.name }}'
     remote_src: True
   with_items: cron_files.results
   when: item.stat.exists == True and ubuntu_use_cron == True
@@ -65,7 +71,7 @@
 # In case an app had a cron file but has now removed it.
 - name: Delete cron files for apps that don't have them
   file:
-    dest: '/etc/cron.d/{{ item.item.name }}.txt'
+    dest: '/etc/cron.d/{{ item.item.name }}'
     state: 'absent'
   with_items: cron_files.results
   when: item.stat.exists == False
@@ -74,6 +80,18 @@
   file:
     path: '/var/log/cron'
     state: 'directory'
+    owner: "{{ ubuntu_deploy_user }}"
+    group: "{{ ubuntu_deploy_group }}"
     mode: 0755
+  when: ubuntu_use_cron == True
+
+- name: Make apps' cron log files
+  file:
+    path: '/var/log/cron/{{ item.item.name }}.log'
+    state: 'touch'
+    owner: "{{ ubuntu_deploy_user }}"
+    group: "{{ ubuntu_deploy_group }}"
+    mode: 0664
+  with_items: cron_files.results
   when: ubuntu_use_cron == True
 

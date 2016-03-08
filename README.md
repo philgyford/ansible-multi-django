@@ -150,10 +150,12 @@ APP_ENV=/home/deploy/.pyenv/versions/pepysdiary
 APP_HOME=/webapps/pepysdiary
 LOGFILE=/var/log/cron/pepysdiary.log
 
-01 04 * * * source $APP_HOME/.env && $APP_ENV/bin/python $APP_HOME/manage.py my_task --foo=bar >> $LOGFILE 2>&1
+01 04 * * * deploy source $APP_HOME/.env && $APP_ENV/bin/python $APP_HOME/manage.py my_task --foo=bar >> $LOGFILE 2>&1
 ```
 
 Which will run the `my_task` Django management command with `foo=bar` arguments at 4:01am every day.
+
+NOTE: Each cron line must include the deploy username (which will run the task) after the five time-based fields. This is different to the standard crontab task format.
 
 The file paths match those set by the playbook. It's a bit annoying that they're hard-coded here, but there we go.
 
