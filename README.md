@@ -302,6 +302,15 @@ Or just run the commands directly:
     $ sudo supervisorctl restart appname_gunicorn
 
 
+### Nginx
+
+Start, stop, or restart Nginx:
+
+	$ sudo service nginx start
+	$ sudo service nginx stop
+	$ sudo service nginx restart
+
+
 ### Memcached
 
 Restart Memcached like:
