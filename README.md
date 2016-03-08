@@ -145,21 +145,20 @@ You would then need to add the `--ask-vault-pass` argument whenever you use `ans
 We assume this structure for Django sites, eg:
 
 ```
-myproject
+appname
 ├── manage.py
-├── myapplication/
+├── appname/
 │   ├── __init__.py
 │   ├── media/
 │   ├── static_collected/
 │   ├── settings/
 │   ├── templates/
+│   │   └── 500.html
 │   ├── urls.py
 │   └── wsgi.py
-└── requirements.txt
+├── requirements.txt
 └── runtime.txt
 ```
-
-(`myproject` is the same as the `name` variable in the `apps` config, above.)
 
 Note that `manage.py` must have `#!/usr/bin/env python` as its shebang, and must be executable.
 
