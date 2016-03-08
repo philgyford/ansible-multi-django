@@ -8,6 +8,14 @@
 ubuntu_deploy_password: ''
 
 
+# If installing s3cmd:
+s3cmd_access_key: ''
+s3cmd_secret_key: ''
+s3cmd_encrypt: 'False'
+s3cmd_gpg_passphrase: ''
+
+
+# Should have one element per app, with the app's name:
 vault:
   pepysdiary:
     akismet_api_key: ''
@@ -17,3 +25,4 @@ vault:
     django_secret_key: ''
     sendgrid_username: ''
     sendgrid_password: ''
+

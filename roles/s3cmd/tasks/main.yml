@@ -1,0 +1,22 @@
+---
+
+- name: Install s3cmd
+  apt: name=s3cmd state=installed
+  when: ubuntu_use_s3cmd
+  tags:
+    - s3cmd
+    - packages
+    - box
+
+- name: Configure s3cmd
+  template:
+    src: s3cfg.j2
+    dest: '{{ deploy_user_home }}/.s3cfg'
+    owner: '{{ ubuntu_deploy_user }}'
+    group: '{{ ubuntu_deploy_group }}'
+    mode: 0600
+  tags:
+    - s3cmd
+    - packages
+    - box
+

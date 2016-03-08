@@ -40,7 +40,11 @@ fail2ban_nginx_noscript_banned_extensions:
   - .cgi
   - .scgi
 
+# Install and configure memcached?
 ubuntu_use_memcached: yes
+
+# Install and configure s3cmd, for copying files to S3?
+ubuntu_use_s3cmd: yes
 
 
 # Deploy user's home directory:
