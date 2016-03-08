@@ -283,9 +283,18 @@ Switch any app into maintenance mode by doing this (with your deploy username an
 All requests to that site will return `503` and that page until the file is moved back.
 
 
+### Nginx
+
+Start, stop, or restart Nginx (which handles incoming HTTP requests):
+
+	$ sudo service nginx start
+	$ sudo service nginx stop
+	$ sudo service nginx restart
+
+
 ### Supervisor
 
-Supervisor runs the Gunicorn processes. Log in as `deploy` and then open supervisorctl to see the processes:
+Supervisor runs the Gunicorn processes, which serve the Django app(s). Log in as `deploy` and then open supervisorctl to see the processes:
 
     $ sudo supervisorctl
     appname_gunicorn              RUNNING    pid 14708, uptime 0:42:06
@@ -300,15 +309,6 @@ Or just run the commands directly:
 
     $ sudo supervisorctl status appname_gunicorn
     $ sudo supervisorctl restart appname_gunicorn
-
-
-### Nginx
-
-Start, stop, or restart Nginx:
-
-	$ sudo service nginx start
-	$ sudo service nginx stop
-	$ sudo service nginx restart
 
 
 ### Memcached
