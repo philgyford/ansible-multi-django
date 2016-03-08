@@ -140,13 +140,30 @@ Edit it with:
 You would then need to add the `--ask-vault-pass` argument whenever you use `ansible-playbook` (see below).
 
 
+### Cron
+
+If an app has a `cron.txt` file in its root, and `ubuntu_use_cron` is set to true, then this file will be copied to `/etc/cron.d/appname.txt`. A `cron.txt` file might look something like:
+
+```
+SHELL=/bin/bash
+APP_ENV=/home/deploy/.pyenv/versions/pepysdiary
+APP_HOME=/webapps/pepysdiary
+LOGFILE=/var/log/cron/pepysdiary.log
+
+01 04 * * * source $APP_HOME/.env && $APP_ENV/bin/python $APP_HOME/manage.py my_task --foo=bar >> $LOGFILE 2>&1
+```
+
+Which will run the `my_task` Django management command with `foo=bar` arguments at 4:01am every day.
+
+The file paths match those set by the playbook. It's a bit annoying that they're hard-coded here, but there we go.
+
+
 ### Django sites
 
 We assume this structure for Django sites, eg:
 
 ```
 appname
-├── manage.py
 ├── appname/
 │   ├── __init__.py
 │   ├── media/
@@ -156,6 +173,8 @@ appname
 │   │   └── 500.html
 │   ├── urls.py
 │   └── wsgi.py
+├── cron.txt				# optional
+├── manage.py
 ├── requirements.txt
 └── runtime.txt
 ```
@@ -311,3 +330,4 @@ Then for any one of the jails you can get more detail:
 Remove an IP address from a jail:
 
     $ sudo fail2ban-client set nginx-http-auth unbanip 111.111.111.111
+

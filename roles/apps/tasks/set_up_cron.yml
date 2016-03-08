@@ -1,0 +1,79 @@
+---
+
+- name: Check which apps have cron.txt files
+  stat: path={{ apps_path }}/{{ item.name }}/cron.txt
+  with_items: active_apps
+  register: cron_files
+
+# cron_files.results will be like:
+#
+# [
+#   {
+#     "item": {
+#       "name": "appname",
+#       ...
+#     },
+#     "stat": {
+#       "exists": true,
+#       ...
+#     }
+#   },
+#   ...
+# ]
+
+#- name: Get apps' cron file contents  
+  #shell: cat '{{ apps_path }}/{{ item.item.name }}/cron.txt'
+  #with_items: cron_files.results
+  #when: item.stat.exists == True and ubuntu_use_cron == True
+  #register: cron_contents
+
+# cron_contents.results will be like:
+#
+# [
+#   {
+#     "item": {
+#       "item": {
+#         "name": "appname",
+#         ...
+#       },
+#       "stat": {
+#         "exists": true,
+#         ...
+#       }
+#     },
+#     "stdout": "Contents of cron.txt file\nLine two.",
+#     "stdout_lines: [
+#       "Contents of cron.txt file",
+#       "Line two."
+#     ]
+#   },
+#   ...
+# ]
+
+#- name: debug
+  #debug: var=cron_contents
+
+
+- name: Copy apps' cron files
+  copy:
+    src: '{{ apps_path }}/{{ item.item.name }}/cron.txt'
+    dest: '/etc/cron.d/{{ item.item.name }}.txt'
+    remote_src: True
+  with_items: cron_files.results
+  when: item.stat.exists == True and ubuntu_use_cron == True
+
+# In case an app had a cron file but has now removed it.
+- name: Delete cron files for apps that don't have them
+  file:
+    dest: '/etc/cron.d/{{ item.item.name }}.txt'
+    state: 'absent'
+  with_items: cron_files.results
+  when: item.stat.exists == False
+
+- name: Make directory for apps' cron log files
+  file:
+    path: '/var/log/cron'
+    state: 'directory'
+    mode: 0755
+  when: ubuntu_use_cron == True
+

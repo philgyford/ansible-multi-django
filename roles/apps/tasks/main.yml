@@ -4,6 +4,7 @@
   debug: msg="DOING TASKS FOR APPS - {{ active_apps|join(', ', attribute='name') }}."
   tags:
     - apps
+    - cron
     - deploy
     - django
     - git
@@ -62,4 +63,9 @@
   tags:
     - apps
     - nginx
+
+- include: set_up_cron.yml
+  tags:
+    - apps
+    - cron
 

@@ -1,0 +1,7 @@
+SHELL=/bin/bash
+APP_ENV={{ deploy_user_home }}/.pyenv/versions/{{ item.name }}
+APP_HOME={{ apps_path }}/{{ item.name }}
+LOGFILE=/var/log/cron/{{ item.name }}.log
+
+{{ commands }}
+

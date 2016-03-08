@@ -46,6 +46,8 @@ ubuntu_use_memcached: yes
 # Install and configure s3cmd, for copying files to S3?
 ubuntu_use_s3cmd: yes
 
+# Should apps' cron files be added to /etc/cron.d/ ?
+ubuntu_use_cron: yes
 
 # Deploy user's home directory:
 deploy_user_home: '/home/{{ ubuntu_deploy_user }}'

@@ -5,4 +5,8 @@ env_name: 'vagrant'
 ubuntu_use_firewall: no
 ubuntu_restrict_ssh: no
 
+# Should apps' cron files be added to /etc/cron.d/ ?
+ubuntu_use_cron: yes
+
 memcached_log_verbosity: '-v'
+
