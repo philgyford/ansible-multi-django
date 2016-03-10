@@ -6,7 +6,6 @@
     - python-dev
     - python-pip
     - python-pycurl
-    - python-virtualenv
   tags:
     - box
     - packages
@@ -17,3 +16,4 @@
     - box
     - python
     - pyenv
+

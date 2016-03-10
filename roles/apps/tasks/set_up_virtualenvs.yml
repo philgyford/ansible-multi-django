@@ -1,6 +1,6 @@
 ---
 
-# As deploy user, because .pyenv is in its home directory.
+# As deploy user, because pyenv_path is in its home directory.
 - name: Install python versions for apps
   become: yes
   become_user: '{{ ubuntu_deploy_user }}'
@@ -9,14 +9,14 @@
   args:
     creates: "{{ pyenv_path }}/versions/{{ item.python_version }}/bin/python"
 
-# As deploy user, because .pyenv is in its home directory.
+# As deploy user, because pyenv_path is in its home directory.
 - name: Create virtualenvs for apps
   become: yes
   become_user: '{{ ubuntu_deploy_user }}'
-  shell: . {{ deploy_user_rc_file }} && {{ pyenv_path }}/libexec/pyenv virtualenv {{ item.python_version }} {{ item.name }}
+  shell: . {{ deploy_user_rc_file }} && mkvirtualenv {{ item.name }} -p {{ pyenv_path }}/versions/{{ item.python_version }}/bin/python
   with_items: python_versions
   args:
-    creates: "{{ pyenv_path }}/versions/{{ item.name }}/bin/activate"
+    creates: "{{ deploy_user_home }}/.virtualenvs/{{ item.name }}/bin/activate"
 
 # Set the virtualenv name in each repo's .python-version file.
 - name: Create .python-version files for virtualenvs
@@ -25,7 +25,6 @@
     content: "{{ item.name }}"
   with_items: python_versions
 
-# Changing
 - name: Install python packages required by apps
   become: yes
   become_user: '{{ ubuntu_deploy_user }}'
@@ -45,10 +44,10 @@
     name: setproctitle # To make gunicorn appear with app name in `ps` etc.
   with_items: active_apps
 
-- name: Create the autoenv .env scripts to set environment variables
+- name: Create the virtualenv postactivate scripts to set environment variables
   template:
-    src: env_{{ item.name }}.j2
-    dest: '{{ apps_path }}/{{ item.name }}/.env'
+    src: 'virtualenv_postactivate_{{ item.name }}.j2'
+    dest: '{{ pyenv_path }}/versions/{{ item.name }}/bin/postactivate'
     owner: '{{ ubuntu_deploy_user }}'
     group: '{{ ubuntu_deploy_group }}'
     mode: 0640
