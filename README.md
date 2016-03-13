@@ -328,7 +328,7 @@ You can do this to see it change:
 
 ### Fail2Ban
 
-[Fail2Ban](http://fail2ban.org) is optionally used with the Nginx server to ban people who request certain things too often. Enable/disable it with the `ubuntu_user_fail2ban` variable in `env_vars/*.yml` files, where there is also some configuration variables.
+[Fail2Ban](http://www.fail2ban.org) is optionally used with the Nginx server to ban people who request certain things too often. Enable/disable it with the `ubuntu_user_fail2ban` variable in `env_vars/*.yml` files, where there is also some configuration variables.
 
 This will get a list of the different jails used:
 
