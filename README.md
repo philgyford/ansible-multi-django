@@ -196,6 +196,33 @@ appname
 
 Note that `manage.py` must have `#!/usr/bin/env python` as its shebang, and must be executable.
 
+#### Django database
+
+By default a database will be created for the app and the Django database migrations will be run. If you subsequently need to import a database from an existing version of the site, this could cause problems. If a new database has already been created by the migration, it's probably best to delete it before importing. eg, on the server/Vagrant (requires the deploy user's password):
+
+```shell
+$ sudo su - postgres
+postgres$ dropdb appname
+```
+
+Then, on the local machine, run the postgresql tasks for that app, which will (re)create the now missing database:
+
+```shell
+$ ./run-playbook.sh -e vagrant -t postgresql -a appname
+```
+
+Then, back on the server/Vagrant, import the database. eg, depending on your requirements (requires the app's database password):
+
+```shell
+$ pg_restore -F c -h localhost -d appname -U appname -W YOUR-PGDUMP-FILE
+```
+
+We could maybe have `pg_restore` delete and recreate the database, but using the above method we know it's been created in the same way as others created by the playbook.
+
+#### Django media files
+
+If your site has any existing media files (eg, images uploaded through Django admin) you may need to manually copy them into the correct location (possibly `/webapps/appname/appname/media/`, depending on your setup).
+
 
 ## Running the playbook
 
