@@ -4,29 +4,42 @@ In progress.
 
 Designed to host multiple Django websites, from different git repositories, on a single webserver. Can be used with a Vagrant virtual machine and a DigitalOcean droplet (not tested with anything else).
 
-The `apps` role sets up things like databases, Nginx, Gunicorn, virtualenvs, directories, etc for each separate app (website) we've added configuration for. The other roles set up the basic machine, without app-specific things.
+If you only want to host a single Django site on one (or more) machine(s) you're probably better off with something like [ansible-django-stack](https://github.com/jcalazan/ansible-django-stack).
+
+This isn't a blank canvas but the playbook I use for my own sites. However, it's built with ease-of-reuse in mind. 
+
+
+## Overview
+
+Most of the roles set up generic things on the server that will be used by all of the "apps" (individual Django websites). eg, basic packages, Postgresql, Memcached, etc. No app-specific configuration is included in those roles.
+
+The `apps` role installs and configures things relevant to the apps. eg, individual databases, Nginx and Gunicorn configs, python virtualenvs, git repositories, etc. The basic configuration for the apps is set in an `apps` array in `group_vars/all/apps.yml` -- each app has its own dictionary of settings there.
+
+There are some secret variables that are set in the `group_vars/all/vault.yml` file and then used within `group_vars/all/apps.yml`. This file can either be ignored by git (as it is at the moment) or else encrypted with ansible-vault.
 
 
 ## To customise this for your own use
 
-This isn't a blank canvas but the playbook I use for my own sites. However, it's built with ease-of-reuse in mind. To use it for yourself:
+To use it for yourself:
 
-1. Replace the `apps` vars in `group_vars/all/apps.yml` with those needed for your apps.
+1. Replace the `apps` vars in `group_vars/all/apps.yml` with those needed for your app(s) (see below).
 2. Copy `group_vars/all/vault_example.yml` to `group_vars/all/vault.yml`
 3. Set the `ubuntu_deploy_password` variable in `vault.yml` (using instructions in that file).
-4. Change the `vault` vars to what you need.
-5. To use with Vagrant, set a synced folder for each app in the `Vagrantfile`.
+4. See if there are any variables you want to change in the `env_vars/*.yml` files.
+5. Follow the instructions below on setting up individual apps.
 
-That might be it. See below for more details on all those variables and how to run the playbook.
+See below for more details configuring individual apps and details specific to running the playbook for Vagrant or DigitalOcean.
 
 
 ## Apps
+
+Each app should have a unique name, using only alphanumeric characters. This is used as its `name` in `group_vars/all/apps.yml`. In all the examples below we use `appname` as a placeholder for this.
 
 To add a new app (ie, a new website on a new domain):
 
 1. Add its config to `group_vars/all/apps.yml` (see below for options).
 2. Add its secret config to `group_vars/all/vault.yml` (see further below).
-3. If it uses a virtualenv and needs environment variables set, create a `roles/apps/templates/env_appname.j2` file (where `appname` corresponds to `name` in the app's config).
+3. If it uses a virtualenv and needs environment variables set, create a `roles/apps/templates/env_appname.j2` file (replacing `appname` in the filename).
 4. If you want a custom Nginx config file, copy `roles/apps/templates/nginx_site_config_default.j2` to `roles/apps/templates/nginx_site_config_appname.j2` and customise that. **NOTE:** Not currently working, see [this issue](https://github.com/philgyford/ansible-playbook/issues/9).
 4. To use with Vagrant, set a synced folder for each app in the `Vagrantfile`.
 5. Cross your fingers and run the playbook.
@@ -35,38 +48,27 @@ By default, the app's repo will be checked out to `/webapps/appname/`.
 
 Logs for each app can be found at:
 
+	* `/var/log/cron/appname.log`
     * `/var/log/nginx/appname_access.log`
     * `/var/log/nginx/appname_error.log`
     * `/var/log/supervisor/appname_gunicorn.log`
 
 A python virtualenv will be created at `/home/deploy/.pyenv/versions/appname`. If the repo has a `runtime.txt` file whose first line is like `python-2.7.11` then that python version will be used in the virtualenv. Otherwise, the `default_python_version` will be used.
 
-(Both those paths, and subsequent examples, assume your `ubuntu_deploy_user` (set in `env_vars/*.yml`) is `deploy`.)
-
-
-### Restricting ansible-playbook to a single app
-
-When the playbook is run, the `apps` tasks will cycle through each of the apps listed in the config and perform the task for each one.
-
-Any of the `ansible-playbook` commands below can be restricted to a single app by using `extra-vars`. eg:
-
-	$ ansible-playbook [other args here] --extra-vars="app=appname"
-
-That will only run the `apps` tasks for the `appname` app. Note that this argument is actually a regular expression. So `app=appname` would match `appname` and `appname2`. Or you could specify multiple apps by doing `app=app1|app2|app3`.
+(That virtualenv path, and subsequent examples, assumes your `ubuntu_deploy_user` is `deploy`.)
 
 
 ### App config
 
-You'll need to alter `group_vars/all/apps.yml` to reflect the websites (called "apps" here you want to install). The file looks something like this:
+You'll need to alter `group_vars/all/apps.yml` to reflect your websites. The `apps` variable looks something like this:
 
-    ---
     apps:
-      - name: 'myapp'
-        git_repo: 'https://github.com/myname/myrepo.git'
+      - name: 'appname'
+        git_repo: 'https://github.com/my-name/my-repo.git'
         git_repo_branch: 'master'
         pip_requirements_file: 'requirements.txt'
         db_type: 'postgresql'
-        db_password: '{{ vault.myapp.db_password }}'
+        db_password: '{{ vault.appname.db_password }}'
         allowed_hosts:
           production: ['example.org', 'www.example.org']
           vagrant: ['example.dev', 'www.example.dev']
@@ -79,26 +81,27 @@ You'll need to alter `group_vars/all/apps.yml` to reflect the websites (called "
             max_requests: 1000
             num_workers: 3
           vagrant:
-            max_requests: 1
             loglevel: 'debug'
+            max_requests: 1
       - name: 'anotherapp'
+        git_repo: 'https://github.com/my-name/my-other-repo.git'
         # etc...
 
 The presence of many of these options determines which tasks will be run for the app. eg, if `db_type` is present then a database will be created; otherwise it won't. The options:
 
-* `name`: Required. No spaces. Must be unique. Depending on other options, will be used as directory names, virtualenv name, database name and user, etc.
+* `name`: Required. Must be alphanumeric only. Must be unique. Depending on other options, will be used as directory names, virtualenv name, database name and user, etc.
 
 * `git_repo`: Optional. The `https://github.com...` path to the git repository. It won't work with a `git@github.com...` path. Although optional, not much will happen without this.
 
 * `git_repo_branch`: Optional. The name of the branch to check out. If omitted, defaults to `'master'`.
 
-* `pip_requirements_file`: Optional. If the app has a pip requirements file, set the path to it within the repo here. eg, `requirements.txt`. Otherwise, omit this. If set, the python packages will be installed.
+* `pip_requirements_file`: Optional. If the app has a pip requirements file, set the path to it within the repo here. eg, `requirements.txt`. Otherwise, omit this. If set, the python packages will be installed in the app's virtualenv.
 
 * `db_type`: Optional. Currently must be 'postgresql' if present.
 
 * `db_password`: Optional. Password for the database. Database name and username will be the same as the app's `name`.
 
-* `allowed_hosts`: Optional. A dictionary with keys of environment names (eg, `production`) each one with an array of allowed hostnames. eg, `production: ['example.org', 'www.example.org']`. Used in Nginx config and maybe in your `env_appname.j2` template.
+* `allowed_hosts`: Optional. A dictionary with keys of environment names (eg, `production`) each one with an array of allowed hostnames. eg, `production: ['example.org', 'www.example.org']`. Used in Nginx config and, if you like, in your optional `env_appname.j2` template.
 
 * `django_settings_module`: Optional. A dictionary with keys of environment names (eg, `production`) and the Python path to the settings file within the app. eg, `production: 'myproject.settings.live'`.
 
@@ -108,9 +111,9 @@ The presence of many of these options determines which tasks will be run for the
 
     Within, there should be one dictionary per environment (eg, `production`), each containing config variables:
     * `loglevel`: Optional, default `"info"'. One of debug, info, warning, error, critical.
-    * `max_requests`: Optional, default `1000`
-    * `num_workers`: Optional, default `3`
-    * `timeout_seconds`: Optional, default `30`
+    * `max_requests`: Optional, default `1000`.
+    * `num_workers`: Optional, default `3`.
+    * `timeout_seconds`: Optional, default `30`.
 
 
 ### Vaulted config
@@ -120,14 +123,14 @@ Copy the `group_vars/all/vault_example.yml` to `group_vars/all/vault.yml` and ed
 We can then use these secret variables in tasks but also within the main `apps` variable structure, which can be kept in git unencrypted. eg, in `vault.yml` we might have:
 
     vault:
-      pepysdiary:
+      appname:
     	db_password: 'secretpassword'
 
 And in `apps.yml` we can use that password like this:
 
     apps:
-	  - name: 'pepysdiary'
-	    db_password: '{{ vault.pepysdiary.db_password }}'
+	  - name: 'appname'
+	    db_password: '{{ vault.appname.db_password }}'
 
 Instead of having the `vault.yml` file `.gitignore`d, you could encrypt it instead. Do that with:
 
@@ -146,16 +149,16 @@ If an app has a `cron.txt` file in its root, and `ubuntu_use_cron` is set to tru
 
 ```
 SHELL=/bin/bash
-APP_ENV=/home/deploy/.pyenv/versions/pepysdiary
-APP_HOME=/webapps/pepysdiary
-LOGFILE=/var/log/cron/pepysdiary.log
+APP_ENV=/home/deploy/.pyenv/versions/appname
+APP_HOME=/webapps/appname
+LOGFILE=/var/log/cron/appname.log
 
 01 04 * * * deploy source $APP_HOME/.env && $APP_ENV/bin/python $APP_HOME/manage.py my_task --foo=bar >> $LOGFILE 2>&1
 ```
 
 Which will run the `my_task` Django management command with `foo=bar` arguments at 4:01am every day.
 
-NOTE: Each cron line must include the deploy username (which will run the task) after the five time-based fields. This is different to the standard crontab task format.
+NOTE: Each cron task line must include the deploy username (which will run the task) after the five time-based fields. This is different to the standard crontab task format.
 
 The file paths match those set by the playbook. It's a bit annoying that they're hard-coded here, but there we go.
 
@@ -184,13 +187,37 @@ appname
 Note that `manage.py` must have `#!/usr/bin/env python` as its shebang, and must be executable.
 
 
-## Vagrant
+## Running the playbook
+
+The playbook is run with the `ansible-playbook` command. There is a shortcut shell script included, `run-playbook.sh`. Instructions for Vagrant or DigitalOcean are below.
+
+
+### Restricting ansible-playbook to a single app
+
+When the playbook is run, the `apps` tasks will cycle through each of the apps listed in the config and perform the task for each one.
+
+Any of the `ansible-playbook` commands below can be restricted to a single app by using `extra-vars`. eg:
+
+	$ ansible-playbook [other args here] --extra-vars="app=appname"
+
+That will only run the `apps` tasks for the `appname` app. Note that this argument is actually a regular expression. So `app=appname` would match `appname` and `appname2`. Or you could specify multiple apps by doing `app=app1|app2|app3`.
+
+If using the shell script, you can restrict it to a single app with the `-a/--app` option, eg:
+
+	$ ./run-playbook.sh --env vagrant --tags "foo,bar" --app appname
+
+or:
+
+	$ ./run-playbook.sh -e vagrant -t "foo,bar" -a appname
+
+
+### Vagrant
 
 To create the Vagrant box:
 
 	$ vagrant up
 
-To subsequently run ansible over the box again:
+To subsequently run ansible over the box again, with all tags and apps:
 
 	$ vagrant provision
 
@@ -211,13 +238,13 @@ or as the standard `vagrant` user:
 	$ vagrant ssh
 
 
-## DigitalOcean
+### DigitalOcean
 
 1. Have an SSH key set on your account: https://www.digitalocean.com/community/tutorials/how-to-use-ssh-keys-with-digitalocean-droplets
 
 2. Create a new Ubuntu 14.04 x64 droplet, clicking the checkbox to add your SSH key (or add a new one).
 
-3. You should be able to do (in this and subsequent examples, change the IP address to your droplet's of course):
+3. You should now be able to do this (in this and subsequent examples, change the IP address to your droplet's of course):
 
 	```
 	$ ssh root@188.166.146.145
@@ -242,21 +269,21 @@ or as the standard `vagrant` user:
 	$ ssh deploy@188.166.146.145 -p 1025
 	```
 
-	These should fail (although the first will work if `ubuntu_ssh_port` is `22`, the default):
+	These should fail (although the first will work if `ubuntu_ssh_port` is `22`):
 
 	```
 	$ ssh deploy@188.166.146.145
 	$ ssh root@188.166.146.145 -p 1025
 	```
 
-7. If the SSH port has now changed (as in the previous step), you'll need to add it to `inventories/production.ini`. eg:
+7. If the SSH port has now changed from 22 (as in the previous step), you'll need to add it to `inventories/production.ini`. eg:
 
 	```
 	[webservers]
 	188.166.146.145:1025
 	```
 
-8. For subsequent runs, you'll need to set it to use the `ubuntu_deploy_user` and use `--sudo` to become sudo, and `--ask-sudo-pass` to be prompted for the sudo password (set in an `env_vars/*.yml` file):
+8. For subsequent runs, you'll need to set ansible-playbook to use the `ubuntu_deploy_user`, use `--sudo` to become sudo, and `--ask-sudo-pass` to be prompted for the sudo password (set in an `env_vars/*.yml` file):
 
 	```
 	$ ansible-playbook --inventory-file=inventories/production.ini --user=deploy --sudo  -v --ask-sudo-pass production.yml
@@ -273,6 +300,15 @@ or as the standard `vagrant` user:
 
 How to start, stop and inspect various services and things. Because I'll never remember all this.
 
+As mentioned above, logs for each app can be found at:
+
+Logs for each app can be found at:
+
+	* `/var/log/cron/appname.log`
+    * `/var/log/nginx/appname_access.log`
+    * `/var/log/nginx/appname_error.log`
+    * `/var/log/supervisor/appname_gunicorn.log`
+
 
 ### Maintenance mode
 
@@ -280,7 +316,7 @@ Switch any app into maintenance mode by doing this (with your deploy username an
 
     $ mv /home/deploy/.pyenv/versions/appname/maintenance_off.html /home/deploy/.pyenv/versions/appname/maintenance_on.html
 
-All requests to that site will return `503` and that page until the file is moved back.
+All requests to that site will return `503` and that HTML page until the file is moved back.
 
 
 ### Nginx
@@ -328,7 +364,7 @@ You can do this to see it change:
 
 ### Fail2Ban
 
-[Fail2Ban](http://www.fail2ban.org) is optionally used with the Nginx server to ban people who request certain things too often. Enable/disable it with the `ubuntu_user_fail2ban` variable in `env_vars/*.yml` files, where there is also some configuration variables.
+[Fail2Ban](http://www.fail2ban.org) is optionally used with the Nginx server to ban people who request certain things too often. Enable/disable it with the `ubuntu_use_fail2ban` variable in `env_vars/*.yml` files, where there are also some configuration variables.
 
 This will get a list of the different jails used:
 
