@@ -62,30 +62,32 @@ A python virtualenv will be created at `/home/deploy/.pyenv/versions/appname`. I
 
 You'll need to alter `group_vars/all/apps.yml` to reflect your websites. The `apps` variable looks something like this:
 
-    apps:
-      - name: 'appname'
-        git_repo: 'https://github.com/my-name/my-repo.git'
-        git_repo_branch: 'master'
-        pip_requirements_file: 'requirements.txt'
-        db_type: 'postgresql'
-        db_password: '{{ vault.appname.db_password }}'
-        allowed_hosts:
-          production: ['example.org', 'www.example.org']
-          vagrant: ['example.dev', 'www.example.dev']
-        django_settings_module:
-          production: 'mydjangoapp.settings.production'
-          vagrant: 'mydjangoapp.settings.vagrant'
-        nginx_config: {}
-        gunicorn_config:
-          production:
-            max_requests: 1000
-            num_workers: 3
-          vagrant:
-            loglevel: 'debug'
-            max_requests: 1
-      - name: 'anotherapp'
-        git_repo: 'https://github.com/my-name/my-other-repo.git'
-        # etc...
+```yaml
+apps:
+  - name: 'appname'
+	git_repo: 'https://github.com/my-name/my-repo.git'
+	git_repo_branch: 'master'
+	pip_requirements_file: 'requirements.txt'
+	db_type: 'postgresql'
+	db_password: '{{ vault.appname.db_password }}'
+	allowed_hosts:
+	  production: ['example.org', 'www.example.org']
+	  vagrant: ['example.dev', 'www.example.dev']
+	django_settings_module:
+	  production: 'mydjangoapp.settings.production'
+	  vagrant: 'mydjangoapp.settings.vagrant'
+	nginx_config: {}
+	gunicorn_config:
+	  production:
+		max_requests: 1000
+		num_workers: 3
+	  vagrant:
+		loglevel: 'debug'
+		max_requests: 1
+  - name: 'anotherapp'
+	git_repo: 'https://github.com/my-name/my-other-repo.git'
+	# etc...
+```
 
 The presence of many of these options determines which tasks will be run for the app. eg, if `db_type` is present then a database will be created; otherwise it won't. The options:
 
@@ -122,23 +124,31 @@ Copy the `group_vars/all/vault_example.yml` to `group_vars/all/vault.yml` and ed
 
 We can then use these secret variables in tasks but also within the main `apps` variable structure, which can be kept in git unencrypted. eg, in `vault.yml` we might have:
 
-    vault:
-      appname:
-    	db_password: 'secretpassword'
+```yaml
+vault:
+  appname:
+	db_password: 'secretpassword'
+```
 
 And in `apps.yml` we can use that password like this:
 
-    apps:
-	  - name: 'appname'
-	    db_password: '{{ vault.appname.db_password }}'
+```yaml
+apps:
+  - name: 'appname'
+	db_password: '{{ vault.appname.db_password }}'
+```
 
 Instead of having the `vault.yml` file `.gitignore`d, you could encrypt it instead. Do that with:
 
-    $ ansible-vault encrypt group_vars/all/vault.yml
+```shell
+$ ansible-vault encrypt group_vars/all/vault.yml
+```
 
 Edit it with:
 
-    $ ansible-vault edit group_vars/all/vault.yml
+```shell
+$ ansible-vault edit group_vars/all/vault.yml
+```
 
 You would then need to add the `--ask-vault-pass` argument whenever you use `ansible-playbook` (see below).
 
@@ -147,7 +157,7 @@ You would then need to add the `--ask-vault-pass` argument whenever you use `ans
 
 If an app has a `cron.txt` file in its root, and `ubuntu_use_cron` is set to true, then this file will be copied to `/etc/cron.d/appname.txt`. A `cron.txt` file might look something like:
 
-```
+```shell
 SHELL=/bin/bash
 APP_ENV=/home/deploy/.pyenv/versions/appname
 APP_HOME=/webapps/appname
@@ -167,7 +177,7 @@ The file paths match those set by the playbook. It's a bit annoying that they're
 
 We assume this structure for Django sites, eg:
 
-```
+```shell
 appname
 ├── appname/
 │   ├── __init__.py
@@ -198,44 +208,62 @@ When the playbook is run, the `apps` tasks will cycle through each of the apps l
 
 Any of the `ansible-playbook` commands below can be restricted to a single app by using `extra-vars`. eg:
 
-	$ ansible-playbook [other args here] --extra-vars="app=appname"
+```shell
+$ ansible-playbook [other args here] --extra-vars="app=appname"
+```
 
 That will only run the `apps` tasks for the `appname` app. Note that this argument is actually a regular expression. So `app=appname` would match `appname` and `appname2`. Or you could specify multiple apps by doing `app=app1|app2|app3`.
 
 If using the shell script, you can restrict it to a single app with the `-a/--app` option, eg:
 
-	$ ./run-playbook.sh --env vagrant --tags "foo,bar" --app appname
+```shell
+$ ./run-playbook.sh --env vagrant --tags "foo,bar" --app appname
+```
 
 or:
 
-	$ ./run-playbook.sh -e vagrant -t "foo,bar" -a appname
+```shell
+$ ./run-playbook.sh -e vagrant -t "foo,bar" -a appname
+```
 
 
 ### Vagrant
 
 To create the Vagrant box:
 
-	$ vagrant up
+```shell
+$ vagrant up
+```
 
 To subsequently run ansible over the box again, with all tags and apps:
 
-	$ vagrant provision
+```shell
+$ vagrant provision
+```
 
 Or:
 
-	$ ./run-playbook.sh -e vagrant
+```shell
+$ ./run-playbook.sh -e vagrant
+```
 
 Which will let you specify tags and apps:
 
-	$ ./run-playbook.sh -e vagrant -t "foo,bar" -a appname
+```shell
+$ ./run-playbook.sh -e vagrant -t "foo,bar" -a appname
+```
 
 Once it's run you can ssh in to Vagrant using the `deploy` user (using the IP address set in `Vagrantfile` and `inventories/vagrant.ini`):
 
-	$ ssh deploy@192.168.33.15
+```shell
+$ ssh deploy@192.168.33.15
+```
 
 or as the standard `vagrant` user:
 
-	$ vagrant ssh
+```shell
+$ vagrant ssh
+```
 
 
 ### DigitalOcean
@@ -246,52 +274,52 @@ or as the standard `vagrant` user:
 
 3. You should now be able to do this (in this and subsequent examples, change the IP address to your droplet's of course):
 
-	```
+	```shell
 	$ ssh root@188.166.146.145
 	```
 
 4. Put the droplet's IP address in `inventories/production.ini`. eg:
 
-	```
+	```ini
 	[webservers]
 	188.166.146.145
 	```
 
 5. Run the playbook (note, this first time we specify the user as `root`):
 
-	```
+	```shell
 	$ ansible-playbook --inventory-file=inventories/production.ini --user=root -v production.yml
 	```
 
 6. It should be all done. If the variable `ubuntu_use_firewall` is true (set in `env_vars/*.yml`), then you'll only be able to SSH to the `ubuntu_ssh_port` as the `ubuntu_deploy_user` eg, if the user is `deploy` and `ubuntu_ssh_port` is `1025`:
 
-	```
+	```shell
 	$ ssh deploy@188.166.146.145 -p 1025
 	```
 
 	These should fail (although the first will work if `ubuntu_ssh_port` is `22`):
 
-	```
+	```shell
 	$ ssh deploy@188.166.146.145
 	$ ssh root@188.166.146.145 -p 1025
 	```
 
 7. If the SSH port has now changed from 22 (as in the previous step), you'll need to add it to `inventories/production.ini`. eg:
 
-	```
+	```ini
 	[webservers]
 	188.166.146.145:1025
 	```
 
 8. For subsequent runs, you'll need to set ansible-playbook to use the `ubuntu_deploy_user`, use `--sudo` to become sudo, and `--ask-sudo-pass` to be prompted for the sudo password (set in an `env_vars/*.yml` file):
 
-	```
+	```shell
 	$ ansible-playbook --inventory-file=inventories/production.ini --user=deploy --sudo  -v --ask-sudo-pass production.yml
 	```
 
     Or, using the provided shell script:
 
-	```
+	```shell
 	$ ./run-playbook.sh -e production
 	```
 
@@ -314,7 +342,9 @@ Logs for each app can be found at:
 
 Switch any app into maintenance mode by doing this (with your deploy username and appname):
 
-    $ mv /home/deploy/.pyenv/versions/appname/maintenance_off.html /home/deploy/.pyenv/versions/appname/maintenance_on.html
+```shell
+$ mv /home/deploy/.pyenv/versions/appname/maintenance_off.html /home/deploy/.pyenv/versions/appname/maintenance_on.html
+```
 
 All requests to that site will return `503` and that HTML page until the file is moved back.
 
@@ -323,43 +353,57 @@ All requests to that site will return `503` and that HTML page until the file is
 
 Start, stop, or restart Nginx (which handles incoming HTTP requests):
 
-	$ sudo service nginx start
-	$ sudo service nginx stop
-	$ sudo service nginx restart
+```shell
+$ sudo service nginx start
+$ sudo service nginx stop
+$ sudo service nginx restart
+```
 
 
 ### Supervisor
 
 Supervisor runs the Gunicorn processes, which serve the Django app(s). Log in as `deploy` and then open supervisorctl to see the processes:
 
-    $ sudo supervisorctl
-    appname_gunicorn              RUNNING    pid 14708, uptime 0:42:06
+```shell
+$ sudo supervisorctl
+appname_gunicorn              RUNNING    pid 14708, uptime 0:42:06
+```
 
 Control processes using their name:
 
-    supervisor> stop appname_gunicorn
-    supervisor> start appname_gunicorn
-    supervisor> restart appname_gunicorn
+```shell
+supervisor> stop appname_gunicorn
+supervisor> start appname_gunicorn
+supervisor> restart appname_gunicorn
+```
 
 Or just run the commands directly:
 
-    $ sudo supervisorctl status appname_gunicorn
-    $ sudo supervisorctl restart appname_gunicorn
+```shell
+$ sudo supervisorctl status appname_gunicorn
+$ sudo supervisorctl restart appname_gunicorn
+```
 
 
 ### Memcached
 
 Restart Memcached like:
 
-    $ sudo /etc/init.d/memcached restart
+```shell
+$ sudo /etc/init.d/memcached restart
+```
 
 See some stats (assuming it's running on default IP and port):
 
-    $ echo stats | nc 127.0.0.1 11211
+```shell
+$ echo stats | nc 127.0.0.1 11211
+```
 
 You can do this to see it change:
 
-    $ watch "echo stats | nc 127.0.0.1 11211"
+```shell
+$ watch "echo stats | nc 127.0.0.1 11211"
+```
 
 
 ### Fail2Ban
@@ -368,13 +412,19 @@ You can do this to see it change:
 
 This will get a list of the different jails used:
 
-    $ sudo fail2ban-client status
+```shell
+$ sudo fail2ban-client status
+```
 
 Then for any one of the jails you can get more detail:
 
-    $ sudo fail2ban-client status nginx-http-auth
+```shell
+$ sudo fail2ban-client status nginx-http-auth
+```
 
 Remove an IP address from a jail:
 
-    $ sudo fail2ban-client set nginx-http-auth unbanip 111.111.111.111
+```shell
+$ sudo fail2ban-client set nginx-http-auth unbanip 111.111.111.111
+```
 
