@@ -4,6 +4,7 @@
 # db_type=='postgresql' and a db_password set.
 
 - name: Ensure PostgreSQL databases are created
+  become: yes
   become_user: postgres
   with_items: active_apps
   when: item.db_type is defined and
@@ -12,10 +13,12 @@
                  encoding='UTF-8'
                  lc_collate='en_US.UTF-8'
                  lc_ctype='en_US.UTF-8'
+                 login_user='postgres'
                  template='template0'
                  state=present
 
 - name: Ensure user has access to the database
+  become: yes
   become_user: postgres
   with_items: active_apps
   when: item.db_type is defined and
@@ -28,6 +31,7 @@
                    state=present
 
 - name: Ensure database user does not have unnecessary privileges
+  become: yes
   become_user: postgres
   with_items: active_apps
   when: item.db_type is defined and
