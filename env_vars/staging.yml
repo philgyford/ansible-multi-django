@@ -1,0 +1,6 @@
+---
+
+env_name: 'staging'
+
+ubuntu_ssh_port: 1025
+

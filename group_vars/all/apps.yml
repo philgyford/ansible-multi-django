@@ -19,13 +19,19 @@ apps:
     db_password: '{{ vault.pepysdiary.db_password }}'
     allowed_hosts:
       production: ['pepysdiary.com', 'www.pepysdiary.com']
+      staging: ['staging.pepysdiary.com']
       vagrant: ['pepysdiary.dev', 'www.pepysdiary.dev']
     django_settings_module:
       production: 'pepysdiary.settings.production'
+      staging: 'pepysdiary.settings.staging'
       vagrant: 'pepysdiary.settings.vagrant'
     nginx_config: {}
     gunicorn_config:
       production:
+        loglevel: 'error' # debug, info, warning, error, critical
+        max_requests: 1000 # Restarts after this many requests.
+        num_workers: 3 # Rule of thumb: 2 * CPUs + 1
+      staging:
         loglevel: 'error' # debug, info, warning, error, critical
         max_requests: 1000 # Restarts after this many requests.
         num_workers: 3 # Rule of thumb: 2 * CPUs + 1

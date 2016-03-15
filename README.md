@@ -254,6 +254,21 @@ $ ./run-playbook.sh -e vagrant -t "foo,bar" -a appname
 ```
 
 
+### Environments
+
+If you need to create a new environment, you'll need to create new files at:
+
+* `env_vars/newenv.yml`
+* `inventories/newenv.ini`
+* `newenv.yml`
+
+Copy existing files. The `newenv.yml` will need to refer to the `env_vars/newenv.yml` variable file.
+
+Also be sure to set any environment-specific variables in `group_vars/all/apps.yml` eg, `gunicorn_config`) or tasks will break when looking for it.
+
+*And* you'll need to add a clause to `run-playbook.sh` to handle the new environment name.
+
+
 ### Vagrant
 
 To create the Vagrant box:
@@ -294,6 +309,8 @@ $ vagrant ssh
 
 
 ### DigitalOcean
+
+These steps assume you're using the `production` environment. Just change that to whatever environment you're using if it's not that.
 
 1. Have an SSH key set on your account: https://www.digitalocean.com/community/tutorials/how-to-use-ssh-keys-with-digitalocean-droplets
 

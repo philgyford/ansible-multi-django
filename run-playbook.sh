@@ -72,6 +72,10 @@ elif [ "$ENVIRONMENT" = "production" ]; then
 	# This will only work once the server has been set up initially, using the root user.
 	command="ansible-playbook --inventory-file=inventories/production.ini --user=deploy --sudo  -v --ask-sudo-pass production.yml"
 
+elif [ "$ENVIRONMENT" = "staging" ]; then
+	# This will only work once the server has been set up initially, using the root user.
+	command="ansible-playbook --inventory-file=inventories/staging.ini --user=deploy --sudo  -v --ask-sudo-pass staging.yml"
+
 else
 	echoerr "
 No environment supplied.

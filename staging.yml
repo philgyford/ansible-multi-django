@@ -1,0 +1,18 @@
+---
+
+
+- name: Create a staging machine
+  hosts: all
+  vars_files:
+    - group_vars/all/vault.yml
+    - group_vars/all/apps.yml
+    - env_vars/base.yml
+    - env_vars/staging.yml
+  roles:
+    - common
+    - memcached
+    - python
+    - postgresql
+    - fail2ban
+    - s3cmd
+    - apps
