@@ -1,7 +1,5 @@
 # My first Ansible playbook
 
-In progress.
-
 Designed to host multiple Django websites, from different git repositories, on a single webserver. Can be used with a Vagrant virtual machine and a DigitalOcean droplet (not tested with anything else).
 
 If you only want to host a single Django site on one (or more) machine(s) you're probably better off with something like [ansible-django-stack](https://github.com/jcalazan/ansible-django-stack).
