@@ -196,28 +196,42 @@ appname
 
 Note that `manage.py` must have `#!/usr/bin/env python` as its shebang, and must be executable.
 
-#### Django database
+#### Importing an existing Django database
 
-By default a database will be created for the app and the Django database migrations will be run. If you subsequently need to import a database from an existing version of the site, this could cause problems. If a new database has already been created by the migration, it's probably best to delete it before importing. eg, on the server/Vagrant (requires the deploy user's password):
+By default a new database will be created for the app and the Django database migrations will be run. If you subsequently need to import a database from an existing version of the site, this could cause problems -- for example, I've had Django's content-types not match up when importing data.
 
-```shell
-$ sudo su - postgres
-postgres$ dropdb appname
-```
-
-Then, on the local machine, run the postgresql tasks for that app, which will (re)create the now missing database:
+We'll assume a database has been dumped from an existing version of the site, and sent to S3 (and encrypted) using this:
 
 ```shell
-$ ./run-playbook.sh -e vagrant -t postgresql -a appname
+$ pg_dump -Fc --no-acl -h localhost -U appname appname > YOUR-PGDUMP-FILE
+$ s3cmd put --encrypt --config=CONFIGFILE YOUR-PGDUMP-FILE s3://BUCKETNAME/DIRECTORY/YOUR-PGDUMP-FILE
 ```
 
-Then, back on the server/Vagrant, import the database. eg, depending on your requirements (requires the app's database password):
+1. Delete the database that was created by the Django migrations. On the server/Vagrant, while logged in as `deploy` (requires the deploy user's password):
 
-```shell
-$ pg_restore -F c -h localhost -d appname -U appname -W YOUR-PGDUMP-FILE
-```
+	```shell
+	$ sudo su - postgres
+	postgres$ dropdb appname
+	```
 
-We could maybe have `pg_restore` delete and recreate the database, but using the above method we know it's been created in the same way as others created by the playbook.
+2. On the local machine, run the postgresql tasks for that app, which will (re)create the now missing database, but not run the Django migrations:
+
+	```shell
+	$ ./run-playbook.sh -e vagrant -t postgresql -a appname
+	```
+
+3. Back on the server/Vagrant, fetch (and decrypt) the dump from S3, if that's where your file is. Otherwise, put it on your server/Vagrant somewhere:
+
+	```shell
+	$ s3cmd get s3://BUCKETNAME/APPNAME/YOUR-PGDUMP-FILE
+	```
+
+4. Still on the server/Vagrant, import the file's contents into the database. eg, depending on your requirements (requires the app's database password, probably set in `group_vars/all/vault.yml`):
+
+	```shell
+	$ pg_restore -Fc -h localhost -d appname -U appname -W YOUR-PGDUMP-FILE
+	```
+
 
 #### Django media files
 
