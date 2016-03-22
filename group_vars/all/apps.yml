@@ -13,7 +13,7 @@ apps:
 
   - name: 'pepysdiary'
     git_repo: 'https://github.com/philgyford/pepysdiary.git'
-    git_repo_branch: 'ansible'
+    git_repo_branch: 'master'
     pip_requirements_file: 'requirements.txt'
     db_type: 'postgresql'
     db_password: '{{ vault.pepysdiary.db_password }}'
