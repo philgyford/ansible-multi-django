@@ -272,6 +272,18 @@ $ ./run-playbook.sh -e vagrant -t "foo,bar" -a appname
 ```
 
 
+### Deploying code changes
+
+If you only need to update the code on an existing server, use the `deploy` tag. eg, for a single app on the production environment:
+
+```shell
+$ ./run-playbook.sh -e production -t deploy -a appname
+```
+
+You may need to restart Gunicorn manually, using Supervisor, afterwards (see "Services" below).
+
+
+
 ### Environments
 
 If you need to create a new environment, you'll need to create new files at:
