@@ -1,7 +1,7 @@
 ---
 
 
-- name: Create a staging machine
+- name: Set up a staging machine
   hosts: all
   vars_files:
     - group_vars/all/vault.yml

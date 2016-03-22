@@ -1,7 +1,7 @@
 ---
 
 
-- name: Create a production machine
+- name: Set up a production machine
   hosts: all
   vars_files:
     - group_vars/all/vault.yml

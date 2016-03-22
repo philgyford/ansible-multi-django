@@ -235,7 +235,11 @@ $ s3cmd put --encrypt --config=CONFIGFILE YOUR-PGDUMP-FILE s3://BUCKETNAME/DIREC
 
 #### Django media files
 
-If your site has any existing media files (eg, images uploaded through Django admin) you may need to manually copy them into the correct location (possibly `/webapps/appname/appname/media/`, depending on your setup).
+If your site has any existing media files (eg, images uploaded through Django admin) you may need to manually copy them into the correct location. For example, assuming we're copying the local directory to 188.166.146.145 using port 1025:
+
+```shell
+$ scp -P 1025 -r ./media deploy@188.166.146.145:/webapps/appname/appname/media
+```
 
 
 ## Running the playbook

@@ -1,7 +1,7 @@
 ---
 
 
-- name: Create a virtual machine via vagrant
+- name: Set up a virtual machine via Vagrant
   hosts: all
   become: yes
   become_method: sudo
