@@ -9,36 +9,36 @@ This isn't a blank canvas but the playbook I use for my own sites. However, it's
 
 ## Overview
 
-Most of the roles set up generic things on the server that will be used by all of the "apps" (individual Django websites). eg, basic packages, Postgresql, Memcached, etc. No app-specific configuration is included in those roles.
+The playbook will set up a server with Nginx, Gunicorn, Supervisor, Postgresql, Memcached, Fail2ban, s3cmd, and Python (using pyenv). It can then set up one *or more* "apps" (Django websites), each from a different git repo, with their own domain name(s), own version of Python, own virtualenvs, own environment variables, Nginx config, Postgresql database, cron tasks, etc.
 
-The `apps` role installs and configures things relevant to the apps. eg, individual databases, Nginx and Gunicorn configs, python virtualenvs, git repositories, etc. The basic configuration for the apps is set in an `apps` array in `group_vars/all/apps.yml` -- each app has its own dictionary of settings there.
+Most of the roles (`common`, `fail2ban`, `memcached`, etc.) set up the basic things on the server that will be used by all of the apps. No app-specific configuration is included in those roles.
+
+The `apps` role installs and configures things particular to the apps. The basic configuration for the apps is set in an `apps` array in `group_vars/all/apps.yml` -- each app has its own dictionary of settings there.
 
 There are some secret variables that are set in the `group_vars/all/vault.yml` file and then used within `group_vars/all/apps.yml`. This file can either be ignored by git (as it is at the moment) or else encrypted with ansible-vault.
 
 
-## To customise this for your own use
+## Customising for your own use
 
 To use it for yourself:
 
-1. Replace the `apps` vars in `group_vars/all/apps.yml` with those needed for your app(s) (see below).
-2. Copy `group_vars/all/vault_example.yml` to `group_vars/all/vault.yml`
-3. Set the `ubuntu_deploy_password` variable in `vault.yml` (using instructions in that file).
-4. See if there are any variables you want to change in the `env_vars/*.yml` files.
-5. Follow the instructions below on setting up individual apps.
-
-See below for more details configuring individual apps and details specific to running the playbook for Vagrant or DigitalOcean.
+1. Copy `group_vars/all/vault_example.yml` to `group_vars/all/vault.yml`
+2. Set the `ubuntu_deploy_password` variable in `vault.yml` (using instructions in that file).
+3. See if there are any variables you want to change in the `env_vars/*.yml` files.
+4. Change IP addresses in `inventories/*.ini` files to reflect your own servers. (See "Environments", below, for more on Vagrant and DigitalOcean.)
+5. Replace the `apps` vars in `group_vars/all/apps.yml` with those needed for your app(s). (See "Apps", below.)
 
 
 ## Apps
 
 Each app should have a unique name, using only alphanumeric characters. This is used as its `name` in `group_vars/all/apps.yml`. In all the examples below we use `appname` as a placeholder for this.
 
-To add a new app (ie, a new website on a new domain):
+To add a new app (ie, a new Django website on a new domain):
 
 1. Add its config to `group_vars/all/apps.yml` (see below for options).
 2. Add its secret config to `group_vars/all/vault.yml` (see further below).
 3. If it uses a virtualenv and needs environment variables set, create a `roles/apps/templates/env_appname.j2` file (replacing `appname` in the filename).
-4. If you want a custom Nginx config file, copy `roles/apps/templates/nginx_site_config_default.j2` to `roles/apps/templates/nginx_site_config_appname.j2` and customise that. **NOTE:** Not currently working, see [this issue](https://github.com/philgyford/ansible-playbook/issues/9).
+4. If you want a custom Nginx config file, copy `roles/apps/templates/nginx_site_config_default.j2` to `roles/apps/templates/nginx_site_config_appname.j2` and customise that. **NOTE:** Not currently working, see [this issue](https://github.com/philgyford/ansible-multi-django/issues/9).
 4. To use with Vagrant, set a synced folder for each app in the `Vagrantfile`.
 5. Cross your fingers and run the playbook.
 
@@ -282,7 +282,7 @@ You may need to restart Gunicorn manually, using Supervisor, afterwards (see "Se
 
 
 
-### Environments
+## Environments
 
 If you need to create a new environment, you'll need to create new files at:
 
