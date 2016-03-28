@@ -39,8 +39,9 @@ To add a new app (ie, a new Django website on a new domain):
 2. Add its secret config to `group_vars/all/vault.yml` (see further below).
 3. If it uses a virtualenv and needs environment variables set, create a `roles/apps/templates/env_appname.j2` file (replacing `appname` in the filename).
 4. If you want a custom Nginx config file, copy `roles/apps/templates/nginx_site_config_default.j2` to `roles/apps/templates/nginx_site_config_appname.j2` and customise that. **NOTE:** Not currently working, see [this issue](https://github.com/philgyford/ansible-multi-django/issues/9).
-4. To use with Vagrant, set a synced folder for each app in the `Vagrantfile`.
-5. Cross your fingers and run the playbook.
+5. To use with Vagrant, set a synced folder for each app in the `Vagrantfile`.
+6. Check your Django site's file structure matches that outlined below.
+7. Cross your fingers and run the playbook.
 
 By default, the app's repo will be checked out to `/webapps/appname/`.
 
