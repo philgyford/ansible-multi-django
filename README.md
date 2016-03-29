@@ -1,4 +1,4 @@
-# My first Ansible playbook
+# Ansible Multi-Django Playbook
 
 Designed to host multiple Django websites, from different git repositories, on a single webserver. Can be used with a Vagrant virtual machine and a DigitalOcean droplet (not tested with anything else).
 
@@ -187,7 +187,7 @@ appname
 │   │   └── 500.html
 │   ├── urls.py
 │   └── wsgi.py
-├── cron.txt				# optional
+├── cron.txt    # optional
 ├── manage.py
 ├── requirements.txt
 └── runtime.txt
