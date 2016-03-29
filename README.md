@@ -336,6 +336,19 @@ or as the standard `vagrant` user:
 $ vagrant ssh
 ```
 
+#### Differences with other environments
+
+The Vagrant environment isn't quite like a standard server. The differences are based on the current settings in `env_vars/vagrant.yml`. The differences are:
+
+* No `/webapps/[appname]` directories are created, because we use synced folders.
+* No git repo is checked out for each app, because we use the contents of synced folders instead.
+* The firewall isn't configured.
+* SSH isn't restricted to a single port.
+* Fail2Ban isn't set up.
+* Each app's `cron.txt` file isn't copied to `/etc/cron.d/`.
+* Each app's database user has permission to create databases (so that Django can do so when running tests).
+* Memcached's log is verbose
+
 
 ### DigitalOcean
 

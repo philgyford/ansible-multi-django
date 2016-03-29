@@ -51,10 +51,17 @@ ubuntu_use_s3cmd: yes
 # Should apps' cron files be added to /etc/cron.d/ ?
 ubuntu_use_cron: yes
 
+# Create directories for apps at `/webapps/[appname]`?
+create_app_directories: yes
+
+# Check git repos out into app directories?
+check_out_git_repos: yes
+
+
 # Deploy user's home directory:
 deploy_user_home: '/home/{{ ubuntu_deploy_user }}'
 
-# Where the code will live, eg `/home/deploy/webapps` will have the `pepysdiary` app's code at `/home/deploy/webapps/pepysdiary`:
+# Where the code will live, eg `/webapps` will have the `pepysdiary` app's code at `/webapps/pepysdiary`:
 apps_path: '/webapps'
 
 # The .bashrc file that we'll use to update PATH etc:
