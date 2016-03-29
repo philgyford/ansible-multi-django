@@ -38,7 +38,7 @@ apps:
       vagrant:
         loglevel: 'debug'
         max_requests: 1 # Reloads code on every request.
-        num_workers: 3
+        num_workers: 1
       # Also, optional: timeout_seconds
 
   # - name: myphpapp
