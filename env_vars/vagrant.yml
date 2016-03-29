@@ -8,5 +8,10 @@ ubuntu_restrict_ssh: no
 # Should apps' cron files be added to /etc/cron.d/ ?
 ubuntu_use_cron: yes
 
+# We don't want NOCREATEDB here. so that we can run Django tests in Vagrant
+# environment:
+postgresql_privileges: 'NOSUPERUSER'
+
+
 memcached_log_verbosity: '-v'
 

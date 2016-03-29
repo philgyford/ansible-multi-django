@@ -20,6 +20,8 @@ ubuntu_use_firewall: yes
 # Change the SSH port, disallow password authentication, disallow root login:
 ubuntu_restrict_ssh: yes
 
+# Default privileges that we check are present for each app's database user:
+postgresql_privileges: 'NOSUPERUSER,NOCREATEDB'
 
 # Install and configure Fail2Ban. http://www.fail2ban.org
 ubuntu_use_fail2ban: yes
