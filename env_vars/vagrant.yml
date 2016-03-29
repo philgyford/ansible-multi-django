@@ -6,7 +6,7 @@ ubuntu_use_firewall: no
 ubuntu_restrict_ssh: no
 
 # Should apps' cron files be added to /etc/cron.d/ ?
-ubuntu_use_cron: yes
+ubuntu_use_cron: no
 
 # We don't want NOCREATEDB here. so that we can run Django tests in Vagrant
 # environment:
