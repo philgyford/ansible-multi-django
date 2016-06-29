@@ -10,9 +10,16 @@
     - git
     - gunicorn
     - nginx
+    - packages
     - postgresql
     - supervisor
     - virtualenvs
+
+- include: install_app_packages.yml
+  tags:
+    - apps
+    - deploy
+    - packages
 
 - include: create_app_directories.yml
   tags:

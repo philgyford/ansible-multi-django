@@ -12,8 +12,8 @@
 
 - include: install_packages.yml
   tags:
-    -- box
-    -- packages
+    - box
+    - packages
 
 - include: set_up_firewall.yml
   when: ubuntu_use_firewall

@@ -37,7 +37,7 @@ To add a new app (ie, a new Django website on a new domain):
 
 1. Add its config to `group_vars/all/apps.yml` (see below for options).
 2. Add its secret config to `group_vars/all/vault.yml` (see further below).
-3. If it uses a virtualenv and needs environment variables set, create a `roles/apps/templates/env_appname.j2` file (replacing `appname` in the filename).
+3. If it uses a virtualenv, create a `roles/apps/templates/env_appname.j2` file (replacing `appname` in the filename) to hold the environment variables.
 4. If you want a custom Nginx config file, copy `roles/apps/templates/nginx_site_config_default.j2` to `roles/apps/templates/nginx_site_config_appname.j2` and customise that. **NOTE:** Not currently working, see [this issue](https://github.com/philgyford/ansible-multi-django/issues/9).
 5. To use with Vagrant, set a synced folder for each app in the `Vagrantfile`.
 6. Check your Django site's file structure matches that outlined below.
@@ -67,6 +67,9 @@ apps:
 	git_repo: 'https://github.com/my-name/my-repo.git'
 	git_repo_branch: 'master'
 	pip_requirements_file: 'requirements.txt'
+    packages:
+      - libjpeg8-dev
+      - zlib1g-dev
 	db_type: 'postgresql'
 	db_password: '{{ vault.appname.db_password }}'
 	allowed_hosts:
@@ -97,6 +100,8 @@ The presence of many of these options determines which tasks will be run for the
 * `git_repo_branch`: Optional. The name of the branch to check out. If omitted, defaults to `'master'`.
 
 * `pip_requirements_file`: Optional. If the app has a pip requirements file, set the path to it within the repo here. eg, `requirements.txt`. Otherwise, omit this. If set, the python packages will be installed in the app's virtualenv.
+
+* `packages`: Optional. A list of package names to be installed with apt. Useful if your app requires some packages that aren't installed by the generic package installing task.
 
 * `db_type`: Optional. Currently must be 'postgresql' if present.
 
@@ -177,20 +182,21 @@ The file paths match those set by the playbook. It's a bit annoying that they're
 We assume this structure for Django sites, eg:
 
 ```shell
-appname
+/webapps/
 ├── appname/
-│   ├── __init__.py
-│   ├── media/
-│   ├── static_collected/
-│   ├── settings/
-│   ├── templates/
-│   │   └── 500.html
-│   ├── urls.py
-│   └── wsgi.py
-├── cron.txt    # optional
-├── manage.py
-├── requirements.txt
-└── runtime.txt
+    ├── appname/
+    │   ├── __init__.py
+    │   ├── media/
+    │   ├── static_collected/
+    │   ├── settings/
+    │   ├── templates/
+    │   │   └── 500.html
+    │   ├── urls.py
+    │   └── wsgi.py
+    ├── cron.txt    # optional
+    ├── manage.py
+    ├── requirements.txt
+    └── runtime.txt
 ```
 
 Note that `manage.py` must have `#!/usr/bin/env python` as its shebang, and must be executable.

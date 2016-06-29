@@ -1,0 +1,25 @@
+---
+
+# Installing packages that are particular to one or more of the apps.
+
+
+# Makes a single list of all the packages listed for all the apps.
+# Removes any duplicates.
+# Puts that list in the app_packages variable.
+- name: Get list of packages to install for apps
+  set_fact:
+    app_packages: "{{ app_packages|default([]) | union( item.packages|default([]) ) }}"
+  with_items: active_apps
+
+- name: Update APT package cache for apps
+  apt: update_cache={{ ubuntu_update_apt_cache }} cache_valid_time=3600
+  when: app_packages|length > 0
+
+- name: Upgrade APT to the latest packages for apps
+  apt: upgrade=safe
+  when: app_packages|length > 0
+
+- name: Install packages for apps
+  apt: name={{ item }} state=installed
+  with_items: app_packages
+
