@@ -3,4 +3,7 @@
 
 active_apps: "{{ apps if app is not defined else apps | selectattr('name', 'match', app) | list }}"
 
+# Will be used as the 'default_server' in the Nginx config.
+default_app_name: "{{ active_apps[0].name | default('') }}"
+
 

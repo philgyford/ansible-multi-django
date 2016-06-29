@@ -10,7 +10,8 @@ upstream {{ item.name }}_wsgi_server {
 
 server {
    # if no Host match, close the connection to prevent host spoofing
-   listen 80 default_server;
+   # The `default_server` bit should only be there for one of the sites.
+   listen 80{% if item.name == default_app_name %} default_server{% endif %};
    return 444;
 }
 
