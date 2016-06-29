@@ -11,6 +11,38 @@ apps:
   #   git_repo_branch: 'master'
   #   pip_requirements_file: 'requirements.txt'
 
+  - name: 'dittodemo'
+    git_repo: 'https://github.com/philgyford/django-ditto-demo'
+    git_repo_branch: 'master'
+    pip_requirements_file: 'requirements.txt'
+    packages:
+      - libjpeg8-dev
+      - zlib1g-dev
+    db_type: 'postgresql'
+    db_password: '{{ vault.dittodemo.db_password }}'
+    allowed_hosts:
+      production: ['django-ditto-demo.gyford.com',]
+      staging: ['staging.django-ditto-demo.gyford.com']
+      vagrant: ['django-ditto-demo.gyford.dev',]
+    django_settings_module:
+      production: 'dittodemo.settings.production'
+      staging: 'dittodemo.settings.staging'
+      vagrant: 'dittodemo.settings.vagrant'
+    nginx_config: {}
+    gunicorn_config:
+      production:
+        loglevel: 'error' # debug, info, warning, error, critical
+        max_requests: 1000 # Restarts after this many requests.
+        num_workers: 3 # Rule of thumb: 2 * CPUs + 1
+      staging:
+        loglevel: 'error' # debug, info, warning, error, critical
+        max_requests: 1000 # Restarts after this many requests.
+        num_workers: 3 # Rule of thumb: 2 * CPUs + 1
+      vagrant:
+        loglevel: 'debug'
+        max_requests: 1 # Reloads code on every request.
+        num_workers: 2
+
   - name: 'pepysdiary'
     git_repo: 'https://github.com/philgyford/pepysdiary.git'
     git_repo_branch: 'master'
