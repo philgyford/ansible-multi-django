@@ -4,3 +4,6 @@ env_name: 'staging'
 
 ubuntu_ssh_port: 1025
 
+# Should apps' cron files be added to /etc/cron.d/ ?
+ubuntu_use_cron: no
+
