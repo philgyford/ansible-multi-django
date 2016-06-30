@@ -300,14 +300,20 @@ You may need to restart Gunicorn manually, using Supervisor, afterwards (see "Se
 
 ### Command line work
 
-To work on a particular app on the command line on your server:
+If you're logged in as the `deploy` user and:
+
+```shell
+    $ cd /webapps/appname
+```
+
+then the virtual environment should be activated automatically, and the `.env` file used to create environment variables.
+
+If you're logged in as a different user, this won't happen (permisisons issue?). In this case, to get the correct environment and its variables:
 
 ```shell
     $ . /home/deploy/.pyenv/versions/appname/bin/activate
     $ . /webapps/appname/.env
 ```
-
-This will activate the virtualenv for the `appname` app and then set the environment variables contained in its `.env` file.
 
 
 ## Environments
