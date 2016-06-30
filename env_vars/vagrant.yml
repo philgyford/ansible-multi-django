@@ -20,3 +20,7 @@ postgresql_privileges: 'NOSUPERUSER'
 
 memcached_log_verbosity: '-v'
 
+# If there's a 500 error, display the 500.html template rather than Django's
+# default:
+use_custom_500_error_template: no
+

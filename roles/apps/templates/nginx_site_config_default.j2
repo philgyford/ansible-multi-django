@@ -49,11 +49,14 @@ server {
     }
 
     # Error pages
-    error_page 500 502 504 /500.html;
-    location = /500.html {
-       root {{ apps_path }}/{{ item.name }}/{{ item.name }}/templates/;
-       internal;
-    }
+
+    {% if use_custom_500_error_template %}
+        error_page 500 502 504 /500.html;
+        location = /500.html {
+           root {{ apps_path }}/{{ item.name }}/{{ item.name }}/templates/;
+           internal;
+        }
+    {% endif %}
 
     error_page 503 /maintenance_on.html;
     location = /maintenance_on.html {
