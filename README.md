@@ -6,6 +6,15 @@ If you only want to host a single Django site on one (or more) machine(s) you're
 
 This isn't a blank canvas but the playbook I use for my own sites. However, it's built with ease-of-reuse in mind. 
 
+**Contents:**
+
+* Overview
+* Customising for your own use
+* Apps
+* Running the playbook
+* Environments
+* Services
+
 
 ## Overview
 
@@ -201,6 +210,7 @@ We assume this structure for Django sites, eg:
 
 Note that `manage.py` must have `#!/usr/bin/env python` as its shebang, and must be executable.
 
+
 #### Importing an existing Django database
 
 By default a new database will be created for the app and the Django database migrations will be run. If you subsequently need to import a database from an existing version of the site, this could cause problems -- for example, I've had Django's content-types not match up when importing data.
@@ -287,6 +297,17 @@ $ ./run-playbook.sh -e production -t deploy -a appname
 
 You may need to restart Gunicorn manually, using Supervisor, afterwards (see "Services" below).
 
+
+### Command line work
+
+To work on a particular app on the command line on your server:
+
+```shell
+    $ . /home/deploy/.pyenv/versions/appname/bin/activate
+    $ . /webapps/appname/.env
+```
+
+This will activate the virtualenv for the `appname` app and then set the environment variables contained in its `.env` file.
 
 
 ## Environments
