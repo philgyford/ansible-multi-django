@@ -13,8 +13,6 @@
   when: item.git_repo is defined and check_out_git_repos
 
 - name: Delete all .pyc files
-  become: yes
-  become_user: '{{ ubuntu_deploy_user }}'
   command: find . -name '*.pyc' -delete
   args:
     chdir: "{{ apps_path }}"
