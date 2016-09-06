@@ -31,3 +31,9 @@
   tags:
     - box
     - timezone
+
+- include: configure_bash.yml
+  tags:
+    - box
+    - bash
+

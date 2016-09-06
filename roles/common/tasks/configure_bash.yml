@@ -1,0 +1,9 @@
+
+- name: write .inputrc
+  copy:
+    src: inputrc
+    dest: '{{ deploy_user_home }}/.inputrc'
+    owner: '{{ ubuntu_deploy_user }}'
+    group: '{{ ubuntu_deploy_group }}'
+    mode: 0644
+
