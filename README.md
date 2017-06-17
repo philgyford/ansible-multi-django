@@ -4,7 +4,7 @@ Designed to host multiple Django websites, from different git repositories, on a
 
 If you only want to host a single Django site on one (or more) machine(s) you're probably better off with something like [ansible-django-stack](https://github.com/jcalazan/ansible-django-stack).
 
-This isn't a blank canvas but the playbook I use for my own sites. However, it's built with ease-of-reuse in mind. 
+This isn't a blank canvas but the playbook I use for my own sites. However, it's built with ease-of-reuse in mind.
 
 **Contents:**
 
@@ -13,12 +13,13 @@ This isn't a blank canvas but the playbook I use for my own sites. However, it's
 * Apps
 * Running the playbook
 * Environments
+* AWS Command Line Interface
 * Services
 
 
 ## Overview
 
-The playbook will set up a server with Nginx, Gunicorn, Supervisor, Postgresql, Memcached, Fail2ban, s3cmd, and Python (using pyenv). It can then set up one *or more* "apps" (Django websites), each from a different git repo, with their own domain name(s), own version of Python, own virtualenvs, own environment variables, Nginx config, Postgresql database, cron tasks, etc.
+The playbook will set up a server with Nginx, Gunicorn, Supervisor, Postgresql, Memcached, Fail2ban, AWS CLI, and Python (using pyenv). It can then set up one *or more* "apps" (Django websites), each from a different git repo, with their own domain name(s), own version of Python, own virtualenvs, own environment variables, Nginx config, Postgresql database, cron tasks, etc.
 
 Most of the roles (`common`, `fail2ban`, `memcached`, etc.) set up the basic things on the server that will be used by all of the apps. No app-specific configuration is included in those roles.
 
@@ -215,11 +216,11 @@ Note that `manage.py` must have `#!/usr/bin/env python` as its shebang, and must
 
 By default a new database will be created for the app and the Django database migrations will be run. If you subsequently need to import a database from an existing version of the site, this could cause problems -- for example, I've had Django's content-types not match up when importing data.
 
-We'll assume a database has been dumped from an existing version of the site, and sent to S3 (and encrypted) using this:
+We'll assume a database has been dumped from an existing version of the site, and sent to S3 using this:
 
 ```shell
 $ pg_dump -Fc --no-acl -h localhost -U appname appname > YOUR-PGDUMP-FILE
-$ s3cmd put --encrypt --config=CONFIGFILE YOUR-PGDUMP-FILE s3://BUCKETNAME/DIRECTORY/YOUR-PGDUMP-FILE
+$ aws s3 cp YOUR-PGDUMP-FILE s3://BUCKETNAME/DIRECTORY/YOUR-PGDUMP-FILE
 ```
 
 1. Delete the database that was created by the Django migrations. On the server/Vagrant, while logged in as `deploy` (requires the deploy user's password):
@@ -235,11 +236,7 @@ $ s3cmd put --encrypt --config=CONFIGFILE YOUR-PGDUMP-FILE s3://BUCKETNAME/DIREC
 	$ ./run-playbook.sh -e vagrant -t postgresql -a appname
 	```
 
-3. Back on the server/Vagrant, fetch (and decrypt) the dump from S3, if that's where your file is. Otherwise, put it on your server/Vagrant somewhere:
-
-	```shell
-	$ s3cmd get s3://BUCKETNAME/APPNAME/YOUR-PGDUMP-FILE
-	```
+3. Back on the server/Vagrant, fetch the dump from S3, if that's where your file is, and put it on your server/Vagrant somewhere:
 
 4. Still on the server/Vagrant, import the file's contents into the database. eg, depending on your requirements (requires the app's database password, probably set in `group_vars/all/vault.yml`):
 
@@ -443,6 +440,27 @@ These steps assume you're using the `production` environment. Just change that t
 	```
 
 
+## AWS Command Line Interface
+
+By default the [AWS CLI](https://aws.amazon.com/documentation/cli/) is installed. A virtualenv is created using pyenv before installing the python `awscli` package. Prevent installation by setting the `ubuntu_use_awscli` variable in `env_vars/base.yml` to `no`.
+
+Configuration happens in the same file, where there are two settings:
+
+	awscli_output_format: 'json'
+	awscli_region: 'eu-west-1'
+
+The vaulted config files contain the AWS key and secret.
+
+	awscli_access_key_id: 'YOUR-KEY-HERE'
+	awscli_secret_access_key: 'YOUR-SECRET-HERE'
+
+If you SSH into your server/vagrant you should be able to do things like this, depending on the permissions of your AWS user. i.e. activate the python virtual environment containing the command, list the contents of an S3 directory, and copy a local file to it:
+
+	$ pyenv activate awscli
+	(awscli) $ aws ls s3://your-bucket-name/directory-name
+	(awscli) $ aws cp your-local-file.txt s3://your-bucket-name/directory-name/
+
+
 ## Services
 
 How to start, stop and inspect various services and things. Because I'll never remember all this.
@@ -546,4 +564,3 @@ Remove an IP address from a jail:
 ```shell
 $ sudo fail2ban-client set nginx-http-auth unbanip 111.111.111.111
 ```
-

@@ -45,8 +45,8 @@ fail2ban_nginx_noscript_banned_extensions:
 # Install and configure memcached?
 ubuntu_use_memcached: yes
 
-# Install and configure s3cmd, for copying files to S3?
-ubuntu_use_s3cmd: yes
+# Install and configure AWS CLI, for copying files to S3 etc?
+ubuntu_use_awscli: yes
 
 # Should apps' cron files be added to /etc/cron.d/ ?
 ubuntu_use_cron: yes
@@ -77,4 +77,8 @@ default_python_version: '3.5.1'
 # If there's a 500 error, display the 500.html template rather than Django's
 # default:
 use_custom_500_error_template: yes
+
+# AWS CLI config. Key and secret are in vaulted config.
+awscli_output_format: 'json'
+awscli_region: 'eu-west-1'
 

@@ -17,5 +17,5 @@
     - python
     - postgresql
     - fail2ban
-    - s3cmd
+    - awscli
     - apps

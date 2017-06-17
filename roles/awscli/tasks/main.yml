@@ -1,0 +1,70 @@
+---
+
+# Assumes that we've already set up python and pyenv and virtualenvs.
+
+
+- name: Create virtualenv for AWS CLI
+  when: ubuntu_use_awscli
+  become: yes
+  become_user: '{{ ubuntu_deploy_user }}'
+  shell: . {{ deploy_user_rc_file }} && {{ pyenv_path }}/libexec/pyenv virtualenv {{ default_python_version }} awscli
+  args:
+    creates: "{{ pyenv_path }}/versions/awscli/bin/activate"
+  tags:
+    - awscli
+    - packages
+    - box
+
+- name: Install AWS CLI
+  when: ubuntu_use_awscli
+  become: yes
+  become_user: '{{ ubuntu_deploy_user }}'
+  pip:
+    executable: '{{ pyenv_path }}/versions/awscli/bin/pip'
+    virtualenv: '{{ pyenv_path }}/versions/awscli'
+    name: awscli
+  tags:
+    - awscli
+    - packages
+    - box
+
+- name: Create the AWS CLI config directory
+  when: ubuntu_use_awscli
+  file:
+    path: '{{ deploy_user_home }}/.aws'
+    state: 'directory'
+    owner: '{{ ubuntu_deploy_user }}'
+    group: '{{ ubuntu_deploy_group }}'
+    mode: 0755
+  become: 'yes'
+  tags:
+    - awscli
+    - packages
+    - box
+
+- name: Copy AWS CLI config
+  when: ubuntu_use_awscli
+  template:
+    src: awscli_config.j2
+    dest: '{{ deploy_user_home }}/.aws/config'
+    owner: '{{ ubuntu_deploy_user }}'
+    group: '{{ ubuntu_deploy_group }}'
+    mode: 0600
+  tags:
+    - awscli
+    - packages
+    - box
+
+- name: Copy AWS CLI credentials
+  when: ubuntu_use_awscli
+  template:
+    src: awscli_credentials.j2
+    dest: '{{ deploy_user_home }}/.aws/credentials'
+    owner: '{{ ubuntu_deploy_user }}'
+    group: '{{ ubuntu_deploy_group }}'
+    mode: 0600
+  tags:
+    - awscli
+    - packages
+    - box
+

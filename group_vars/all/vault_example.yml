@@ -8,11 +8,9 @@
 ubuntu_deploy_password: ''
 
 
-# If installing s3cmd:
-s3cmd_access_key: ''
-s3cmd_secret_key: ''
-s3cmd_encrypt: 'False'
-s3cmd_gpg_passphrase: ''
+# If installing AWS CLI:
+awscli_access_key_id: ''
+awscli_secret_access_key: ''
 
 
 # Should have one element per app, with the app's name:
